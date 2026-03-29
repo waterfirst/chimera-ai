@@ -83,11 +83,71 @@
 - 데이터: yfinance 무료 API (KOSPI, VIX, 삼성전자, SK하이닉스, TNX, Gold)
 - `capital_flow.py` — 단일 파일, 독립 실행
 
+## v0.8 — Agent Reach: 인터넷 눈 장착 (2026-03-29)
+- **검색**: Agent Reach v1.3.0 설치 — AI 에이전트 인터넷 접근 툴킷 (무료)
+- **7/16 채널 활성화**:
+  - ✅ Exa 시맨틱 검색 (전체 웹, 무료, API 키 불필요)
+  - ✅ Jina Reader (임의 웹페이지 → 마크다운 변환)
+  - ✅ YouTube 자막 추출 (yt-dlp)
+  - ✅ RSS/Atom 피드 읽기
+  - ✅ Bilibili 영상/자막/검색
+  - ✅ V2EX 커뮤니티
+  - ✅ WeChat 공식계정 글 (검색 + 읽기)
+- **추가 도구 설치됨**: mcporter (MCP 서버 관리), bird CLI (Twitter용, 미인증)
+- **환경**: `~/.agent-reach-venv/` (Python venv)
+- **의미**: 기존에는 AgentQL(월 300회)과 WebFetch에 의존했으나, 이제 무제한 무료로 웹 전체 검색/읽기 가능
+- **첫 실전 테스트**: "glass substrate semiconductor packaging 2026" → MIT Tech Review 최신 기사(2026-03-13) 즉시 검색 성공
+
+## v0.8.1 — 팟캐스트 파이프라인 (2026-03-29)
+- **팟캐스트 생성기**: Gemini(대본) → GPT TTS(2인 음성) → ffmpeg(결합)
+- 2인 호스트: nova(여성) + onyx(남성), 자연스러운 한국어 대화체
+- 첫 에피소드: 글래스 패키징 기술 세미나 (3.0MB, 16턴)
+- GitHub 저장소: waterfirst/sunday-ai-coffee-club
+- Podbbang 채널 연동: "일요 AI 커피 클럽" (32+ 에피소드)
+
+## v0.8.2 — Google Cloud 인증 (2026-03-29)
+- OAuth 2.0 PKCE 커스텀 플로우 구현 (headless EC2 대응)
+- gcloud CLI 설치 (v562.0.0)
+- Google Cloud 프로젝트 접근 토큰 확보 (cloud-platform 스코프)
+- Discovery Engine API 활성화 (gemini-455003 프로젝트)
+- NotebookLM Enterprise API는 소비자 계정 미지원 확인
+
+---
+
+## 현재 아키텍처 요약 (v0.8)
+
+```
+┌──────────────────────────────────────────────┐
+│              사용자 (Telegram)                 │
+│                    ↕                          │
+│           cokacdir (중계/스케줄)               │
+│                    ↕                          │
+│  ┌─────────── Claude (두뇌) ──────────────┐   │
+│  │  사고 · 분석 · 대화 · 코딩 · 판단      │   │
+│  │                                        │   │
+│  │  [기억: Walnut 마크다운 커널]           │   │
+│  │   now / tasks / insights / log         │   │
+│  └──┬──────────┬──────────┬───────────────┘   │
+│     │          │          │                   │
+│  ┌──▼───┐  ┌──▼───┐  ┌───▼──────────────┐    │
+│  │GPT   │  │Gemini│  │ Agent Reach      │    │
+│  │TTS   │  │Flash │  │ (인터넷 눈) 🆕   │    │
+│  │+범용 │  │검색  │  │ Exa/Jina/YT/RSS │    │
+│  └──────┘  └──────┘  └──────────────────┘    │
+│                                               │
+│  [도구] bash·python·DALL-E·ffmpeg·gcloud     │
+│  [MCP]  AgentQL(300/월) + mcporter(무제한)   │
+│  [인증] Google OAuth PKCE 토큰 보유          │
+└──────────────────────────────────────────────┘
+```
+
 ---
 
 ## 다음 업그레이드 후보
+- [ ] Agent Reach 추가 채널 활성화 (Twitter 인증, Reddit 프록시, 샤오홍슈 Docker)
 - [ ] 한국어 TTS 네이티브화 (edge-tts / CLOVA / 무료 대안)
 - [ ] 영상 인물 일관성 (IP-Adapter / 참조 이미지 기법)
-- [ ] Gemini 웹 검색 자동화 강화
+- [ ] NotebookLM 브라우저 자동화 (PC 환경에서 시도)
 - [ ] 아들 에이전트 배포 (독립 워크스페이스)
 - [ ] capsule 패턴 도입 (프로젝트별 독립 작업 단위)
+- [x] ~~Gemini 웹 검색 자동화 강화~~ → Agent Reach로 대체 (v0.8)

@@ -112,9 +112,21 @@
 - Discovery Engine API 활성화 (gemini-455003 프로젝트)
 - NotebookLM Enterprise API는 소비자 계정 미지원 확인
 
+## v0.9 — Gemini TTS: 목소리 혁명 (2026-03-29 심야)
+- **음성 엔진 교체**: GPT TTS → Gemini TTS (`gemini-2.5-flash-preview-tts`)
+- **완전 무료**: OpenAI API 비용 0원 (Gemini 무료 tier)
+- 여성 호스트: Kore (한국어 네이티브 품질)
+- 남성 호스트: Charon (깊은 톤)
+- 자동 폴백: Gemini 실패 시 → OpenAI TTS 자동 전환
+- PCM→MP3 실시간 변환 파이프라인 (ffmpeg)
+- 짧은 대사 패딩 처리 (15자 미만 자동 보정)
+- `--engine gemini|openai` CLI 옵션 추가
+- **3두 완전 무료 체제 확립**: Claude(두뇌) + Gemini TTS(목소리) + Gemini Flash(손발)
+- GPT는 범용 폴백으로 격하 (비용 절감)
+
 ---
 
-## 현재 아키텍처 요약 (v0.8)
+## 현재 아키텍처 요약 (v0.9)
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -129,12 +141,14 @@
 │  │   now / tasks / insights / log         │   │
 │  └──┬──────────┬──────────┬───────────────┘   │
 │     │          │          │                   │
-│  ┌──▼───┐  ┌──▼───┐  ┌───▼──────────────┐    │
-│  │GPT   │  │Gemini│  │ Agent Reach      │    │
-│  │TTS   │  │Flash │  │ (인터넷 눈) 🆕   │    │
-│  │+범용 │  │검색  │  │ Exa/Jina/YT/RSS │    │
-│  └──────┘  └──────┘  └──────────────────┘    │
+│  ┌──▼──────┐ ┌▼───────┐ ┌▼────────────────┐  │
+│  │Gemini   │ │Gemini  │ │ Agent Reach     │  │
+│  │TTS 🆕  │ │Flash   │ │ (인터넷 눈)     │  │
+│  │Kore     │ │검색    │ │ Exa/Jina/YT    │  │
+│  │Charon   │ │대본    │ │ RSS/WeChat     │  │
+│  └─────────┘ └────────┘ └────────────────┘  │
 │                                               │
+│  [폴백] GPT TTS(nova/onyx) + GPT 범용       │
 │  [도구] bash·python·DALL-E·ffmpeg·gcloud     │
 │  [MCP]  AgentQL(300/월) + mcporter(무제한)   │
 │  [인증] Google OAuth PKCE 토큰 보유          │
@@ -145,9 +159,10 @@
 
 ## 다음 업그레이드 후보
 - [ ] Agent Reach 추가 채널 활성화 (Twitter 인증, Reddit 프록시, 샤오홍슈 Docker)
-- [ ] 한국어 TTS 네이티브화 (edge-tts / CLOVA / 무료 대안)
+- [ ] Gemini Live API 실시간 음성 대화 (WebSocket A2A)
 - [ ] 영상 인물 일관성 (IP-Adapter / 참조 이미지 기법)
 - [ ] NotebookLM 브라우저 자동화 (PC 환경에서 시도)
 - [ ] 아들 에이전트 배포 (독립 워크스페이스)
 - [ ] capsule 패턴 도입 (프로젝트별 독립 작업 단위)
 - [x] ~~Gemini 웹 검색 자동화 강화~~ → Agent Reach로 대체 (v0.8)
+- [x] ~~한국어 TTS 네이티브화~~ → Gemini TTS Kore/Charon (v0.9)

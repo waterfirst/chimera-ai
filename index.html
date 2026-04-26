@@ -12,9 +12,16 @@
 :root{--bg:#0a0a14;--sf:#14142a;--bd:#1e1e3a;--ac:#f59e0b;--tx:#e4e4ec;--mt:#888;--rd:#ef4444;--gn:#22c55e;--bl:#6366f1;--cy:#06b6d4}
 [data-theme=light]{--bg:#f8f8fa;--sf:#fff;--bd:#e0e0e8;--ac:#d97706;--tx:#1a1a2e;--mt:#666}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px 16px;transition:background .3s,color .3s}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s,color .3s}
 .theme-btn{position:fixed;top:14px;right:14px;background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:18px;z-index:100;display:flex;align-items:center;justify-content:center}
-header{text-align:center;margin-bottom:32px;max-width:650px}
+.splash{width:100%;max-height:340px;overflow:hidden;position:relative;margin-bottom:0}
+.splash img{width:100%;height:340px;object-fit:cover;display:block;filter:brightness(.65)}
+.splash::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none}
+.splash-text{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;width:90%}
+.splash-text h1{font-size:2.6em;font-weight:900;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.7);margin-bottom:4px}
+.splash-text .stag{font-size:12px;color:rgba(255,255,255,.7);letter-spacing:3px;text-transform:uppercase}
+.content{padding:0 16px 30px;display:flex;flex-direction:column;align-items:center;width:100%}
+header{text-align:center;margin:24px 0 32px;max-width:650px}
 h1{font-size:2em;font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .badge{display:inline-block;background:rgba(245,158,11,.15);color:var(--ac);font-size:11px;font-weight:700;padding:3px 12px;border-radius:12px;margin-bottom:8px}
 .desc{color:var(--mt);font-size:13px;line-height:1.6;margin-bottom:6px}
@@ -42,9 +49,18 @@ footer a{color:var(--ac);text-decoration:none}
 </head>
 <body>
 <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<div class="splash">
+<img src="hero.png" alt="Chimera AI Hero">
+<div class="splash-text">
+<h1>CHIMERA AI</h1>
+<div class="stag">AI-Powered Economic Analysis</div>
+</div>
+</div>
+
+<div class="content">
 <header>
 <div class="badge">Quarto HTML 경제분석 Reports</div>
-<h1>🐉 CHIMERA AI</h1>
 <div class="desc">Claude 두뇌 + GPT 목소리 + Gemini 손발<br>키메라 멀티에이전트 시스템이 생성하는 주간 증시·경제 분석 보고서</div>
 <div class="author">Nakcho Choi | Alpha Hunter × Chimera-AI</div>
 <div class="arch"><b>🧠 Claude</b> 분석 · <b>🔍 Gemini</b> 검색 · <b>📊 Plotly</b> 시각화</div>
@@ -101,6 +117,7 @@ footer a{color:var(--ac);text-decoration:none}
 <div>🐉 Claude 두뇌 + GPT 목소리 + Gemini 손발</div>
 <div><a href="https://github.com/waterfirst/chimera-ai">GitHub</a> · <a href="https://github.com/waterfirst/alpha-hunter">Alpha Hunter</a> · © 2026 Chimera AI</div>
 </footer>
+</div><!-- /content -->
 <script>
 function toggleTheme(){const b=document.body,t=b.getAttribute('data-theme');b.setAttribute('data-theme',t==='light'?'':'light');document.getElementById('themeBtn').textContent=t==='light'?'🌙':'☀️';localStorage.setItem('ch-theme',t==='light'?'dark':'light')}
 const s=localStorage.getItem('ch-theme');if(s==='light'){document.body.setAttribute('data-theme','light');document.getElementById('themeBtn').textContent='☀️'}

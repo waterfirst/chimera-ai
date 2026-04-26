@@ -6,29 +6,41 @@
 <title>Chimera AI — 경제분석 보고서</title>
 <meta name="description" content="키메라 AI 멀티에이전트 시스템의 주간 증시·경제 분석 Quarto HTML 보고서">
 <meta property="og:title" content="Chimera AI — 경제분석 보고서">
-<meta property="og:description" content="Claude+GPT+Gemini 키메라 아키텍처로 생성하는 주간 증시·경제 분석 보고서">
+<meta property="og:description" content="Claude+GPT+Gemini 키메라 아키텍처 주간 증시·경제 분석 보고서">
+<meta property="og:image" content="https://waterfirst.github.io/chimera-ai/hero.png">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a14;--sf:#14142a;--bd:#1e1e3a;--ac:#f59e0b;--tx:#e4e4ec;--mt:#888;--rd:#ef4444;--gn:#22c55e;--bl:#6366f1;--cy:#06b6d4}
 [data-theme=light]{--bg:#f8f8fa;--sf:#fff;--bd:#e0e0e8;--ac:#d97706;--tx:#1a1a2e;--mt:#666}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s,color .3s}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+
+/* === Splash Fullscreen === */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s;overflow:hidden}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+#splash img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.4)}
+.sp-overlay{position:relative;z-index:2;text-align:center;padding:20px}
+.sp-title{font-size:3em;font-weight:900;color:#fff;text-shadow:0 4px 30px rgba(0,0,0,.5);margin-bottom:8px;opacity:0;animation:fadeUp .8s .3s forwards}
+.sp-sub{font-size:14px;color:rgba(255,255,255,.6);letter-spacing:4px;text-transform:uppercase;opacity:0;animation:fadeUp .6s .7s forwards}
+.sp-author{font-size:12px;color:rgba(255,255,255,.4);margin-top:12px;opacity:0;animation:fadeUp .5s 1s forwards}
+.sp-bar{width:200px;height:3px;background:rgba(255,255,255,.1);border-radius:3px;margin:24px auto 0;overflow:hidden;opacity:0;animation:fadeUp .4s 1.2s forwards}
+.sp-fill{width:0;height:100%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:3px;animation:load 2s 1.4s ease-in-out forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes load{0%{width:0}60%{width:75%}100%{width:100%}}
+
+/* === Main === */
+.main{display:flex;flex-direction:column;align-items:center;padding:30px 16px}
 .theme-btn{position:fixed;top:14px;right:14px;background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:18px;z-index:100;display:flex;align-items:center;justify-content:center}
-.splash{width:100%;max-height:340px;overflow:hidden;position:relative;margin-bottom:0}
-.splash img{width:100%;height:340px;object-fit:cover;display:block;filter:brightness(.65)}
-.splash::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none}
-.splash-text{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;width:90%}
-.splash-text h1{font-size:2.6em;font-weight:900;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.7);margin-bottom:4px}
-.splash-text .stag{font-size:12px;color:rgba(255,255,255,.7);letter-spacing:3px;text-transform:uppercase}
-.content{padding:0 16px 30px;display:flex;flex-direction:column;align-items:center;width:100%}
-header{text-align:center;margin:24px 0 32px;max-width:650px}
-h1{font-size:2em;font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-banner{width:100%;max-height:200px;overflow:hidden;position:relative;margin-bottom:0}
+.hero-banner img{width:100%;height:200px;object-fit:cover;display:block;filter:brightness(.55)}
+.hero-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--bg),transparent)}
+header{text-align:center;margin:20px 0 28px;max-width:650px}
 .badge{display:inline-block;background:rgba(245,158,11,.15);color:var(--ac);font-size:11px;font-weight:700;padding:3px 12px;border-radius:12px;margin-bottom:8px}
 .desc{color:var(--mt);font-size:13px;line-height:1.6;margin-bottom:6px}
 .author{color:var(--ac);font-size:12px;margin-bottom:12px}
 .arch{font-size:12px;color:var(--mt);background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 16px;display:inline-block}
 .arch b{color:var(--tx)}
-.sec{font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:2px;margin:28px 0 12px;max-width:650px;width:100%;padding-left:4px;display:flex;align-items:center;gap:8px}
+.sec{font-size:12px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:2px;margin:24px 0 12px;max-width:650px;width:100%;padding-left:4px;display:flex;align-items:center;gap:8px}
 .sec::after{content:'';flex:1;height:1px;background:var(--bd)}
 .card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:10px;max-width:650px;width:100%;transition:border-color .2s,transform .1s}
 .card:hover{border-color:var(--ac);transform:translateY(-1px)}
@@ -48,17 +60,24 @@ footer a{color:var(--ac);text-decoration:none}
 </style>
 </head>
 <body>
+
+<!-- Fullscreen Splash -->
+<div id="splash">
+<img src="hero.png" alt="">
+<div class="sp-overlay">
+<div class="sp-title">CHIMERA AI</div>
+<div class="sp-sub">AI-Powered Economic Analysis</div>
+<div class="sp-author">Claude Brain + GPT Voice + Gemini Hands</div>
+<div class="sp-bar"><div class="sp-fill"></div></div>
+</div>
+</div>
+
+<!-- Main Content -->
 <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<div class="main">
 
-<div class="splash">
-<img src="hero.png" alt="Chimera AI Hero">
-<div class="splash-text">
-<h1>CHIMERA AI</h1>
-<div class="stag">AI-Powered Economic Analysis</div>
-</div>
-</div>
+<div class="hero-banner"><img src="hero.png" alt=""></div>
 
-<div class="content">
 <header>
 <div class="badge">Quarto HTML 경제분석 Reports</div>
 <div class="desc">Claude 두뇌 + GPT 목소리 + Gemini 손발<br>키메라 멀티에이전트 시스템이 생성하는 주간 증시·경제 분석 보고서</div>
@@ -117,10 +136,12 @@ footer a{color:var(--ac);text-decoration:none}
 <div>🐉 Claude 두뇌 + GPT 목소리 + Gemini 손발</div>
 <div><a href="https://github.com/waterfirst/chimera-ai">GitHub</a> · <a href="https://github.com/waterfirst/alpha-hunter">Alpha Hunter</a> · © 2026 Chimera AI</div>
 </footer>
-</div><!-- /content -->
+</div>
+
 <script>
+setTimeout(()=>{const s=document.getElementById('splash');s.classList.add('hide');setTimeout(()=>s.remove(),800)},3800);
 function toggleTheme(){const b=document.body,t=b.getAttribute('data-theme');b.setAttribute('data-theme',t==='light'?'':'light');document.getElementById('themeBtn').textContent=t==='light'?'🌙':'☀️';localStorage.setItem('ch-theme',t==='light'?'dark':'light')}
-const s=localStorage.getItem('ch-theme');if(s==='light'){document.body.setAttribute('data-theme','light');document.getElementById('themeBtn').textContent='☀️'}
+const sv=localStorage.getItem('ch-theme');if(sv==='light'){document.body.setAttribute('data-theme','light');document.getElementById('themeBtn').textContent='☀️'}
 </script>
 </body>
 </html>

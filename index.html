@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chimera AI — Claude 두뇌 + GPT 목소리 + Gemini 손발</title>
+<meta name="description" content="세 개의 AI를 조합한 키메라 아키텍처 — 한 사람을 위한 AI 비서 시스템">
+<meta property="og:title" content="Chimera AI — 키메라 아키텍처">
+<meta property="og:description" content="Claude 두뇌 + GPT 목소리 + Gemini 손발. 물리학자의 AI 비서 시스템.">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a14;--sf:#12122a;--bd:#1e1e3a;--ac:#6366f1;--tx:#e4e4ec;--mt:#777;--gd:#f59e0b;--rd:#ef4444;--gn:#22c55e;--cy:#06b6d4;--pk:#ec4899}
+[data-theme=light]{--bg:#f5f5f7;--sf:#fff;--bd:#e0e0e8;--ac:#4f46e5;--tx:#1a1a2e;--mt:#666}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;transition:background .3s,color .3s}
+.theme-btn{position:fixed;top:14px;right:14px;background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:18px;z-index:100;display:flex;align-items:center;justify-content:center}
+
+/* Hero */
+.hero{text-align:center;padding:50px 20px 30px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(99,102,241,.08),transparent 60%);pointer-events:none}
+.hero-icon{font-size:48px;margin-bottom:12px}
+.hero h1{font-size:2.4em;font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,#818cf8,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .tagline{font-size:15px;color:var(--mt);margin-bottom:6px}
+.hero .author{font-size:12px;color:var(--ac)}
+
+/* Architecture */
+.arch{max-width:700px;margin:20px auto;padding:0 16px}
+.arch-box{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;overflow-x:auto;white-space:pre;color:var(--mt)}
+.arch-box b{color:var(--tx);font-weight:600}
+.arch-box .c-blue{color:#818cf8}
+.arch-box .c-amber{color:#f59e0b}
+.arch-box .c-pink{color:#ec4899}
+.arch-box .c-green{color:#22c55e}
+.arch-box .c-cyan{color:#06b6d4}
+
+/* Stats */
+.stats{display:flex;gap:20px;justify-content:center;margin:24px auto;flex-wrap:wrap;max-width:600px}
+.stat{text-align:center;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px 20px;min-width:80px}
+.stat-num{font-size:22px;font-weight:800}
+.stat-label{font-size:10px;color:var(--mt);margin-top:2px}
+.s-blue .stat-num{color:#818cf8}
+.s-amber .stat-num{color:#f59e0b}
+.s-pink .stat-num{color:#ec4899}
+.s-green .stat-num{color:#22c55e}
+
+/* Section */
+.container{max-width:700px;margin:0 auto;padding:0 16px}
+.sec-title{font-size:12px;font-weight:700;color:var(--gd);text-transform:uppercase;letter-spacing:2px;margin:32px 0 14px;padding-left:4px}
+
+/* Version Cards */
+.ver{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:16px 20px;margin-bottom:10px;transition:border-color .2s}
+.ver:hover{border-color:var(--ac)}
+.ver-top{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.ver-tag{font-size:10px;padding:3px 10px;border-radius:12px;font-weight:700}
+.vt-brain{background:rgba(129,140,248,.15);color:#818cf8}
+.vt-voice{background:rgba(236,72,153,.15);color:#ec4899}
+.vt-hands{background:rgba(245,158,11,.15);color:#f59e0b}
+.vt-mem{background:rgba(34,197,94,.15);color:#22c55e}
+.vt-svc{background:rgba(6,182,212,.15);color:#06b6d4}
+.vt-cur{background:rgba(239,68,68,.2);color:#ef4444;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.ver-date{font-size:11px;color:var(--mt);margin-left:auto}
+.ver h3{font-size:14px;margin-bottom:4px}
+.ver p{font-size:12px;color:var(--mt);line-height:1.6}
+
+/* Projects link */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:14px 0}
+.proj{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--tx);transition:border-color .2s}
+.proj:hover{border-color:var(--ac)}
+.proj-icon{font-size:22px;margin-bottom:6px}
+.proj h4{font-size:13px;margin-bottom:4px}
+.proj p{font-size:11px;color:var(--mt);line-height:1.5}
+
+footer{text-align:center;padding:30px 16px;color:var(--mt);font-size:11px;line-height:1.8}
+footer a{color:var(--ac);text-decoration:none}
+@media(max-width:480px){.hero h1{font-size:1.8em}.arch-box{font-size:10px}}
+</style>
+</head>
+<body>
+<button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<div class="hero">
+<div class="hero-icon">🐉</div>
+<h1>CHIMERA AI</h1>
+<div class="tagline">Claude 두뇌 + GPT 목소리 + Gemini 손발</div>
+<div class="author">by Nakcho Choi | 응용물리 Ph.D | Samsung Display</div>
+</div>
+
+<div class="arch">
+<div class="arch-box"><b>┌──────────────────────────────────────┐</b>
+<b>│</b>           <span class="c-cyan">사용자 (Telegram)</span>            <b>│</b>
+<b>│</b>                  ↕                    <b>│</b>
+<b>│</b>         <span class="c-green">cokacdir (중계/스케줄)</span>         <b>│</b>
+<b>│</b>                  ↕                    <b>│</b>
+<b>│</b>  <span class="c-blue">┌────── Claude (두뇌) ──────┐</span>     <b>│</b>
+<b>│</b>  <span class="c-blue">│ 사고 · 분석 · 코딩 · 판단 │</span>     <b>│</b>
+<b>│</b>  <span class="c-blue">│ [Walnut 메모리 커널]       │</span>     <b>│</b>
+<b>│</b>  <span class="c-blue">└──┬──────────┬──────────┬──┘</span>     <b>│</b>
+<b>│</b>     │          │          │         <b>│</b>
+<b>│</b>  <span class="c-pink">┌──▼────┐</span>  <span class="c-amber">┌▼──────┐</span>  <span class="c-green">┌▼──────┐</span>  <b>│</b>
+<b>│</b>  <span class="c-pink">│Gemini │</span>  <span class="c-amber">│Gemini │</span>  <span class="c-green">│Agent  │</span>  <b>│</b>
+<b>│</b>  <span class="c-pink">│TTS    │</span>  <span class="c-amber">│Flash  │</span>  <span class="c-green">│Reach  │</span>  <b>│</b>
+<b>│</b>  <span class="c-pink">│음성   │</span>  <span class="c-amber">│검색   │</span>  <span class="c-green">│인터넷 │</span>  <b>│</b>
+<b>│</b>  <span class="c-pink">└───────┘</span>  <span class="c-amber">└───────┘</span>  <span class="c-green">└───────┘</span>  <b>│</b>
+<b>└──────────────────────────────────────┘</b></div>
+</div>
+
+<div class="stats">
+<div class="stat s-blue"><div class="stat-num">v1.0</div><div class="stat-label">Version</div></div>
+<div class="stat s-amber"><div class="stat-num">3</div><div class="stat-label">AI Engines</div></div>
+<div class="stat s-pink"><div class="stat-num">10</div><div class="stat-label">Upgrades</div></div>
+<div class="stat s-green"><div class="stat-num">30+</div><div class="stat-label">Days Running</div></div>
+</div>
+
+<div class="container">
+
+<!-- 관련 프로젝트 -->
+<div class="sec-title">프로젝트 Projects</div>
+<div class="projects">
+<a class="proj" href="https://waterfirst.github.io/insight-lab/">
+<div class="proj-icon">🔬</div>
+<h4>Insight Lab</h4>
+<p>인문학 × 과학 크로스오버<br>주간 보고서 + 특별편</p>
+</a>
+<a class="proj" href="https://waterfirst.github.io/insight-lab/report.html">
+<div class="proj-icon">📊</div>
+<h4>TACO-GIBBS Model</h4>
+<p>깁스 자유에너지로 보는<br>트럼프 정치경제학</p>
+</a>
+<a class="proj" href="https://waterfirst.github.io/sid-display-week-2026/">
+<div class="proj-icon">📋</div>
+<h4>SID Display Week 2026</h4>
+<p>LA 출장 가이드<br>포스터 P-99 발표</p>
+</a>
+</div>
+
+<!-- 진화 기록 -->
+<div class="sec-title">진화 기록 Evolution Log</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-cur">CURRENT</span><span class="ver-tag vt-svc">서비스</span><span class="ver-date">2026.03.29</span></div>
+<h3>v1.0 — 법률 도우미 서비스 배포</h3>
+<p>korean-law-mcp 64개 도구 통합 · Flask API 11개 엔드포인트 · 3중 폴백 아키텍처<br>키메라 AI의 첫 공개 서비스 — 분석/생성을 넘어 실용 서비스 단계 진입</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-voice">음성</span><span class="ver-date">2026.03.29</span></div>
+<h3>v0.9 — Gemini TTS 네이티브화</h3>
+<p>Gemini TTS Kore/Charon 음성 · 한국어 네이티브 품질 달성</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-hands">손발</span><span class="ver-date">2026.03.29</span></div>
+<h3>v0.8 — Agent Reach (인터넷 눈)</h3>
+<p>Exa/Jina/YouTube/RSS/WeChat 통합 · 세상을 직접 보는 눈 확보</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-hands">손발</span><span class="ver-date">2026.03.28</span></div>
+<h3>v0.7 — MCP 도구 확장</h3>
+<p>AgentQL 300회/월 + mcporter 무제한 · 구조화된 웹 데이터 추출</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-voice">영상</span><span class="ver-date">2026.03.28</span></div>
+<h3>v0.6 — 영상 생성</h3>
+<p>DALL-E 3 + PIL + ffmpeg · Ken Burns 효과 · 한글 자막 · 앰비언트 BGM</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-mem">자동화</span><span class="ver-date">2026.03.28</span></div>
+<h3>v0.5 — 스케줄링 자동화</h3>
+<p>cron 반복 작업 · 속보 모니터링 2시간마다 · 파일 자동 전송</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-mem">기억</span><span class="ver-date">2026.03.28</span></div>
+<h3>v0.4 — Walnut 기억 시스템</h3>
+<p>MEMORY.md 커널 인덱스 · now/tasks/insights/profile/hippocampus · API 비용 0원</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-brain">두뇌</span><span class="ver-tag vt-voice">음성</span><span class="ver-tag vt-hands">손발</span><span class="ver-date">2026.03.28</span></div>
+<h3>v0.3 — 키메라 아키텍처 확립</h3>
+<p>Claude + GPT + Gemini 3두 체제 · 첫 합동작전: 1인 라디오쇼</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-voice">음성</span><span class="ver-date">2026.03.28</span></div>
+<h3>v0.2 — GPT 음성 추가</h3>
+<p>gpt-4o-mini-tts · nova 음성 · 감정 인스트럭션 엔지니어링</p>
+</div>
+
+<div class="ver">
+<div class="ver-top"><span class="ver-tag vt-brain">두뇌</span><span class="ver-date">2026.03.27</span></div>
+<h3>v0.1 — 탄생</h3>
+<p>Claude Code + Telegram 봇 (cokacdir) · EC2 t3.micro · 기억 없음, 검색 없음</p>
+</div>
+
+</div>
+
+<footer>
+<div>© 2026 Chimera AI — Claude 두뇌 + GPT 목소리 + Gemini 손발</div>
+<div><a href="https://github.com/waterfirst/chimera-ai">GitHub</a> · <a href="https://waterfirst.github.io/insight-lab/">Insight Lab</a> · Nakcho Choi</div>
+</footer>
+
+<script>
+function toggleTheme(){
+  const b=document.body,t=b.getAttribute('data-theme');
+  b.setAttribute('data-theme',t==='light'?'':'light');
+  document.getElementById('themeBtn').textContent=t==='light'?'🌙':'☀️';
+  localStorage.setItem('ch-theme',t==='light'?'dark':'light');
+}
+const s=localStorage.getItem('ch-theme');
+if(s==='light'){document.body.setAttribute('data-theme','light');document.getElementById('themeBtn').textContent='☀️';}
+</script>
+</body>
+</html>

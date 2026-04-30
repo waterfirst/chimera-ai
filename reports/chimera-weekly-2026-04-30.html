@@ -1,0 +1,2900 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chimera-AI 주간 증시 분석 리포트 | 2026-04-30</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        /* ===== CSS Reset & Base ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2333;
+            --bg-card: #21262d;
+            --bg-card-hover: #292e36;
+            --border-primary: #30363d;
+            --border-accent: #388bfd;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-red: #f85149;
+            --accent-yellow: #d29922;
+            --accent-orange: #db6d28;
+            --accent-purple: #bc8cff;
+            --accent-cyan: #39d2c0;
+            --accent-pink: #f778ba;
+            --gradient-blue: linear-gradient(135deg, #1a3a5c, #0d1117);
+            --gradient-green: linear-gradient(135deg, #1a3c2a, #0d1117);
+            --gradient-red: linear-gradient(135deg, #3c1a1a, #0d1117);
+            --gradient-purple: linear-gradient(135deg, #2a1a3c, #0d1117);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow-glow-blue: 0 0 20px rgba(88, 166, 255, 0.15);
+            --shadow-glow-green: 0 0 20px rgba(63, 185, 80, 0.15);
+            --shadow-glow-red: 0 0 20px rgba(248, 81, 73, 0.15);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+            min-height: 100vh;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-primary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ===== Layout ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== Header ===== */
+        .report-header {
+            background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+            border-bottom: 1px solid var(--border-primary);
+            padding: 48px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-cyan), var(--accent-green));
+        }
+
+        .report-header::after {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(88, 166, 255, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .header-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .report-title {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .report-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .header-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-meta-item .label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ===== Navigation / TOC ===== */
+        .toc-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .toc-bar .container {
+            display: flex;
+            overflow-x: auto;
+            gap: 0;
+        }
+
+        .toc-link {
+            display: inline-block;
+            padding: 14px 18px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .toc-link:hover {
+            color: var(--text-primary);
+            background: rgba(88, 166, 255, 0.05);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        /* ===== Market Ticker ===== */
+        .ticker-strip {
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-primary);
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .ticker-track {
+            display: flex;
+            animation: ticker-scroll 40s linear infinite;
+            gap: 48px;
+            width: max-content;
+        }
+
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .ticker-name {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .ticker-value {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .ticker-change {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .ticker-change.up {
+            color: var(--accent-red);
+            background: rgba(248, 81, 73, 0.1);
+        }
+
+        .ticker-change.down {
+            color: var(--accent-blue);
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        .ticker-change.flat {
+            color: var(--text-muted);
+            background: rgba(110, 118, 129, 0.1);
+        }
+
+        /* ===== Section Base ===== */
+        .section {
+            padding: 56px 0;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 640px;
+        }
+
+        /* ===== Cards ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(88, 166, 255, 0.3);
+            box-shadow: var(--shadow-glow-blue);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-size: 20px;
+        }
+
+        .card-icon.blue { background: rgba(88, 166, 255, 0.15); }
+        .card-icon.green { background: rgba(63, 185, 80, 0.15); }
+        .card-icon.red { background: rgba(248, 81, 73, 0.15); }
+        .card-icon.yellow { background: rgba(210, 153, 34, 0.15); }
+        .card-icon.purple { background: rgba(188, 140, 255, 0.15); }
+        .card-icon.cyan { background: rgba(57, 210, 192, 0.15); }
+        .card-icon.orange { background: rgba(219, 109, 40, 0.15); }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ===== Grid Layouts ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 901px) and (max-width: 1100px) {
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ===== KPI Cards ===== */
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .kpi-card.positive::before { background: var(--accent-green); }
+        .kpi-card.negative::before { background: var(--accent-red); }
+        .kpi-card.neutral::before { background: var(--accent-blue); }
+        .kpi-card.warning::before { background: var(--accent-yellow); }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 30px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+
+        .kpi-value.green { color: var(--accent-green); }
+        .kpi-value.red { color: var(--accent-red); }
+        .kpi-value.blue { color: var(--accent-blue); }
+        .kpi-value.yellow { color: var(--accent-yellow); }
+
+        .kpi-change {
+            font-size: 13px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .kpi-change.up { color: var(--accent-red); }
+        .kpi-change.down { color: var(--accent-blue); }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== Summary Banner ===== */
+        .summary-banner {
+            background: var(--gradient-blue);
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(88, 166, 255, 0.08) 0%, transparent 70%);
+        }
+
+        .summary-banner h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+        }
+
+        .summary-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .summary-list li {
+            font-size: 15px;
+            color: var(--text-primary);
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .summary-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+        }
+
+        /* ===== Alert Boxes ===== */
+        .alert-box {
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin: 16px 0;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .alert-box.danger {
+            background: rgba(248, 81, 73, 0.08);
+            border-color: var(--accent-red);
+            color: #ffa198;
+        }
+
+        .alert-box.warning {
+            background: rgba(210, 153, 34, 0.08);
+            border-color: var(--accent-yellow);
+            color: #e3b341;
+        }
+
+        .alert-box.info {
+            background: rgba(88, 166, 255, 0.08);
+            border-color: var(--accent-blue);
+            color: #79c0ff;
+        }
+
+        .alert-box.success {
+            background: rgba(63, 185, 80, 0.08);
+            border-color: var(--accent-green);
+            color: #56d364;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        /* ===== Data Table ===== */
+        .data-table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-primary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-primary);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+            color: var(--text-primary);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(88, 166, 255, 0.03);
+        }
+
+        .data-table .mono {
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .data-table .positive { color: var(--accent-red); }
+        .data-table .negative { color: var(--accent-blue); }
+
+        /* ===== Chart Container ===== */
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .chart-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .chart-plot {
+            width: 100%;
+            min-height: 400px;
+        }
+
+        /* ===== Tags / Badges ===== */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag.bullish {
+            background: rgba(248, 81, 73, 0.12);
+            color: var(--accent-red);
+        }
+
+        .tag.bearish {
+            background: rgba(88, 166, 255, 0.12);
+            color: var(--accent-blue);
+        }
+
+        .tag.neutral {
+            background: rgba(110, 118, 129, 0.15);
+            color: var(--text-secondary);
+        }
+
+        .tag.caution {
+            background: rgba(210, 153, 34, 0.12);
+            color: var(--accent-yellow);
+        }
+
+        /* ===== Progress / Gauge ===== */
+        .gauge-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .gauge-fill.green { background: linear-gradient(90deg, #238636, #3fb950); }
+        .gauge-fill.red { background: linear-gradient(90deg, #da3633, #f85149); }
+        .gauge-fill.yellow { background: linear-gradient(90deg, #9e6a03, #d29922); }
+        .gauge-fill.blue { background: linear-gradient(90deg, #1f6feb, #58a6ff); }
+
+        /* ===== TACO Model ===== */
+        .taco-model {
+            background: var(--gradient-purple);
+            border: 1px solid rgba(188, 140, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin: 24px 0;
+        }
+
+        .taco-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .taco-logo {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .taco-score {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .taco-score-value {
+            font-size: 48px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--accent-yellow);
+        }
+
+        .taco-score-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .taco-factors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .taco-factor {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+
+        .taco-factor-name {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .taco-factor-value {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        /* ===== Strategy Cards ===== */
+        .strategy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            position: relative;
+        }
+
+        .strategy-card .priority-tag {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .priority-tag.high {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
+        }
+
+        .priority-tag.medium {
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--accent-yellow);
+        }
+
+        .priority-tag.low {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+
+        .strategy-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding-right: 80px;
+        }
+
+        .strategy-body {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .strategy-body ul {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .strategy-body ul li {
+            padding: 6px 0 6px 16px;
+            position: relative;
+        }
+
+        .strategy-body ul li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        /* ===== Outlook Section ===== */
+        .outlook-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .outlook-grid { grid-template-columns: 1fr; }
+        }
+
+        .outlook-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        .outlook-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .outlook-detail {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== Footer ===== */
+        .report-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-primary);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .footer-disclaimer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-primary);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===== Utility ===== */
+        .mt-8 { margin-top: 8px; }
+        .mt-12 { margin-top: 12px; }
+        .mt-16 { margin-top: 16px; }
+        .mt-24 { margin-top: 24px; }
+        .mt-32 { margin-top: 32px; }
+        .mb-8 { margin-bottom: 8px; }
+        .mb-16 { margin-bottom: 16px; }
+        .mb-24 { margin-bottom: 24px; }
+        .mb-32 { margin-bottom: 32px; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-muted { color: var(--text-muted); }
+        .text-secondary { color: var(--text-secondary); }
+        .font-mono { font-family: var(--font-mono); }
+
+        .divider {
+            height: 1px;
+            background: var(--border-primary);
+            margin: 32px 0;
+        }
+
+        .highlight-box {
+            background: rgba(88, 166, 255, 0.06);
+            border: 1px solid rgba(88, 166, 255, 0.15);
+            border-radius: var(--radius-md);
+            padding: 20px;
+        }
+
+        /* ===== Sector heatmap ===== */
+        .sector-heatmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .sector-cell {
+            padding: 16px 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            transition: transform 0.15s ease;
+        }
+
+        .sector-cell:hover {
+            transform: scale(1.04);
+        }
+
+        .sector-cell .name {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .sector-cell .value {
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .sector-cell.hot {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
+        }
+
+        .sector-cell.warm {
+            background: rgba(219, 109, 40, 0.15);
+            color: var(--accent-orange);
+        }
+
+        .sector-cell.cool {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .sector-cell.cold {
+            background: rgba(57, 210, 192, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        .sector-cell.neutral-cell {
+            background: rgba(110, 118, 129, 0.15);
+            color: var(--text-secondary);
+        }
+
+        /* ===== Risk meter ===== */
+        .risk-meter {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 8px 0;
+        }
+
+        .risk-bar {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg-tertiary);
+        }
+
+        .risk-bar.filled-green { background: var(--accent-green); }
+        .risk-bar.filled-yellow { background: var(--accent-yellow); }
+        .risk-bar.filled-orange { background: var(--accent-orange); }
+        .risk-bar.filled-red { background: var(--accent-red); }
+
+        /* ===== Timeline ===== */
+        .timeline {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            border: 2px solid var(--bg-primary);
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            margin-bottom: 4px;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* ===== Print Styles ===== */
+        @media print {
+            body { background: #fff; color: #000; }
+            .toc-bar, .ticker-strip { display: none; }
+            .card, .kpi-card, .chart-container { border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="report-header">
+        <div class="container">
+            <div class="header-badge">
+                <span class="pulse"></span>
+                Chimera-AI Multi-Agent System v3.2
+            </div>
+            <h1 class="report-title">주간 증시 분석 리포트</h1>
+            <p class="report-subtitle">4월 5주차 (04.28 ~ 04.30) | 글로벌 매크로 & 국내 시장 정밀 분석</p>
+            <div class="header-meta">
+                <div class="header-meta-item">
+                    <span class="label">발행일:</span> 2026-04-30 (목)
+                </div>
+                <div class="header-meta-item">
+                    <span class="label">분석 에이전트:</span> Chimera-AI Multi-Agent System
+                </div>
+                <div class="header-meta-item">
+                    <span class="label">데이터 기준:</span> 2026-04-30 장마감 15:30 KST
+                </div>
+                <div class="header-meta-item">
+                    <span class="label">분석 모델:</span> TACO v2.1 + Sector Rotation AI
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== TICKER STRIP ==================== -->
+    <div class="ticker-strip">
+        <div class="ticker-track" id="tickerTrack">
+            <div class="ticker-item">
+                <span class="ticker-name">KOSPI</span>
+                <span class="ticker-value">6,598.80</span>
+                <span class="ticker-change down">-1.38%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">KOSDAQ</span>
+                <span class="ticker-value">1,192.35</span>
+                <span class="ticker-change down">-2.29%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">S&P 500</span>
+                <span class="ticker-value">5,569.06</span>
+                <span class="ticker-change down">-0.04%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">NASDAQ</span>
+                <span class="ticker-value">17,461.32</span>
+                <span class="ticker-change up">+0.04%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">DOW</span>
+                <span class="ticker-value">40,669.22</span>
+                <span class="ticker-change down">-0.57%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">USD/KRW</span>
+                <span class="ticker-value">1,372.50</span>
+                <span class="ticker-change up">+0.22%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">Brent</span>
+                <span class="ticker-value">$109.87</span>
+                <span class="ticker-change up">+2.14%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">Gold</span>
+                <span class="ticker-value">$2,348.10</span>
+                <span class="ticker-change up">+0.38%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">Bitcoin</span>
+                <span class="ticker-value">$94,280</span>
+                <span class="ticker-change down">-1.52%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">VIX</span>
+                <span class="ticker-value">18.42</span>
+                <span class="ticker-change up">+5.7%</span>
+            </div>
+            <!-- duplicate for seamless loop -->
+            <div class="ticker-item">
+                <span class="ticker-name">KOSPI</span>
+                <span class="ticker-value">6,598.80</span>
+                <span class="ticker-change down">-1.38%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">KOSDAQ</span>
+                <span class="ticker-value">1,192.35</span>
+                <span class="ticker-change down">-2.29%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">S&P 500</span>
+                <span class="ticker-value">5,569.06</span>
+                <span class="ticker-change down">-0.04%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">NASDAQ</span>
+                <span class="ticker-value">17,461.32</span>
+                <span class="ticker-change up">+0.04%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">DOW</span>
+                <span class="ticker-value">40,669.22</span>
+                <span class="ticker-change down">-0.57%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">USD/KRW</span>
+                <span class="ticker-value">1,372.50</span>
+                <span class="ticker-change up">+0.22%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">Brent</span>
+                <span class="ticker-value">$109.87</span>
+                <span class="ticker-change up">+2.14%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">Gold</span>
+                <span class="ticker-value">$2,348.10</span>
+                <span class="ticker-change up">+0.38%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">Bitcoin</span>
+                <span class="ticker-value">$94,280</span>
+                <span class="ticker-change down">-1.52%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-name">VIX</span>
+                <span class="ticker-value">18.42</span>
+                <span class="ticker-change up">+5.7%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOC BAR ==================== -->
+    <nav class="toc-bar">
+        <div class="container">
+            <a class="toc-link" href="#section-summary">01 핵심 요약</a>
+            <a class="toc-link" href="#section-global">02 글로벌 증시</a>
+            <a class="toc-link" href="#section-korea">03 한국 증시</a>
+            <a class="toc-link" href="#section-sector">04 섹터 분석</a>
+            <a class="toc-link" href="#section-taco">05 TACO 모델</a>
+            <a class="toc-link" href="#section-risk">06 리스크 요인</a>
+            <a class="toc-link" href="#section-strategy">07 투자 전략</a>
+            <a class="toc-link" href="#section-outlook">08 다음 주 전망</a>
+        </div>
+    </nav>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+
+        <!-- ===== SECTION 1: Executive Summary ===== -->
+        <section class="section" id="section-summary">
+            <div class="container">
+                <div class="section-number">01</div>
+                <h2 class="section-title">핵심 요약</h2>
+                <p class="section-desc">
+                    Chimera-AI 멀티 에이전트 시스템이 분석한 이번 주 핵심 시장 인사이트입니다.
+                </p>
+
+                <div class="summary-banner animate-in">
+                    <h3>Weekly Intelligence Brief</h3>
+                    <ul class="summary-list">
+                        <li><strong>KOSPI 6,598.8pt</strong> - 월간 +31% 역사적 상승 기록 (1998년 1월 이후 최대). 공매도 대차잔고 175조원 돌파, 신용융자 35조원 사상 최고치 경신으로 과열 시그널 점등</li>
+                        <li><strong>FOMC 매파적 동결</strong> - 반대표 4명 (1992년 이후 최다). 금리 인하 기대 후퇴하며 글로벌 채권 금리 상승 압력</li>
+                        <li><strong>유가 급등</strong> - 브렌트유 배럴당 $110 육박. 미-이란 핵협상 불발로 지정학적 프리미엄 재확대</li>
+                        <li><strong>대형주 vs 중소형주 양극화</strong> - 삼성전자, SK하이닉스 등 AI 수혜주 집중 매수 vs KOSDAQ 중소형주 소외 심화</li>
+                        <li><strong>빅테크 실적</strong> - 알파벳, 아마존, MS 시간외 강세. 반면 OpenAI 내부 성장 목표 미달로 AI 섹터 밸류에이션 우려 부상</li>
+                        <li><strong>Samsung SDI 흑자전환</strong> - ESS 배터리 부문 수익성 개선. 2차전지 섹터 단기 모멘텀 유입</li>
+                    </ul>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="grid-4 animate-in delay-1">
+                    <div class="kpi-card negative">
+                        <div class="kpi-label">KOSPI</div>
+                        <div class="kpi-value red">6,598.8</div>
+                        <div class="kpi-change down">-1.38% (일간)</div>
+                        <div class="kpi-sub">월간 +31.0% | 7,000 돌파 임박</div>
+                    </div>
+                    <div class="kpi-card negative">
+                        <div class="kpi-label">KOSDAQ</div>
+                        <div class="kpi-value red">1,192.35</div>
+                        <div class="kpi-change down">-2.29% (일간)</div>
+                        <div class="kpi-sub">중소형주 약세 지속</div>
+                    </div>
+                    <div class="kpi-card warning">
+                        <div class="kpi-label">공매도 대차잔고</div>
+                        <div class="kpi-value yellow">175조</div>
+                        <div class="kpi-change up">역대 최고 수준</div>
+                        <div class="kpi-sub">숏커버링 잠재력 vs 하방 압력</div>
+                    </div>
+                    <div class="kpi-card warning">
+                        <div class="kpi-label">신용융자</div>
+                        <div class="kpi-value yellow">35조</div>
+                        <div class="kpi-change up">사상 최고치</div>
+                        <div class="kpi-sub">레버리지 리스크 경고</div>
+                    </div>
+                </div>
+
+                <div class="alert-box danger mt-24 animate-in delay-2">
+                    <div class="alert-title">Chimera-AI 경고 시그널</div>
+                    KOSPI 월간 +31% 상승은 1998년 1월(+49.5%) 이후 최대 월간 상승률입니다. 공매도 대차잔고 175조원과 신용융자 35조원이 동시에 사상 최고치를 기록하며, 시장 과열 지표(Chimera Overheat Index)가 <strong>87/100</strong>으로 위험 구간에 진입했습니다. 단기 조정 가능성에 유의하십시오.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 2: Global Markets ===== -->
+        <section class="section" id="section-global">
+            <div class="container">
+                <div class="section-number">02</div>
+                <h2 class="section-title">글로벌 증시 동향</h2>
+                <p class="section-desc">
+                    미국, 유럽, 아시아 주요 증시의 주간 동향과 FOMC 영향을 분석합니다.
+                </p>
+
+                <!-- US Markets -->
+                <div class="card mb-24 animate-in">
+                    <div class="card-header">
+                        <div class="card-icon blue">&#127482;&#127480;</div>
+                        <div>
+                            <div class="card-title">미국 증시</div>
+                            <div class="card-subtitle">FOMC 매파적 동결 충격 vs 빅테크 실적 방어</div>
+                        </div>
+                    </div>
+
+                    <div class="grid-3 mb-16">
+                        <div class="kpi-card negative">
+                            <div class="kpi-label">다우존스</div>
+                            <div class="kpi-value" style="font-size:24px; color: var(--accent-blue);">40,669.22</div>
+                            <div class="kpi-change down">-0.57%</div>
+                        </div>
+                        <div class="kpi-card negative">
+                            <div class="kpi-label">S&P 500</div>
+                            <div class="kpi-value" style="font-size:24px; color: var(--accent-blue);">5,569.06</div>
+                            <div class="kpi-change down">-0.04%</div>
+                        </div>
+                        <div class="kpi-card neutral">
+                            <div class="kpi-label">NASDAQ</div>
+                            <div class="kpi-value" style="font-size:24px; color: var(--accent-green);">17,461.32</div>
+                            <div class="kpi-change" style="color: var(--accent-green);">+0.04%</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-box warning">
+                        <div class="alert-title">FOMC 매파적 동결 - 반대표 4명 (1992년 이후 최다)</div>
+                        연준은 기준금리를 현 수준에서 동결하였으나, 4명의 위원이 인하를 주장하며 반대표를 행사했습니다.
+                        이는 1992년 이후 단일 회의에서 가장 많은 반대표로, 연준 내부의 극심한 의견 분열을 드러냅니다.
+                        파월 의장은 "인플레이션 목표 달성 확신이 필요하다"며 매파적 스탠스를 유지했습니다.
+                    </div>
+
+                    <div class="highlight-box mt-16">
+                        <strong>빅테크 시간외 실적 반응</strong>
+                        <div class="grid-3 mt-12">
+                            <div style="text-align:center;">
+                                <div style="font-size:13px; color:var(--text-muted);">Alphabet (GOOGL)</div>
+                                <div style="font-size:20px; font-weight:700; color:var(--accent-green); font-family:var(--font-mono);">+4.2%</div>
+                                <div style="font-size:12px; color:var(--text-muted);">클라우드 매출 서프라이즈</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-size:13px; color:var(--text-muted);">Amazon (AMZN)</div>
+                                <div style="font-size:20px; font-weight:700; color:var(--accent-green); font-family:var(--font-mono);">+3.8%</div>
+                                <div style="font-size:12px; color:var(--text-muted);">AWS 성장 가속화</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-size:13px; color:var(--text-muted);">Microsoft (MSFT)</div>
+                                <div style="font-size:20px; font-weight:700; color:var(--accent-green); font-family:var(--font-mono);">+2.9%</div>
+                                <div style="font-size:12px; color:var(--text-muted);">Azure AI 수요 급증</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert-box info mt-16">
+                        <div class="alert-title">OpenAI 내부 성장 목표 미달</div>
+                        OpenAI가 내부적으로 설정한 2026년 매출 목표에 미달하고 있다는 보도가 나오며
+                        AI 섹터 전반의 밸류에이션 정당성에 대한 의문이 제기되고 있습니다.
+                        ChatGPT 유료 가입자 성장 둔화와 기업용 API 수익화 지연이 주요 원인으로 지목됩니다.
+                    </div>
+                </div>
+
+                <!-- Europe & Asia -->
+                <div class="grid-2 animate-in delay-1">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon purple">&#127466;&#127482;</div>
+                            <div>
+                                <div class="card-title">유럽 증시</div>
+                                <div class="card-subtitle">유가 급등 + FOMC 여파</div>
+                            </div>
+                        </div>
+                        <div class="data-table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>지수</th>
+                                        <th>종가</th>
+                                        <th>등락</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>STOXX 600</td>
+                                        <td class="mono">538.42</td>
+                                        <td class="mono negative">-0.82%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>DAX</td>
+                                        <td class="mono">22,156.80</td>
+                                        <td class="mono negative">-0.64%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FTSE 100</td>
+                                        <td class="mono">8,472.30</td>
+                                        <td class="mono negative">-0.91%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CAC 40</td>
+                                        <td class="mono">8,218.45</td>
+                                        <td class="mono negative">-0.73%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-secondary mt-12" style="font-size:14px;">
+                            미-이란 핵협상 불발로 유가 급등, 에너지 수입 비용 증가 우려 확산.
+                            ECB 금리 인하 기대감 약화.
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon orange">&#127471;&#127477;</div>
+                            <div>
+                                <div class="card-title">아시아 증시</div>
+                                <div class="card-subtitle">한국 과열 vs 일본 안정</div>
+                            </div>
+                        </div>
+                        <div class="data-table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>지수</th>
+                                        <th>종가</th>
+                                        <th>등락</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Nikkei 225</td>
+                                        <td class="mono">36,045.38</td>
+                                        <td class="mono negative">-0.44%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shanghai</td>
+                                        <td class="mono">3,288.41</td>
+                                        <td class="mono positive">+0.18%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hang Seng</td>
+                                        <td class="mono">22,119.60</td>
+                                        <td class="mono negative">-0.55%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TAIEX</td>
+                                        <td class="mono">20,892.14</td>
+                                        <td class="mono negative">-1.02%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-secondary mt-12" style="font-size:14px;">
+                            한국 시장의 급등이 아시아 내에서도 이례적. 대만은 TSMC 관련
+                            미중 반도체 규제 우려로 하락.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Commodities -->
+                <div class="card mt-24 animate-in delay-2">
+                    <div class="card-header">
+                        <div class="card-icon yellow">&#9981;</div>
+                        <div>
+                            <div class="card-title">원자재 및 통화</div>
+                            <div class="card-subtitle">유가 급등, 안전자산 수요 지속</div>
+                        </div>
+                    </div>
+                    <div class="grid-4">
+                        <div style="text-align:center; padding:12px;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">브렌트유</div>
+                            <div style="font-size:22px; font-weight:700; color:var(--accent-red); font-family:var(--font-mono);">$109.87</div>
+                            <div style="font-size:12px; color:var(--accent-red);">+2.14% | 3주 최고</div>
+                        </div>
+                        <div style="text-align:center; padding:12px;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">WTI</div>
+                            <div style="font-size:22px; font-weight:700; color:var(--accent-red); font-family:var(--font-mono);">$106.42</div>
+                            <div style="font-size:12px; color:var(--accent-red);">+1.88%</div>
+                        </div>
+                        <div style="text-align:center; padding:12px;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">금(Gold)</div>
+                            <div style="font-size:22px; font-weight:700; color:var(--accent-yellow); font-family:var(--font-mono);">$2,348.10</div>
+                            <div style="font-size:12px; color:var(--accent-yellow);">+0.38%</div>
+                        </div>
+                        <div style="text-align:center; padding:12px;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">USD/KRW</div>
+                            <div style="font-size:22px; font-weight:700; color:var(--accent-blue); font-family:var(--font-mono);">1,372.50</div>
+                            <div style="font-size:12px; color:var(--accent-blue);">+0.22%</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-box danger mt-16">
+                        <div class="alert-title">미-이란 핵협상 불발</div>
+                        미-이란 핵협상이 결렬되면서 중동 지정학적 리스크가 재부상했습니다.
+                        이란산 원유 공급 차질 우려로 브렌트유가 배럴당 $110에 육박하며 3주 최고치를 기록,
+                        인플레이션 재가속 리스크를 높이고 있습니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 3: Korea Market ===== -->
+        <section class="section" id="section-korea">
+            <div class="container">
+                <div class="section-number">03</div>
+                <h2 class="section-title">한국 증시 분석</h2>
+                <p class="section-desc">
+                    KOSPI, KOSDAQ 시장의 상세 분석과 수급 동향을 점검합니다.
+                </p>
+
+                <!-- KOSPI Weekly Chart -->
+                <div class="chart-container animate-in">
+                    <div class="chart-title">KOSPI 주간 추이</div>
+                    <div class="chart-subtitle">2026년 4월 | 월간 +31% 역사적 랠리 기록</div>
+                    <div id="chartKospiWeekly" class="chart-plot"></div>
+                </div>
+
+                <!-- Key metrics -->
+                <div class="grid-3 mt-24 animate-in delay-1">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon red">&#128200;</div>
+                            <div>
+                                <div class="card-title">시장 과열 지표</div>
+                                <div class="card-subtitle">Chimera Overheat Index</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center; padding:16px 0;">
+                            <div style="font-size:56px; font-weight:800; color:var(--accent-red); font-family:var(--font-mono);">87</div>
+                            <div style="font-size:13px; color:var(--text-muted);">/ 100 (위험 구간: 80+)</div>
+                        </div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill red" style="width:87%;"></div>
+                        </div>
+                        <p style="font-size:13px; color:var(--accent-red); margin-top:8px; text-align:center;">
+                            극단적 과열 구간 진입
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon yellow">&#128176;</div>
+                            <div>
+                                <div class="card-title">수급 분석</div>
+                                <div class="card-subtitle">4/30 기준 투자자별 매매</div>
+                            </div>
+                        </div>
+                        <div class="data-table-wrapper mt-12">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>투자자</th><th>순매수</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>외국인</td>
+                                        <td class="mono negative">-4,280억</td>
+                                    </tr>
+                                    <tr>
+                                        <td>기관</td>
+                                        <td class="mono negative">-2,150억</td>
+                                    </tr>
+                                    <tr>
+                                        <td>개인</td>
+                                        <td class="mono positive">+6,430억</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert-box warning mt-12" style="padding:12px 16px; font-size:12px;">
+                            개인 투자자 집중 매수 + 외국인/기관 매도 = 전형적 과열 패턴
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon cyan">&#128202;</div>
+                            <div>
+                                <div class="card-title">대형주 vs 중소형주</div>
+                                <div class="card-subtitle">양극화 심화 추세</div>
+                            </div>
+                        </div>
+                        <div style="padding:16px 0;">
+                            <div style="margin-bottom:16px;">
+                                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                                    <span>대형주 (Large Cap)</span>
+                                    <span class="font-mono" style="color:var(--accent-green);">+28.4%</span>
+                                </div>
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill green" style="width:85%;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                                    <span>중형주 (Mid Cap)</span>
+                                    <span class="font-mono" style="color:var(--accent-yellow);">+12.1%</span>
+                                </div>
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill yellow" style="width:45%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                                    <span>소형주 (Small Cap)</span>
+                                    <span class="font-mono" style="color:var(--accent-blue);">+3.2%</span>
+                                </div>
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill blue" style="width:15%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">
+                            대형주 편중 월간 수익률 | KOSPI200 vs 코스닥150 괴리 확대
+                        </p>
+                    </div>
+                </div>
+
+                <!-- KOSPI 7000 milestone -->
+                <div class="highlight-box mt-24 animate-in delay-2">
+                    <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+                        <div style="font-size:36px;">&#127942;</div>
+                        <div>
+                            <div style="font-size:20px; font-weight:700;">KOSPI 7,000 돌파 임박</div>
+                            <div style="font-size:14px; color:var(--text-secondary);">현재 6,598.8pt | 목표까지 401.2pt (6.1%)</div>
+                        </div>
+                    </div>
+                    <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                        KOSPI가 월간 31% 상승하며 7,000pt 돌파를 눈앞에 두고 있습니다.
+                        이는 반도체/AI 슈퍼사이클 기대감, 외국인 패시브 자금 유입, 공매도 제한 등 복합적 요인에 의한 것입니다.
+                        다만, 현 수준에서의 추가 상승은 밸류에이션 부담과 차익실현 매물 출회 가능성으로 변동성이 확대될 수 있습니다.
+                    </p>
+                    <div class="gauge-bar mt-12" style="height:12px;">
+                        <div class="gauge-fill green" style="width:94%; background: linear-gradient(90deg, #238636, #3fb950, #d29922);"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-top:4px;">
+                        <span>5,000</span>
+                        <span>6,000</span>
+                        <span style="color:var(--accent-yellow); font-weight:700;">6,598.8 (현재)</span>
+                        <span style="color:var(--accent-red); font-weight:700;">7,000 (목표)</span>
+                    </div>
+                </div>
+
+                <!-- Timeline: Key Events -->
+                <div class="card mt-24 animate-in delay-3">
+                    <div class="card-header">
+                        <div class="card-icon green">&#128197;</div>
+                        <div>
+                            <div class="card-title">주간 주요 이벤트 타임라인</div>
+                            <div class="card-subtitle">4월 5주차 핵심 일정</div>
+                        </div>
+                    </div>
+                    <div class="timeline mt-16">
+                        <div class="timeline-item">
+                            <div class="timeline-date">04.28 (월)</div>
+                            <div class="timeline-content">
+                                KOSPI 6,690pt 돌파 (장중 신고가). 외국인 순매수 5,200억원.
+                                삼성전자 +3.2%, SK하이닉스 +4.8%. 반도체 슈퍼사이클 기대감 최고조.
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">04.29 (화)</div>
+                            <div class="timeline-content">
+                                FOMC 매파적 동결 결과 발표. 반대표 4명 (1992년 이후 최다).
+                                금리 인하 기대 후퇴. 미국 국채 10년물 4.52% 상승.
+                                미-이란 핵협상 불발 보도. 브렌트유 $108 돌파.
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">04.30 (수)</div>
+                            <div class="timeline-content">
+                                KOSPI -1.38% 조정. KOSDAQ -2.29% 급락. 공매도 대차잔고 175조원 돌파.
+                                신용융자 35조원 사상 최고. Samsung SDI 흑자전환 발표.
+                                알파벳/아마존/MS 시간외 강세. OpenAI 내부 성장 목표 미달 보도.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 4: Sector Analysis ===== -->
+        <section class="section" id="section-sector">
+            <div class="container">
+                <div class="section-number">04</div>
+                <h2 class="section-title">섹터 분석</h2>
+                <p class="section-desc">
+                    주요 업종별 성과와 모멘텀을 분석합니다. Chimera Sector Rotation AI 모델 기반.
+                </p>
+
+                <!-- Sector Heatmap -->
+                <div class="card mb-24 animate-in">
+                    <div class="card-header">
+                        <div class="card-icon green">&#128293;</div>
+                        <div>
+                            <div class="card-title">섹터 히트맵</div>
+                            <div class="card-subtitle">월간 수익률 기준 | 4월 전체</div>
+                        </div>
+                    </div>
+                    <div class="sector-heatmap">
+                        <div class="sector-cell hot">
+                            <span class="name">반도체</span>
+                            <span class="value">+42.3%</span>
+                        </div>
+                        <div class="sector-cell hot">
+                            <span class="name">AI/SW</span>
+                            <span class="value">+38.7%</span>
+                        </div>
+                        <div class="sector-cell hot">
+                            <span class="name">방산</span>
+                            <span class="value">+35.2%</span>
+                        </div>
+                        <div class="sector-cell warm">
+                            <span class="name">2차전지</span>
+                            <span class="value">+22.8%</span>
+                        </div>
+                        <div class="sector-cell warm">
+                            <span class="name">자동차</span>
+                            <span class="value">+18.5%</span>
+                        </div>
+                        <div class="sector-cell warm">
+                            <span class="name">에너지</span>
+                            <span class="value">+16.4%</span>
+                        </div>
+                        <div class="sector-cell neutral-cell">
+                            <span class="name">금융</span>
+                            <span class="value">+8.2%</span>
+                        </div>
+                        <div class="sector-cell neutral-cell">
+                            <span class="name">헬스케어</span>
+                            <span class="value">+5.1%</span>
+                        </div>
+                        <div class="sector-cell cool">
+                            <span class="name">소비재</span>
+                            <span class="value">+2.3%</span>
+                        </div>
+                        <div class="sector-cell cool">
+                            <span class="name">유틸리티</span>
+                            <span class="value">+1.8%</span>
+                        </div>
+                        <div class="sector-cell cold">
+                            <span class="name">건설</span>
+                            <span class="value">-1.2%</span>
+                        </div>
+                        <div class="sector-cell cold">
+                            <span class="name">미디어</span>
+                            <span class="value">-3.4%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sector Performance Chart -->
+                <div class="chart-container animate-in delay-1">
+                    <div class="chart-title">섹터별 월간 수익률 비교</div>
+                    <div class="chart-subtitle">2026년 4월 | 반도체/AI 섹터 집중 강세</div>
+                    <div id="chartSectorPerf" class="chart-plot"></div>
+                </div>
+
+                <!-- Detailed Sector Analysis -->
+                <div class="grid-2 mt-24 animate-in delay-2">
+                    <!-- Semiconductor/AI -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon blue">&#128187;</div>
+                            <div>
+                                <div class="card-title">반도체 / AI</div>
+                                <div class="card-subtitle">월간 +42.3% | 슈퍼사이클 진행 중</div>
+                            </div>
+                            <span class="tag bullish" style="margin-left:auto;">강세</span>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                            HBM(고대역폭메모리) 수요 폭증과 AI 데이터센터 투자 확대로 반도체 섹터가 시장을 견인하고 있습니다.
+                            삼성전자와 SK하이닉스의 HBM3E 양산 본격화, NVIDIA의 차세대 GPU 수요 확인이 주요 모멘텀입니다.
+                        </p>
+                        <div class="data-table-wrapper mt-12">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>종목</th><th>주가</th><th>월간</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>삼성전자</td>
+                                        <td class="mono">98,200</td>
+                                        <td class="mono positive">+38.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SK하이닉스</td>
+                                        <td class="mono">284,500</td>
+                                        <td class="mono positive">+52.1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>한미반도체</td>
+                                        <td class="mono">156,300</td>
+                                        <td class="mono positive">+44.8%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert-box info mt-12" style="padding:10px 14px; font-size:12px;">
+                            OpenAI 성장 목표 미달 보도로 AI 밸류에이션 리스크 상존.
+                            단기적으로 실적 기반 종목 선별 필요.
+                        </div>
+                    </div>
+
+                    <!-- Defense -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon red">&#127981;</div>
+                            <div>
+                                <div class="card-title">방산</div>
+                                <div class="card-subtitle">월간 +35.2% | 글로벌 군비 확장</div>
+                            </div>
+                            <span class="tag bullish" style="margin-left:auto;">강세</span>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                            NATO 회원국 방위비 증액 합의, 한국 방산 수출 확대, K-방산 프리미엄이 지속되고 있습니다.
+                            한화에어로스페이스, LIG넥스원 등이 수주 잔고 사상 최고치를 경신했습니다.
+                        </p>
+                        <div class="data-table-wrapper mt-12">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>종목</th><th>주가</th><th>월간</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>한화에어로</td>
+                                        <td class="mono">485,000</td>
+                                        <td class="mono positive">+32.4%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LIG넥스원</td>
+                                        <td class="mono">218,500</td>
+                                        <td class="mono positive">+28.7%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>현대로템</td>
+                                        <td class="mono">72,800</td>
+                                        <td class="mono positive">+41.2%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Energy -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon orange">&#9981;</div>
+                            <div>
+                                <div class="card-title">에너지</div>
+                                <div class="card-subtitle">유가 $110 육박 | 지정학 프리미엄</div>
+                            </div>
+                            <span class="tag caution" style="margin-left:auto;">주의</span>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                            미-이란 핵협상 불발로 중동 긴장이 고조되며 유가가 급등했습니다.
+                            정유/화학 업종은 유가 상승 수혜와 마진 악화 우려가 교차하는 국면입니다.
+                        </p>
+                        <div class="data-table-wrapper mt-12">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>종목</th><th>주가</th><th>월간</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>S-Oil</td>
+                                        <td class="mono">88,400</td>
+                                        <td class="mono positive">+18.6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SK이노베이션</td>
+                                        <td class="mono">142,500</td>
+                                        <td class="mono positive">+14.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GS</td>
+                                        <td class="mono">62,300</td>
+                                        <td class="mono positive">+11.8%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Secondary Battery -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon green">&#128267;</div>
+                            <div>
+                                <div class="card-title">2차전지</div>
+                                <div class="card-subtitle">Samsung SDI 흑자전환 | ESS 모멘텀</div>
+                            </div>
+                            <span class="tag bullish" style="margin-left:auto;">긍정</span>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                            Samsung SDI가 ESS 배터리 부문 호실적으로 흑자전환에 성공하며 2차전지 섹터에 긍정적 신호를 보냈습니다.
+                            LG에너지솔루션도 유럽 수주 확대로 수익성 개선 기대감이 높아지고 있습니다.
+                        </p>
+                        <div class="data-table-wrapper mt-12">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>종목</th><th>주가</th><th>월간</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Samsung SDI</td>
+                                        <td class="mono">412,000</td>
+                                        <td class="mono positive">+26.4%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LG에너지솔루션</td>
+                                        <td class="mono">486,500</td>
+                                        <td class="mono positive">+22.1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>에코프로비엠</td>
+                                        <td class="mono">198,200</td>
+                                        <td class="mono positive">+19.8%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert-box success mt-12" style="padding:10px 14px; font-size:12px;">
+                            Samsung SDI 흑자전환은 ESS 배터리 시장 성장의 초기 시그널.
+                            중장기적으로 섹터 재평가 기대.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 5: TACO Model ===== -->
+        <section class="section" id="section-taco">
+            <div class="container">
+                <div class="section-number">05</div>
+                <h2 class="section-title">TACO 모델 분석</h2>
+                <p class="section-desc">
+                    Trump-Adjusted Capital Oscillator: 관세, 지정학, 정책 리스크를 정량화하는 독자 모델입니다.
+                </p>
+
+                <div class="taco-model animate-in">
+                    <div class="taco-header">
+                        <div class="taco-logo">&#127790;</div>
+                        <div>
+                            <div style="font-size:22px; font-weight:700;">TACO Model v2.1</div>
+                            <div style="font-size:14px; color:var(--text-secondary);">Trump-Adjusted Capital Oscillator</div>
+                        </div>
+                    </div>
+
+                    <div class="taco-score">
+                        <div class="taco-score-value">72.4</div>
+                        <div>
+                            <div class="taco-score-label">/ 100</div>
+                            <div style="font-size:14px; color:var(--accent-yellow); font-weight:600;">경계 구간 (Cautionary Zone)</div>
+                        </div>
+                    </div>
+
+                    <div class="gauge-bar" style="height:14px; border-radius:7px;">
+                        <div class="gauge-fill" style="width:72.4%; border-radius:7px; background: linear-gradient(90deg, #238636 0%, #d29922 50%, #f85149 100%);"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:4px;">
+                        <span>0 (안전)</span>
+                        <span>25 (양호)</span>
+                        <span>50 (주의)</span>
+                        <span style="color:var(--accent-yellow); font-weight:700;">72.4 (경계)</span>
+                        <span>100 (위험)</span>
+                    </div>
+
+                    <div class="taco-factors">
+                        <div class="taco-factor">
+                            <div class="taco-factor-name">관세 리스크</div>
+                            <div class="taco-factor-value" style="color:var(--accent-yellow);">68</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                                미중 기술패권 경쟁 지속. 반도체 장비 수출 규제 강화 우려.
+                            </div>
+                        </div>
+                        <div class="taco-factor">
+                            <div class="taco-factor-name">지정학 리스크</div>
+                            <div class="taco-factor-value" style="color:var(--accent-red);">82</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                                미-이란 핵협상 불발. 유가 급등. 중동 긴장 고조.
+                            </div>
+                        </div>
+                        <div class="taco-factor">
+                            <div class="taco-factor-name">통화정책 리스크</div>
+                            <div class="taco-factor-value" style="color:var(--accent-yellow);">74</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                                FOMC 매파적 동결. 반대표 4명. 금리 인하 지연.
+                            </div>
+                        </div>
+                        <div class="taco-factor">
+                            <div class="taco-factor-name">시장 과열도</div>
+                            <div class="taco-factor-value" style="color:var(--accent-red);">87</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                                KOSPI 월간 +31%. 공매도 175조. 신용 35조.
+                            </div>
+                        </div>
+                        <div class="taco-factor">
+                            <div class="taco-factor-name">유동성 지수</div>
+                            <div class="taco-factor-value" style="color:var(--accent-green);">42</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                                글로벌 유동성은 여전히 풍부. M2 증가 추세 유지.
+                            </div>
+                        </div>
+                        <div class="taco-factor">
+                            <div class="taco-factor-name">실적 모멘텀</div>
+                            <div class="taco-factor-value" style="color:var(--accent-green);">38</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                                빅테크 실적 서프라이즈. 반도체 업황 양호.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Radar Chart -->
+                <div class="chart-container mt-24 animate-in delay-1">
+                    <div class="chart-title">TACO 리스크 인디케이터 레이더</div>
+                    <div class="chart-subtitle">6대 리스크 요인 정량 분석 | 2026-04-30 기준</div>
+                    <div id="chartRiskRadar" class="chart-plot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 6: Risk Factors ===== -->
+        <section class="section" id="section-risk">
+            <div class="container">
+                <div class="section-number">06</div>
+                <h2 class="section-title">리스크 요인</h2>
+                <p class="section-desc">
+                    현재 시장에 내재된 주요 리스크 요인을 상세히 점검합니다.
+                </p>
+
+                <div class="grid-2 animate-in">
+                    <!-- Short Selling Risk -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon red">&#9888;</div>
+                            <div>
+                                <div class="card-title">공매도 대차잔고 175조원</div>
+                                <div class="card-subtitle">역대 최고 수준</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center; padding:16px 0;">
+                            <div style="font-size:40px; font-weight:800; color:var(--accent-red); font-family:var(--font-mono);">175조원</div>
+                            <div style="font-size:13px; color:var(--text-muted);">공매도 대차잔고 (역대 최고)</div>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                            공매도 대차잔고가 175조원을 돌파하며 역대 최고 수준을 기록했습니다.
+                            이는 양면적 시그널입니다:
+                        </p>
+                        <ul style="margin-top:12px; font-size:14px; color:var(--text-secondary);">
+                            <li style="padding:4px 0;">&#9650; 숏커버링 시 추가 상승 모멘텀 제공 가능</li>
+                            <li style="padding:4px 0;">&#9660; 급락 시 하방 가속화 리스크</li>
+                        </ul>
+                        <div class="risk-meter mt-12">
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-orange"></div>
+                        </div>
+                        <div style="font-size:11px; color:var(--accent-red); text-align:right;">리스크: 매우 높음</div>
+                    </div>
+
+                    <!-- Margin Trading Risk -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon yellow">&#128179;</div>
+                            <div>
+                                <div class="card-title">신용융자 35조원 사상 최고</div>
+                                <div class="card-subtitle">레버리지 과잉 경고</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center; padding:16px 0;">
+                            <div style="font-size:40px; font-weight:800; color:var(--accent-yellow); font-family:var(--font-mono);">35조원</div>
+                            <div style="font-size:13px; color:var(--text-muted);">신용융자잔고 (사상 최고)</div>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7;">
+                            신용융자잔고가 35조원으로 사상 최고치를 경신했습니다.
+                            개인 투자자의 레버리지 매수가 극대화된 상태로, 시장 하락 시
+                            반대매매 촉발에 의한 급락 위험이 높습니다.
+                        </p>
+                        <div class="alert-box danger mt-12" style="padding:10px 14px; font-size:12px;">
+                            신용융자 비율이 시가총액 대비 1.2%에 도달.
+                            과거 이 수준에서 평균 -8~12% 조정 발생.
+                        </div>
+                        <div class="risk-meter mt-12">
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-orange"></div>
+                            <div class="risk-bar filled-yellow"></div>
+                        </div>
+                        <div style="font-size:11px; color:var(--accent-red); text-align:right;">리스크: 높음</div>
+                    </div>
+
+                    <!-- Oil Price Risk -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon orange">&#128293;</div>
+                            <div>
+                                <div class="card-title">유가 급등 ($110 육박)</div>
+                                <div class="card-subtitle">인플레이션 재가속 위험</div>
+                            </div>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7; margin-top:12px;">
+                            브렌트유가 배럴당 $109.87로 3주 최고치를 기록했습니다.
+                            미-이란 핵협상 불발에 따른 공급 차질 우려가 주요 원인입니다.
+                        </p>
+                        <div class="highlight-box mt-12" style="background:rgba(219, 109, 40, 0.06); border-color:rgba(219, 109, 40, 0.15);">
+                            <strong>유가 시나리오 분석:</strong>
+                            <ul style="margin-top:8px; font-size:13px; color:var(--text-secondary);">
+                                <li style="padding:4px 0;">&#128994; $100~105: 완화 시나리오 (이란 협상 재개)</li>
+                                <li style="padding:4px 0;">&#128992; $105~115: 기본 시나리오 (현 수준 유지)</li>
+                                <li style="padding:4px 0;">&#128308; $115~130: 위기 시나리오 (중동 충돌 확대)</li>
+                            </ul>
+                        </div>
+                        <div class="risk-meter mt-12">
+                            <div class="risk-bar filled-red"></div>
+                            <div class="risk-bar filled-orange"></div>
+                            <div class="risk-bar filled-orange"></div>
+                            <div class="risk-bar filled-yellow"></div>
+                            <div class="risk-bar"></div>
+                        </div>
+                        <div style="font-size:11px; color:var(--accent-orange); text-align:right;">리스크: 중상</div>
+                    </div>
+
+                    <!-- FOMC Risk -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon purple">&#127970;</div>
+                            <div>
+                                <div class="card-title">FOMC 매파적 동결</div>
+                                <div class="card-subtitle">금리 인하 기대 후퇴</div>
+                            </div>
+                        </div>
+                        <p style="font-size:14px; color:var(--text-secondary); line-height:1.7; margin-top:12px;">
+                            FOMC는 금리를 동결했으나 4명의 위원이 반대표를 행사하며
+                            1992년 이후 가장 많은 반대가 나왔습니다.
+                            이는 연준 내부 의견 분열을 의미하며, 향후 금리 경로 불확실성을 높입니다.
+                        </p>
+                        <div class="data-table-wrapper mt-12">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>지표</th><th>값</th><th>시사점</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>기준금리</td>
+                                        <td class="mono">5.25~5.50%</td>
+                                        <td>동결 유지</td>
+                                    </tr>
+                                    <tr>
+                                        <td>반대표</td>
+                                        <td class="mono positive">4명</td>
+                                        <td>1992년 이후 최다</td>
+                                    </tr>
+                                    <tr>
+                                        <td>인하 확률</td>
+                                        <td class="mono">38%</td>
+                                        <td>6월 FOMC 기준</td>
+                                    </tr>
+                                    <tr>
+                                        <td>10Y UST</td>
+                                        <td class="mono">4.52%</td>
+                                        <td>채권 금리 상승</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="risk-meter mt-12">
+                            <div class="risk-bar filled-orange"></div>
+                            <div class="risk-bar filled-orange"></div>
+                            <div class="risk-bar filled-yellow"></div>
+                            <div class="risk-bar filled-yellow"></div>
+                            <div class="risk-bar"></div>
+                        </div>
+                        <div style="font-size:11px; color:var(--accent-orange); text-align:right;">리스크: 중간</div>
+                    </div>
+                </div>
+
+                <!-- Composite Risk Summary -->
+                <div class="alert-box danger mt-24 animate-in delay-1">
+                    <div class="alert-title">Chimera-AI 복합 리스크 경보</div>
+                    <p style="line-height:1.7;">
+                        현재 4대 리스크 요인(공매도, 신용융자, 유가, FOMC)이 동시에 경계 수준 이상으로 감지되었습니다.
+                        Chimera Composite Risk Score는 <strong>74.2/100</strong>으로, 지난주(62.8) 대비 11.4pt 상승했습니다.
+                        이는 2024년 8월 블랙먼데이 직전(78.5) 이후 가장 높은 수준입니다.
+                        <br><br>
+                        특히 공매도 대차잔고와 신용융자가 동시에 사상 최고치를 기록한 것은 시장 참여자들의 양방향 레버리지가
+                        극대화된 상태를 의미하며, 변동성 확대의 전조 시그널로 해석됩니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 7: Investment Strategy ===== -->
+        <section class="section" id="section-strategy">
+            <div class="container">
+                <div class="section-number">07</div>
+                <h2 class="section-title">투자 전략 제안</h2>
+                <p class="section-desc">
+                    Chimera-AI 멀티 에이전트 시스템이 제안하는 시장 국면별 전략입니다.
+                </p>
+
+                <div class="alert-box info mb-24 animate-in">
+                    <div class="alert-title">Chimera-AI 시장 판단: 전술적 방어 + 선별적 공격</div>
+                    월간 31% 급등 후 과열 시그널이 다수 점등된 가운데, 무분별한 추격 매수보다는
+                    실적 기반 종목 선별과 리스크 관리에 집중하는 전략을 권장합니다.
+                </div>
+
+                <div class="grid-2 animate-in delay-1">
+                    <!-- Strategy 1 -->
+                    <div class="strategy-card">
+                        <span class="priority-tag high">핵심 전략</span>
+                        <div style="font-size:28px; margin-bottom:12px;">&#127919;</div>
+                        <div class="strategy-title">반도체/AI: 실적 기반 선별 매수</div>
+                        <div class="strategy-body">
+                            AI 슈퍼사이클은 유효하나, 밸류에이션 부담이 높아진 상태입니다.
+                            OpenAI 성장 둔화 보도가 시사하듯 AI 수혜 기대감만으로는 한계가 있습니다.
+                            <ul>
+                                <li>실적 서프라이즈 확인된 종목 중심 편입</li>
+                                <li>HBM 매출 비중 높은 SK하이닉스 우선 선호</li>
+                                <li>삼성전자는 HBM3E 양산 이후 실적 확인 시점까지 대기</li>
+                                <li>반도체 장비주: 한미반도체, 원익IPS 관심</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy 2 -->
+                    <div class="strategy-card">
+                        <span class="priority-tag high">핵심 전략</span>
+                        <div style="font-size:28px; margin-bottom:12px;">&#128737;</div>
+                        <div class="strategy-title">리스크 관리: 포지션 축소 및 헷지</div>
+                        <div class="strategy-body">
+                            시장 과열 지표가 위험 구간에 진입한 만큼, 적극적인 리스크 관리가 필요합니다.
+                            <ul>
+                                <li>현금 비중 30% 이상 유지 권장</li>
+                                <li>신용/레버리지 매수 비중 축소</li>
+                                <li>KOSPI200 풋옵션 헷지 검토 (행사가 6,300~6,400)</li>
+                                <li>분할 매수/매도 전략으로 평균 단가 관리</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy 3 -->
+                    <div class="strategy-card">
+                        <span class="priority-tag medium">보조 전략</span>
+                        <div style="font-size:28px; margin-bottom:12px;">&#128267;</div>
+                        <div class="strategy-title">2차전지: Samsung SDI 흑자전환 모멘텀</div>
+                        <div class="strategy-body">
+                            ESS 배터리 시장 성장이 확인되면서 2차전지 섹터에 재평가 기회가 열리고 있습니다.
+                            <ul>
+                                <li>Samsung SDI: ESS 흑자전환 확인, 중장기 매수 관심</li>
+                                <li>LG에너지솔루션: 유럽 수주 모멘텀 지속</li>
+                                <li>소재주(양극재, 전해질)는 아직 실적 턴어라운드 미확인</li>
+                                <li>밸류에이션 부담 낮은 구간에서 분할 매수 접근</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy 4 -->
+                    <div class="strategy-card">
+                        <span class="priority-tag medium">보조 전략</span>
+                        <div style="font-size:28px; margin-bottom:12px;">&#127981;</div>
+                        <div class="strategy-title">방산: 구조적 성장 테마 유지</div>
+                        <div class="strategy-body">
+                            글로벌 군비 확장 사이클은 구조적 트렌드로, 단기 조정 시 매수 기회로 활용 가능합니다.
+                            <ul>
+                                <li>한화에어로스페이스: K-방산 대표 수혜주</li>
+                                <li>LIG넥스원: 유도무기 수출 확대 기대</li>
+                                <li>현대로템: 폴란드 K2 추가 수주 가능성</li>
+                                <li>단기 급등 후 조정 시 분할 매수 접근</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Positioning -->
+                <div class="card mt-24 animate-in delay-2">
+                    <div class="card-header">
+                        <div class="card-icon cyan">&#9878;</div>
+                        <div>
+                            <div class="card-title">Chimera-AI 추천 자산배분</div>
+                            <div class="card-subtitle">현 시장 국면 최적 배분 비율</div>
+                        </div>
+                    </div>
+                    <div class="grid-4 mt-16">
+                        <div style="text-align:center; padding:16px; background:rgba(63,185,80,0.06); border-radius:var(--radius-sm);">
+                            <div style="font-size:32px; font-weight:800; color:var(--accent-green); font-family:var(--font-mono);">30%</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">현금/단기채</div>
+                            <div style="font-size:11px; color:var(--text-muted);">방어적 유동성 확보</div>
+                        </div>
+                        <div style="text-align:center; padding:16px; background:rgba(88,166,255,0.06); border-radius:var(--radius-sm);">
+                            <div style="font-size:32px; font-weight:800; color:var(--accent-blue); font-family:var(--font-mono);">35%</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">대형 우량주</div>
+                            <div style="font-size:11px; color:var(--text-muted);">반도체/방산/2차전지</div>
+                        </div>
+                        <div style="text-align:center; padding:16px; background:rgba(188,140,255,0.06); border-radius:var(--radius-sm);">
+                            <div style="font-size:32px; font-weight:800; color:var(--accent-purple); font-family:var(--font-mono);">20%</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">해외 자산</div>
+                            <div style="font-size:11px; color:var(--text-muted);">미국 빅테크/인도 ETF</div>
+                        </div>
+                        <div style="text-align:center; padding:16px; background:rgba(210,153,34,0.06); border-radius:var(--radius-sm);">
+                            <div style="font-size:32px; font-weight:800; color:var(--accent-yellow); font-family:var(--font-mono);">15%</div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">안전자산</div>
+                            <div style="font-size:11px; color:var(--text-muted);">금/미국채 ETF</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 8: Next Week Outlook ===== -->
+        <section class="section" id="section-outlook">
+            <div class="container">
+                <div class="section-number">08</div>
+                <h2 class="section-title">다음 주 전망</h2>
+                <p class="section-desc">
+                    5월 1주차(05.04~05.08) 시장 전망과 주요 이벤트를 정리합니다.
+                </p>
+
+                <div class="summary-banner animate-in" style="background: var(--gradient-green);">
+                    <h3 style="color:var(--accent-green);">Chimera-AI 5월 1주차 전망</h3>
+                    <ul class="summary-list">
+                        <li><strong>KOSPI 예상 레인지:</strong> 6,350 ~ 6,850 (변동성 확대 구간)</li>
+                        <li><strong>핵심 변수:</strong> 5월 FOMC 의사록 공개, 미국 비농업고용지표, 빅테크 실적 발표 연속</li>
+                        <li><strong>시장 심리:</strong> 과열 후 숨고르기 국면 진입 예상. 차익실현 매물 출회 가능성</li>
+                        <li><strong>주도 섹터:</strong> 반도체(실적 확인), 방산(수주 모멘텀), 2차전지(Samsung SDI 후속)</li>
+                    </ul>
+                </div>
+
+                <div class="outlook-grid animate-in delay-1">
+                    <div class="outlook-item">
+                        <div class="outlook-label">&#128197; 주요 경제 일정</div>
+                        <div class="outlook-detail">
+                            <ul style="list-style:none; margin:0; padding:0;">
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.02 (금)</strong> - 미국 비농업고용지표 (NFP)
+                                </li>
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.05 (월)</strong> - 어린이날 (한국 휴장)
+                                </li>
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.06 (화)</strong> - ISM 서비스업 PMI
+                                </li>
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.07 (수)</strong> - FOMC 4월 의사록 공개
+                                </li>
+                                <li style="padding:6px 0;">
+                                    <strong>05.08 (목)</strong> - ECB 금리 결정
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="outlook-item">
+                        <div class="outlook-label">&#128200; 실적 발표 주요 일정</div>
+                        <div class="outlook-detail">
+                            <ul style="list-style:none; margin:0; padding:0;">
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.02</strong> - Apple (AAPL) 실적 발표
+                                </li>
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.05</strong> - NVIDIA (NVDA) 가이던스 업데이트
+                                </li>
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.06</strong> - 삼성전자 1Q 잠정실적 상세
+                                </li>
+                                <li style="padding:6px 0; border-bottom:1px solid rgba(48,54,61,0.5);">
+                                    <strong>05.07</strong> - LG에너지솔루션 실적
+                                </li>
+                                <li style="padding:6px 0;">
+                                    <strong>05.08</strong> - 현대자동차 실적
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="outlook-item">
+                        <div class="outlook-label">&#128161; 관심 포인트</div>
+                        <div class="outlook-detail">
+                            <ul style="list-style:none; margin:0; padding:0;">
+                                <li style="padding:8px 0;">
+                                    <span class="tag caution">주의</span>
+                                    <span style="margin-left:8px;">KOSPI 7,000 도달 시 차익실현 압력</span>
+                                </li>
+                                <li style="padding:8px 0;">
+                                    <span class="tag bearish">리스크</span>
+                                    <span style="margin-left:8px;">반대매매 트리거 가격대 모니터링</span>
+                                </li>
+                                <li style="padding:8px 0;">
+                                    <span class="tag bullish">모멘텀</span>
+                                    <span style="margin-left:8px;">NVIDIA 가이던스에 따른 반도체주 방향성</span>
+                                </li>
+                                <li style="padding:8px 0;">
+                                    <span class="tag neutral">관찰</span>
+                                    <span style="margin-left:8px;">미-이란 핵협상 재개 여부</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="outlook-item">
+                        <div class="outlook-label">&#127919; 시나리오 분석</div>
+                        <div class="outlook-detail">
+                            <div style="margin-bottom:12px;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                    <span style="color:var(--accent-green); font-weight:600;">&#128994; Bull Case (30%)</span>
+                                    <span class="font-mono" style="font-size:13px;">6,750~6,850</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">
+                                    빅테크 실적 호조 + NFP 골디락스 + KOSPI 7,000 돌파
+                                </div>
+                            </div>
+                            <div style="margin-bottom:12px;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                    <span style="color:var(--accent-yellow); font-weight:600;">&#128992; Base Case (50%)</span>
+                                    <span class="font-mono" style="font-size:13px;">6,450~6,650</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">
+                                    숨고르기 조정 + 차익실현 + 횡보
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                    <span style="color:var(--accent-red); font-weight:600;">&#128308; Bear Case (20%)</span>
+                                    <span class="font-mono" style="font-size:13px;">6,200~6,400</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--text-muted);">
+                                    유가 $120 돌파 + 반대매매 촉발 + 외국인 대량 매도
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="report-footer">
+        <div class="container">
+            <div class="footer-logo">Chimera-AI</div>
+            <p class="footer-text">
+                Chimera-AI Multi-Agent System v3.2<br>
+                매주 발행되는 AI 기반 증시 분석 리포트<br>
+                <a href="https://waterfirst.github.io/chimera-ai/" style="color:var(--accent-blue); text-decoration:none;">waterfirst.github.io/chimera-ai</a>
+            </p>
+            <div class="footer-disclaimer">
+                본 리포트는 Chimera-AI 멀티 에이전트 시스템에 의해 자동 생성된 분석 자료입니다.
+                투자 판단의 최종 책임은 투자자 본인에게 있으며, 본 자료는 투자 권유를 목적으로 하지 않습니다.
+                과거 성과가 미래 수익을 보장하지 않습니다.
+                <br><br>
+                &copy; 2026 Chimera-AI Project | Author: Nakcho Choi (Samsung Display)
+                <br>
+                Generated: 2026-04-30T18:00:00+09:00 KST
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== CHARTS (Plotly.js) ==================== -->
+    <script>
+        // ===== Plotly Config =====
+        const plotlyConfig = {
+            responsive: true,
+            displayModeBar: false,
+            staticPlot: false
+        };
+
+        const darkLayout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            font: {
+                family: '-apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans KR, sans-serif',
+                color: '#8b949e',
+                size: 12
+            },
+            margin: { t: 30, r: 30, b: 50, l: 60 },
+            xaxis: {
+                gridcolor: 'rgba(48, 54, 61, 0.5)',
+                linecolor: 'rgba(48, 54, 61, 0.8)',
+                zerolinecolor: 'rgba(48, 54, 61, 0.5)',
+                tickfont: { size: 11 }
+            },
+            yaxis: {
+                gridcolor: 'rgba(48, 54, 61, 0.5)',
+                linecolor: 'rgba(48, 54, 61, 0.8)',
+                zerolinecolor: 'rgba(48, 54, 61, 0.5)',
+                tickfont: { size: 11 }
+            },
+            hoverlabel: {
+                bgcolor: '#21262d',
+                bordercolor: '#30363d',
+                font: { color: '#e6edf3', size: 13 }
+            }
+        };
+
+        // ===== Chart 1: KOSPI Weekly Trend =====
+        (function() {
+            const dates = [
+                '04-01', '04-02', '04-03', '04-04', '04-07',
+                '04-08', '04-09', '04-10', '04-11', '04-14',
+                '04-15', '04-16', '04-17', '04-18', '04-21',
+                '04-22', '04-23', '04-24', '04-25', '04-28',
+                '04-29', '04-30'
+            ];
+
+            const kospi = [
+                5037, 5098, 5155, 5210, 5328,
+                5412, 5486, 5572, 5645, 5738,
+                5824, 5912, 5998, 6078, 6185,
+                6278, 6365, 6442, 6520, 6690,
+                6691, 6599
+            ];
+
+            const volume = [
+                12.4, 13.1, 14.8, 15.2, 16.8,
+                17.5, 18.2, 19.6, 20.1, 21.4,
+                22.8, 23.5, 24.1, 22.6, 25.3,
+                26.8, 27.2, 28.5, 29.1, 32.4,
+                30.8, 28.6
+            ];
+
+            const traceKospi = {
+                x: dates,
+                y: kospi,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'KOSPI',
+                line: {
+                    color: '#58a6ff',
+                    width: 3,
+                    shape: 'spline'
+                },
+                marker: {
+                    size: 6,
+                    color: '#58a6ff'
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(88, 166, 255, 0.08)',
+                hovertemplate: '<b>KOSPI</b><br>날짜: %{x}<br>지수: %{y:,.1f}pt<extra></extra>'
+            };
+
+            const traceVolume = {
+                x: dates,
+                y: volume,
+                type: 'bar',
+                name: '거래대금(조)',
+                yaxis: 'y2',
+                marker: {
+                    color: volume.map(v => v > 28 ? 'rgba(248, 81, 73, 0.4)' : 'rgba(88, 166, 255, 0.25)'),
+                    line: { width: 0 }
+                },
+                hovertemplate: '<b>거래대금</b><br>날짜: %{x}<br>금액: %{y:.1f}조원<extra></extra>'
+            };
+
+            // Annotation: 7000 target line
+            const annotations = [
+                {
+                    x: '04-30',
+                    y: 6599,
+                    xref: 'x',
+                    yref: 'y',
+                    text: '6,598.8<br>(-1.38%)',
+                    showarrow: true,
+                    arrowhead: 2,
+                    arrowsize: 1,
+                    arrowcolor: '#f85149',
+                    ax: 50,
+                    ay: -40,
+                    font: { size: 12, color: '#f85149', family: 'SF Mono, monospace' },
+                    bgcolor: 'rgba(248, 81, 73, 0.1)',
+                    bordercolor: 'rgba(248, 81, 73, 0.3)',
+                    borderwidth: 1,
+                    borderpad: 6
+                },
+                {
+                    x: '04-28',
+                    y: 6690,
+                    xref: 'x',
+                    yref: 'y',
+                    text: '6,690 (신고가)',
+                    showarrow: true,
+                    arrowhead: 2,
+                    arrowcolor: '#3fb950',
+                    ax: -50,
+                    ay: -30,
+                    font: { size: 11, color: '#3fb950' },
+                    bgcolor: 'rgba(63, 185, 80, 0.1)',
+                    bordercolor: 'rgba(63, 185, 80, 0.3)',
+                    borderwidth: 1,
+                    borderpad: 4
+                }
+            ];
+
+            // 7000 line
+            const shapes = [
+                {
+                    type: 'line',
+                    x0: dates[0],
+                    x1: dates[dates.length - 1],
+                    y0: 7000,
+                    y1: 7000,
+                    line: {
+                        color: 'rgba(210, 153, 34, 0.5)',
+                        width: 2,
+                        dash: 'dash'
+                    }
+                }
+            ];
+
+            const layout = {
+                ...darkLayout,
+                height: 450,
+                showlegend: true,
+                legend: {
+                    x: 0.01,
+                    y: 0.99,
+                    bgcolor: 'rgba(33, 38, 45, 0.8)',
+                    bordercolor: 'rgba(48, 54, 61, 0.5)',
+                    borderwidth: 1,
+                    font: { size: 11 }
+                },
+                xaxis: {
+                    ...darkLayout.xaxis,
+                    title: { text: '2026년 4월', font: { size: 12 } }
+                },
+                yaxis: {
+                    ...darkLayout.yaxis,
+                    title: { text: 'KOSPI (pt)', font: { size: 12 } },
+                    range: [4800, 7200]
+                },
+                yaxis2: {
+                    title: { text: '거래대금 (조원)', font: { size: 12, color: '#6e7681' } },
+                    overlaying: 'y',
+                    side: 'right',
+                    showgrid: false,
+                    range: [0, 65],
+                    tickfont: { size: 10, color: '#6e7681' }
+                },
+                annotations: [
+                    ...annotations,
+                    {
+                        x: dates[dates.length - 1],
+                        y: 7000,
+                        xref: 'x',
+                        yref: 'y',
+                        text: '7,000 목표',
+                        showarrow: false,
+                        font: { size: 11, color: '#d29922' },
+                        xanchor: 'right',
+                        yanchor: 'bottom'
+                    }
+                ],
+                shapes: shapes
+            };
+
+            Plotly.newPlot('chartKospiWeekly', [traceVolume, traceKospi], layout, plotlyConfig);
+        })();
+
+        // ===== Chart 2: Sector Performance Bar Chart =====
+        (function() {
+            const sectors = [
+                '반도체', 'AI/SW', '방산', '2차전지', '자동차',
+                '에너지', '금융', '헬스케어', '소비재', '유틸리티',
+                '건설', '미디어'
+            ];
+
+            const monthly = [42.3, 38.7, 35.2, 22.8, 18.5, 16.4, 8.2, 5.1, 2.3, 1.8, -1.2, -3.4];
+
+            const weekly = [8.2, 6.5, 7.8, 4.1, 3.2, 5.6, 1.8, 0.9, -0.5, 0.3, -2.1, -1.8];
+
+            const colors = monthly.map(v => {
+                if (v >= 30) return '#f85149';
+                if (v >= 15) return '#db6d28';
+                if (v >= 5) return '#d29922';
+                if (v >= 0) return '#8b949e';
+                return '#58a6ff';
+            });
+
+            const traceMonthly = {
+                x: sectors,
+                y: monthly,
+                type: 'bar',
+                name: '월간 수익률 (%)',
+                marker: {
+                    color: colors,
+                    line: { width: 0 },
+                    opacity: 0.85
+                },
+                text: monthly.map(v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%'),
+                textposition: 'outside',
+                textfont: { size: 11, color: '#e6edf3', family: 'SF Mono, monospace' },
+                hovertemplate: '<b>%{x}</b><br>월간: %{y:+.1f}%<extra></extra>'
+            };
+
+            const traceWeekly = {
+                x: sectors,
+                y: weekly,
+                type: 'bar',
+                name: '주간 수익률 (%)',
+                marker: {
+                    color: 'rgba(188, 140, 255, 0.5)',
+                    line: { width: 0 }
+                },
+                hovertemplate: '<b>%{x}</b><br>주간: %{y:+.1f}%<extra></extra>'
+            };
+
+            const layout = {
+                ...darkLayout,
+                height: 450,
+                barmode: 'group',
+                bargap: 0.25,
+                bargroupgap: 0.1,
+                showlegend: true,
+                legend: {
+                    x: 0.01,
+                    y: 0.99,
+                    bgcolor: 'rgba(33, 38, 45, 0.8)',
+                    bordercolor: 'rgba(48, 54, 61, 0.5)',
+                    borderwidth: 1,
+                    font: { size: 11 }
+                },
+                xaxis: {
+                    ...darkLayout.xaxis,
+                    tickangle: -30,
+                    tickfont: { size: 12 }
+                },
+                yaxis: {
+                    ...darkLayout.yaxis,
+                    title: { text: '수익률 (%)', font: { size: 12 } },
+                    range: [-8, 50],
+                    zeroline: true,
+                    zerolinecolor: 'rgba(139, 148, 158, 0.3)',
+                    zerolinewidth: 1
+                },
+                shapes: [
+                    {
+                        type: 'line',
+                        x0: -0.5,
+                        x1: sectors.length - 0.5,
+                        y0: 0,
+                        y1: 0,
+                        line: { color: 'rgba(139, 148, 158, 0.3)', width: 1 }
+                    }
+                ]
+            };
+
+            Plotly.newPlot('chartSectorPerf', [traceMonthly, traceWeekly], layout, plotlyConfig);
+        })();
+
+        // ===== Chart 3: Risk Indicator Radar Chart =====
+        (function() {
+            const categories = [
+                '관세 리스크',
+                '지정학 리스크',
+                '통화정책 리스크',
+                '시장 과열도',
+                '유동성 지수',
+                '실적 모멘텀'
+            ];
+
+            const currentValues = [68, 82, 74, 87, 42, 38];
+            const prevWeekValues = [62, 68, 65, 72, 45, 35];
+
+            // Close the polygon
+            const catsClosed = [...categories, categories[0]];
+            const currClosed = [...currentValues, currentValues[0]];
+            const prevClosed = [...prevWeekValues, prevWeekValues[0]];
+
+            const traceCurrent = {
+                type: 'scatterpolar',
+                r: currClosed,
+                theta: catsClosed,
+                fill: 'toself',
+                fillcolor: 'rgba(248, 81, 73, 0.15)',
+                line: {
+                    color: '#f85149',
+                    width: 2.5
+                },
+                marker: {
+                    size: 8,
+                    color: '#f85149'
+                },
+                name: '이번 주 (04.30)',
+                hovertemplate: '<b>%{theta}</b><br>점수: %{r}/100<extra></extra>'
+            };
+
+            const tracePrev = {
+                type: 'scatterpolar',
+                r: prevClosed,
+                theta: catsClosed,
+                fill: 'toself',
+                fillcolor: 'rgba(88, 166, 255, 0.08)',
+                line: {
+                    color: '#58a6ff',
+                    width: 1.5,
+                    dash: 'dot'
+                },
+                marker: {
+                    size: 6,
+                    color: '#58a6ff'
+                },
+                name: '지난 주 (04.23)',
+                hovertemplate: '<b>%{theta}</b><br>점수: %{r}/100<extra></extra>'
+            };
+
+            const layout = {
+                ...darkLayout,
+                height: 500,
+                showlegend: true,
+                legend: {
+                    x: 0.5,
+                    xanchor: 'center',
+                    y: -0.1,
+                    orientation: 'h',
+                    bgcolor: 'rgba(33, 38, 45, 0.8)',
+                    bordercolor: 'rgba(48, 54, 61, 0.5)',
+                    borderwidth: 1,
+                    font: { size: 12 }
+                },
+                polar: {
+                    bgcolor: 'rgba(0,0,0,0)',
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 100],
+                        tickvals: [20, 40, 60, 80, 100],
+                        ticktext: ['20', '40', '60', '80', '100'],
+                        gridcolor: 'rgba(48, 54, 61, 0.4)',
+                        linecolor: 'rgba(48, 54, 61, 0.4)',
+                        tickfont: { size: 10, color: '#6e7681' }
+                    },
+                    angularaxis: {
+                        gridcolor: 'rgba(48, 54, 61, 0.4)',
+                        linecolor: 'rgba(48, 54, 61, 0.4)',
+                        tickfont: { size: 12, color: '#e6edf3' },
+                        rotation: 90,
+                        direction: 'clockwise'
+                    }
+                },
+                annotations: [
+                    {
+                        x: 0.5,
+                        y: 1.12,
+                        xref: 'paper',
+                        yref: 'paper',
+                        text: '높은 값 = 높은 리스크 (유동성, 실적은 역방향)',
+                        showarrow: false,
+                        font: { size: 11, color: '#6e7681' }
+                    }
+                ]
+            };
+
+            Plotly.newPlot('chartRiskRadar', [tracePrev, traceCurrent], layout, plotlyConfig);
+        })();
+
+        // ===== Intersection Observer for Animations =====
+        (function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-in').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        })();
+
+        // ===== Smooth scroll for TOC links =====
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    const offset = document.querySelector('.toc-bar').offsetHeight + 16;
+                    const top = targetEl.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({ top: top, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ===== Active TOC highlight =====
+        (function() {
+            const sections = document.querySelectorAll('.section[id]');
+            const tocLinks = document.querySelectorAll('.toc-link');
+
+            window.addEventListener('scroll', () => {
+                const scrollPos = window.scrollY + 120;
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    if (section.offsetTop <= scrollPos) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.style.color = '';
+                    link.style.borderBottomColor = 'transparent';
+                    if (link.getAttribute('href') === '#' + currentSection) {
+                        link.style.color = '#e6edf3';
+                        link.style.borderBottomColor = '#58a6ff';
+                    }
+                });
+            });
+        })();
+    </script>
+
+</body>
+</html>

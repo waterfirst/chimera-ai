@@ -49,7 +49,9 @@ author: "Chimera-AI Multi-Agent System"
 date: "YYYY-MM-DD"
 format:
   html:
-    theme: darkly
+    theme:
+      dark: darkly
+      light: flatly
     toc: true
     toc-depth: 3
     toc-location: left

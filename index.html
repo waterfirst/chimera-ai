@@ -30,7 +30,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 
 /* === Main === */
 .main{display:flex;flex-direction:column;align-items:center;padding:30px 16px}
-.theme-btn{position:fixed;top:14px;right:14px;background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:18px;z-index:100;display:flex;align-items:center;justify-content:center}
+.ctrl-bar{position:fixed;top:14px;right:14px;display:flex;align-items:center;gap:8px;z-index:100}
+.theme-btn{background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s}
+.theme-btn:hover{border-color:var(--ac)}
+.lang-sel{background:var(--sf);border:1px solid var(--bd);color:var(--tx);border-radius:20px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;appearance:none;-webkit-appearance:none;outline:none;transition:background .3s,color .3s}
+.lang-sel:hover{border-color:var(--ac)}
 .hero-banner{width:100%;max-height:200px;overflow:hidden;position:relative;margin-bottom:0}
 .hero-banner img{width:100%;height:200px;object-fit:cover;display:block;filter:brightness(.55)}
 .hero-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--bg),transparent)}
@@ -76,7 +80,18 @@ footer a{color:var(--ac);text-decoration:none}
 </div>
 
 <!-- Main Content -->
+<div class="ctrl-bar">
 <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<select class="lang-sel" id="langSel" onchange="setLang(this.value)">
+  <option value="ko">한국어</option>
+  <option value="en">English</option>
+  <option value="ja">日本語</option>
+  <option value="zh">中文</option>
+  <option value="es">Español</option>
+  <option value="fr">Français</option>
+  <option value="de">Deutsch</option>
+</select>
+</div>
 <div class="main">
 
 <div class="hero-banner"><img src="hero.png" alt=""></div>
@@ -158,6 +173,25 @@ footer a{color:var(--ac);text-decoration:none}
 setTimeout(()=>{const s=document.getElementById('splash');s.classList.add('hide');setTimeout(()=>s.remove(),800)},3800);
 function toggleTheme(){const b=document.body,t=b.getAttribute('data-theme');b.setAttribute('data-theme',t==='light'?'':'light');document.getElementById('themeBtn').textContent=t==='light'?'🌙':'☀️';localStorage.setItem('ch-theme',t==='light'?'dark':'light')}
 const sv=localStorage.getItem('ch-theme');if(sv==='light'){document.body.setAttribute('data-theme','light');document.getElementById('themeBtn').textContent='☀️'}
+
+// Language switcher
+const CH_TRANS={
+  ko:{weekly:'주간 증시 분석 Weekly Market Report',special:'특별 분석 Special Analysis',related:'관련 프로젝트'},
+  en:{weekly:'Weekly Market Analysis',special:'Special Analysis',related:'Related Projects'},
+  ja:{weekly:'週次市場分析',special:'特別分析',related:'関連プロジェクト'},
+  zh:{weekly:'每周市场分析',special:'专题分析',related:'相关项目'},
+  es:{weekly:'Análisis Semanal del Mercado',special:'Análisis Especial',related:'Proyectos Relacionados'},
+  fr:{weekly:'Analyse Hebdomadaire du Marché',special:'Analyse Spéciale',related:'Projets Connexes'},
+  de:{weekly:'Wöchentliche Marktanalyse',special:'Sonderanalyse',related:'Verwandte Projekte'}
+};
+function setLang(l){
+  const t=CH_TRANS[l]||CH_TRANS.ko;
+  const secs=document.querySelectorAll('.sec');
+  const keys=['weekly','special','related'];
+  secs.forEach((s,i)=>{if(keys[i]){const txt=s.childNodes[0];if(txt&&txt.nodeType===3)txt.textContent=t[keys[i]]||txt.textContent}});
+  localStorage.setItem('ch-lang',l);
+}
+(function(){const l=localStorage.getItem('ch-lang')||'ko';document.getElementById('langSel').value=l;if(l!=='ko')setLang(l)})();
 </script>
 </body>
 </html>

@@ -27,6 +27,7 @@ Alpha Hunter 보고서는 별도 저장소(https://github.com/waterfirst/alpha-h
 ## 기술 스택
 
 R + ggplot2로 차트를 생성한다. Plotly는 파일 용량이 비대해지므로 사용하지 않는다.
+시계열/그룹 비교 시각화는 tidyplots 패키지를 우선 사용한다 (ggplot2 래퍼, 코드 간결, 출판 품질). tidyplots가 적합하지 않은 복잡한 커스텀 차트는 ggplot2 직접 사용.
 Quarto (.qmd)로 보고서를 렌더링하며, 아래 설정을 따른다:
 
 - `lightbox: true` — 차트를 클릭하면 줌인할 수 있어서 독자의 데이터 탐색 경험이 향상된다

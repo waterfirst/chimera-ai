@@ -1,0 +1,346 @@
+---
+title: "Chimera-AI Weekly Market Report"
+subtitle: "N월 N주차 (MM.DD~MM.DD) — 핵심 한줄 요약"
+author: "Chimera-AI Multi-Agent System"
+date: "2026-MM-DD"
+lang: ko
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    self-contained: true
+    lightbox: true
+    smooth-scroll: true
+    page-layout: article
+    fig-align: center
+    fig-width: 10
+    fig-height: 6
+knitr:
+  opts_chunk:
+    dev: ragg_png
+    dpi: 150
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+<!-- 목차로 돌아가기 버튼 (렌더링 후 자동 삽입) -->
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(scales)
+library(viridis)
+library(patchwork)
+
+kfont <- "Noto Sans CJK KR"
+
+# === 표준 다크 테마 (W4 기준) ===
+theme_chimera <- function(base_size = 13) {
+  theme_minimal(base_size = base_size) +
+    theme(
+      plot.background = element_rect(fill = "#1a1a2e", color = NA),
+      panel.background = element_rect(fill = "#1a1a2e", color = NA),
+      panel.grid.major = element_line(color = "#2a2a4a", linewidth = 0.3),
+      panel.grid.minor = element_blank(),
+      text = element_text(family = kfont, color = "#e4e4ec"),
+      axis.text = element_text(color = "#aaaaaa"),
+      axis.title = element_text(color = "#cccccc", size = rel(0.9)),
+      plot.title = element_text(color = "#f59e0b", face = "bold", size = rel(1.2)),
+      plot.subtitle = element_text(color = "#888888", size = rel(0.85)),
+      plot.caption = element_text(color = "#666666", size = rel(0.7)),
+      legend.background = element_rect(fill = "#1a1a2e", color = NA),
+      legend.text = element_text(color = "#cccccc"),
+      legend.title = element_text(color = "#f59e0b"),
+      strip.text = element_text(color = "#f59e0b", face = "bold")
+    )
+}
+
+# === 표준 색상 팔레트 ===
+chimera_colors <- list(
+  up     = "#ff6b6b",   # 상승 (빨강)
+  down   = "#4ecdc4",   # 하락 (청록)
+  accent = "#f59e0b",   # 강조 (앰버)
+  blue   = "#6366f1",   # 보라파랑
+  cyan   = "#06b6d4",   # 시안
+  green  = "#22c55e",   # 초록
+  red    = "#ef4444",   # 빨강
+  gray   = "#888888",   # 회색
+  foreign = "#ff6348",  # 외국인
+  inst    = "#3742fa",  # 기관
+  indiv   = "#ffa502"   # 개인
+)
+```
+
+## Executive Summary {.unnumbered}
+
+::: {.callout-note appearance="simple"}
+**핵심 요약 3줄**
+
+1. **[첫번째 핵심 포인트]**
+2. **[두번째 핵심 포인트]**
+3. **[세번째 핵심 포인트]**
+:::
+
+---
+
+## NS Index 산출
+
+```{r ns-index}
+#| fig-cap: "NS Index 게이지 — 시장 체온계"
+#| lightbox: true
+
+# NS Index 계산
+vix_raw <- 17.94
+volatility_raw <- 19.39
+soxx_weekly <- 5.01
+hormuz_ships <- 10
+
+vix_score <- max(0, min(100, 100 - (vix_raw - 12) * 5))
+vol_score <- max(0, min(100, 100 - (volatility_raw - 10) * 4))
+semi_score <- max(0, min(100, 50 + soxx_weekly * 5))
+re_score <- max(0, min(100, hormuz_ships * 3))
+
+ns_index <- round(vix_score * 0.4 + vol_score * 0.4 + semi_score * 0.2 + re_score * 0.1, 1)
+
+# 게이지 시각화 (ggplot2)
+gauge_df <- data.frame(
+  label = c("위험", "난류", "안정", "과열"),
+  start = c(0, 30, 50, 70),
+  end = c(30, 50, 70, 100),
+  color = c("#ff4444", "#ffaa44", "#44ff44", "#4444ff")
+)
+
+ggplot() +
+  geom_rect(data = gauge_df,
+            aes(xmin = start, xmax = end, ymin = 0, ymax = 1, fill = color),
+            alpha = 0.7) +
+  geom_vline(xintercept = ns_index, color = "#ffffff", linewidth = 2) +
+  annotate("text", x = ns_index, y = 1.15, label = paste0("NS ", ns_index),
+           color = "#f59e0b", size = 7, fontface = "bold", family = kfont) +
+  scale_fill_identity() +
+  scale_x_continuous(breaks = c(0, 30, 50, 70, 100)) +
+  coord_cartesian(ylim = c(-0.1, 1.3)) +
+  labs(title = paste0("NS Index: ", ns_index),
+       subtitle = paste0("VIX(", round(vix_score), ")×40% + Vol(", round(vol_score),
+                         ")×30% + Semi(", round(semi_score), ")×20% + Re(",
+                         round(re_score), ")×10%")) +
+  theme_chimera() +
+  theme(axis.text.y = element_blank(), axis.title = element_blank(),
+        panel.grid = element_blank())
+```
+
+::: {.callout-tip}
+**NS 구간 해석**: 0~30 위험 | 30~50 난류 | 50~70 안정 | 70~100 과열
+:::
+
+## 글로벌 시장 현황
+
+### 미국 증시
+
+```{r us-market}
+#| fig-cap: "미국 주요 지수 주간 수익률"
+#| lightbox: true
+
+# 데이터 입력 (매주 업데이트)
+us_df <- data.frame(
+  index = c("S&P 500", "NASDAQ", "Dow Jones", "Russell 2000"),
+  weekly = c(4.54, 6.84, 3.19, 5.12),  # 주간 수익률 (%)
+  ytd = c(0.89, 2.10, -1.20, 3.50)     # YTD 수익률 (%)
+)
+
+ggplot(us_df, aes(x = reorder(index, weekly), y = weekly)) +
+  geom_col(aes(fill = weekly > 0), width = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = paste0(ifelse(weekly > 0, "+", ""), weekly, "%")),
+            hjust = ifelse(us_df$weekly > 0, -0.1, 1.1),
+            color = "#e4e4ec", size = 4.5, fontface = "bold", family = kfont) +
+  scale_fill_manual(values = c("TRUE" = "#ff6b6b", "FALSE" = "#4ecdc4")) +
+  coord_flip() +
+  labs(title = "미국 주요 지수 주간 수익률",
+       subtitle = "이번 주 변동률 (%)") +
+  theme_chimera() +
+  theme(axis.title = element_blank())
+```
+
+### 한국 증시
+
+```{r kr-market}
+#| fig-cap: "한국 증시 주간 동향"
+#| lightbox: true
+
+# 데이터 입력 (매주 업데이트)
+kr_df <- data.frame(
+  index = c("KOSPI", "KOSDAQ"),
+  close = c(6191.92, 1170.04),
+  weekly = c(5.68, 6.99)
+)
+
+ggplot(kr_df, aes(x = index, y = weekly)) +
+  geom_col(fill = "#f59e0b", width = 0.5) +
+  geom_text(aes(label = paste0("+", weekly, "%\n(", format(close, big.mark = ","), ")")),
+            vjust = -0.3, color = "#e4e4ec", size = 5, fontface = "bold", family = kfont) +
+  labs(title = "한국 증시 주간 수익률",
+       subtitle = "KOSPI / KOSDAQ 종가 및 주간 변동률") +
+  theme_chimera() +
+  theme(axis.title = element_blank()) +
+  ylim(0, max(kr_df$weekly) * 1.3)
+```
+
+### 금리 / 환율 / 원자재
+
+| 지표 | 현재 | 전주 대비 | 비고 |
+|------|------|----------|------|
+| 미 10년 국채 | 4.25% | +0.05%p | |
+| 원/달러 | 1,320원 | -15원 | |
+| WTI 유가 | $82.5 | +$3.2 | |
+| 금 | $2,350 | +$45 | |
+
+## 호르무즈 해협 모니터링
+
+```{r hormuz}
+#| fig-cap: "호르무즈 해협 일일 선박 통과량 추이"
+#| lightbox: true
+
+# 최근 10일 데이터 (매주 업데이트)
+hormuz_df <- data.frame(
+  day = factor(paste0("D-", 9:0), levels = paste0("D-", 9:0)),
+  ships = c(28, 25, 22, 18, 15, 12, 10, 11, 13, 10)
+)
+
+ggplot(hormuz_df, aes(x = day, y = ships)) +
+  geom_col(aes(fill = ships >= 30), width = 0.7, show.legend = FALSE) +
+  geom_hline(yintercept = 30, color = "#22c55e", linewidth = 1, linetype = "dashed") +
+  annotate("text", x = 1, y = 31.5, label = "투자 본격화 기준선 (30척)",
+           color = "#22c55e", size = 3.5, hjust = 0, family = kfont) +
+  scale_fill_manual(values = c("TRUE" = "#22c55e", "FALSE" = "#ef4444")) +
+  labs(title = "호르무즈 해협 일일 선박 통과량",
+       subtitle = "30척 이상 = 정상 | 30척 미만 = 경계",
+       y = "통과 선박 수") +
+  theme_chimera() +
+  theme(axis.title.x = element_blank())
+```
+
+## 투자자 센티멘트 (외국인/기관/개인)
+
+```{r investor-flow}
+#| fig-cap: "투자자별 일별 순매수 추이 (억 원)"
+#| lightbox: true
+
+# 일별 순매수 데이터 (매주 업데이트)
+flow_df <- data.frame(
+  date = rep(c("월", "화", "수", "목", "금"), 3),
+  investor = rep(c("외국인", "기관", "개인"), each = 5),
+  net_buy = c(
+    3200, 2800, -500, 4100, 2640,     # 외국인
+    1500, -800, 2200, 1100, 1670,     # 기관
+    -4700, -2000, -1700, -5200, -4310  # 개인
+  )
+)
+flow_df$date <- factor(flow_df$date, levels = c("월", "화", "수", "목", "금"))
+flow_df$investor <- factor(flow_df$investor, levels = c("외국인", "기관", "개인"))
+
+ggplot(flow_df, aes(x = date, y = net_buy, fill = investor)) +
+  geom_col(position = "dodge", width = 0.7) +
+  geom_hline(yintercept = 0, color = "#ffffff", linewidth = 0.5) +
+  scale_fill_manual(values = c("외국인" = "#ff6348", "기관" = "#3742fa", "개인" = "#ffa502")) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "KOSPI 투자자별 일별 순매수",
+       subtitle = "억 원 기준",
+       y = "순매수 (억 원)", fill = "") +
+  theme_chimera() +
+  theme(axis.title.x = element_blank(),
+        legend.position = "top")
+```
+
+```{r investor-pie}
+#| fig-cap: "투자자별 거래대금 비중 (%)"
+#| lightbox: true
+
+pie_df <- data.frame(
+  investor = c("외국인", "기관", "개인"),
+  pct = c(38.2, 24.5, 37.3)
+)
+
+ggplot(pie_df, aes(x = "", y = pct, fill = investor)) +
+  geom_col(width = 1) +
+  coord_polar("y") +
+  geom_text(aes(label = paste0(investor, "\n", pct, "%")),
+            position = position_stack(vjust = 0.5),
+            color = "#ffffff", size = 4.5, fontface = "bold", family = kfont) +
+  scale_fill_manual(values = c("외국인" = "#ff6348", "기관" = "#3742fa", "개인" = "#ffa502")) +
+  labs(title = "KOSPI 거래대금 비중") +
+  theme_chimera() +
+  theme(axis.text = element_blank(), axis.title = element_blank(),
+        legend.position = "none")
+```
+
+::: {.callout-warning}
+**수급 핵심 판단**
+
+- 외국인 N일 연속 순매수(+X조) + 기관 동조 → **수급 우호적/비우호적**
+- 개인 순매도 = 차익실현 물량
+- ⚠️ 원/달러 환율 1,350원 돌파 시 외국인 매도 전환 리스크
+:::
+
+## 포트폴리오 시사점
+
+### 현재 환경 평가
+
+| 항목 | 평가 | 근거 |
+|------|------|------|
+| 유동성 | 🟢 우호적 | Fed 동결 유지, ECB 금리 인하 |
+| 수급 | 🟢 우호적 | 외국인 연속 매수 |
+| 밸류에이션 | 🟡 중립 | PER 적정 수준 |
+| 지정학 | 🔴 주의 | 호르무즈 통과 선박 감소 |
+
+### 액션 아이템
+
+1. **[즉시]** — 구체적 액션
+2. **[이번 주]** — 구체적 액션
+3. **[모니터링]** — 관찰 사항
+
+## 주요 거시 데이터
+
+```{r macro-heatmap}
+#| fig-cap: "주요 거시경제 지표 히트맵"
+#| lightbox: true
+
+macro_df <- data.frame(
+  indicator = c("GDP 성장률", "CPI", "실업률", "PMI 제조업", "PMI 서비스업", "소비자 신뢰"),
+  US = c(2.8, 3.1, 3.8, 52.4, 54.1, 98.5),
+  KR = c(2.1, 2.5, 3.2, 51.8, 53.2, 95.0),
+  EU = c(0.8, 2.2, 6.4, 48.5, 52.1, 89.3)
+)
+
+# 시각화는 매주 데이터에 맞게 조정
+macro_long <- tidyr::pivot_longer(macro_df, cols = c(US, KR, EU), names_to = "region", values_to = "value")
+
+ggplot(macro_long, aes(x = region, y = indicator, fill = value)) +
+  geom_tile(color = "#2a2a4a", linewidth = 0.5) +
+  geom_text(aes(label = value), color = "#ffffff", size = 4, fontface = "bold", family = kfont) +
+  scale_fill_viridis(option = "plasma") +
+  labs(title = "주요 거시경제 지표 비교", fill = "") +
+  theme_chimera() +
+  theme(axis.title = element_blank())
+```
+
+## 다음 주 관전 포인트
+
+1. **[이벤트 1]** — 영향 분석
+2. **[이벤트 2]** — 영향 분석
+3. **[이벤트 3]** — 영향 분석
+
+---
+
+::: {.callout-note appearance="minimal"}
+**면책:** 본 리포트는 AI 기반 자동 생성 리서치이며, 투자 권유가 아닙니다.
+데이터 소스: KRX, FRED, Yahoo Finance, CNBC, 네이버 증권
+:::

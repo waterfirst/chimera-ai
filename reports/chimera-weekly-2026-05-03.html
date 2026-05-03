@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>키메라 AI 주간 리포트 — 2026년 5월 3일</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#1a1a2e;--bg2:#16213e;--card:#0f3460;--card2:#1a1a3e;
+  --text:#e4e4ec;--text2:#a0a0b8;--accent:#f59e0b;--accent2:#fbbf24;
+  --red:#ef4444;--green:#22c55e;--border:#2a2a4a;
+  --glass:rgba(15,52,96,0.5);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.fade-up{animation:fadeUp .6s ease forwards;opacity:0}
+.fade-up:nth-child(2){animation-delay:.1s}
+.fade-up:nth-child(3){animation-delay:.2s}
+.fade-up:nth-child(4){animation-delay:.3s}
+
+/* Layout */
+.wrapper{display:grid;grid-template-columns:240px 1fr;max-width:1440px;margin:0 auto;min-height:100vh}
+@media(max-width:1024px){.wrapper{grid-template-columns:1fr}.toc-sidebar{display:none !important}}
+
+/* TOC Sidebar */
+.toc-sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;z-index:50}
+.toc-logo{font-size:13px;font-weight:900;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.toc-date{font-size:12px;color:var(--text2);margin-bottom:24px}
+.toc-sidebar nav a{display:block;padding:8px 12px;font-size:13px;color:var(--text2);text-decoration:none;border-left:2px solid transparent;transition:all .2s;border-radius:0 4px 4px 0;margin-bottom:2px}
+.toc-sidebar nav a:hover,.toc-sidebar nav a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(245,158,11,0.08)}
+.toc-sidebar nav a .toc-num{font-weight:700;color:var(--accent);margin-right:6px;font-size:11px}
+
+/* Main content */
+.main-content{padding:32px 40px 80px;max-width:1100px}
+@media(max-width:768px){.main-content{padding:20px 16px 60px}}
+
+/* Hero */
+.hero{margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.hero-badge{display:inline-block;background:var(--accent);color:#000;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:32px;font-weight:900;line-height:1.3;margin-bottom:12px}
+@media(max-width:768px){.hero h1{font-size:24px}}
+.hero h1 span{color:var(--accent)}
+.hero-sub{font-size:18px;color:var(--text2);font-weight:300;font-style:italic;margin-bottom:20px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+@media(max-width:768px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+.hero-stat{background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;backdrop-filter:blur(10px)}
+.hero-stat .label{font-size:11px;color:var(--text2);margin-bottom:4px}
+.hero-stat .value{font-size:22px;font-weight:900}
+.hero-stat .value.green{color:var(--green)}
+.hero-stat .value.red{color:var(--red)}
+.hero-stat .value.accent{color:var(--accent)}
+
+/* Sections */
+.section{margin-bottom:48px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--accent)}
+.section-num{background:var(--accent);color:#000;font-size:14px;font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-title{font-size:22px;font-weight:700}
+
+/* Tables */
+.table-wrap{overflow-x:auto;margin-bottom:16px;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--bg2)}
+th{padding:10px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);border-bottom:2px solid var(--accent);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+tr:hover{background:rgba(245,158,11,0.04)}
+.rank-cell{font-weight:900;color:var(--accent);font-size:15px}
+.name-cell{font-weight:500;max-width:260px;white-space:normal}
+.momentum-cell{font-weight:700;font-size:14px}
+.pct-green{color:var(--green);font-weight:600}
+.pct-red{color:var(--red);font-weight:600}
+.change-up{color:var(--green);font-weight:700}
+.change-down{color:var(--red);font-weight:700}
+.change-new{background:var(--accent);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px}
+.interpret{color:var(--text2);font-size:12px;font-style:italic}
+
+/* Tier cards */
+.tier-grid{display:grid;gap:16px;margin-bottom:16px}
+.tier-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:20px;position:relative;overflow:hidden}
+.tier-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.tier-1::before{background:linear-gradient(180deg,var(--accent),var(--green))}
+.tier-2::before{background:linear-gradient(180deg,#3b82f6,#6366f1)}
+.tier-3::before{background:linear-gradient(180deg,var(--red),#f97316)}
+.tier-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.tier-1 .tier-label{color:var(--accent)}
+.tier-2 .tier-label{color:#60a5fa}
+.tier-3 .tier-label{color:var(--red)}
+.tier-card h4{font-size:17px;font-weight:700;margin-bottom:4px}
+.tier-card .tier-score{font-size:13px;color:var(--text2);margin-bottom:10px}
+.tier-items{list-style:none;padding:0}
+.tier-items li{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.tier-items li:last-child{border:none}
+.tier-items .ti-name{flex:1}
+.tier-items .ti-rank{color:var(--accent);font-weight:700;margin-right:12px;min-width:40px}
+.tier-items .ti-score{font-weight:700;min-width:50px;text-align:right}
+
+/* Portfolio table */
+.pf-action{font-weight:700;font-size:12px;padding:4px 10px;border-radius:4px;display:inline-block}
+.pf-buy{background:rgba(34,197,94,0.15);color:var(--green)}
+.pf-sell{background:rgba(239,68,68,0.15);color:var(--red)}
+.pf-hold{background:rgba(245,158,11,0.15);color:var(--accent)}
+.pf-reduce{background:rgba(251,191,36,0.12);color:#fbbf24}
+
+/* Timeline */
+.timeline{position:relative;padding-left:28px;margin-top:16px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--green),#3b82f6)}
+.tl-step{position:relative;margin-bottom:28px;animation:fadeUp .5s ease forwards;opacity:0}
+.tl-step:nth-child(1){animation-delay:.1s}
+.tl-step:nth-child(2){animation-delay:.3s}
+.tl-step:nth-child(3){animation-delay:.5s}
+.tl-dot{position:absolute;left:-22px;top:4px;width:14px;height:14px;border-radius:50%;border:3px solid var(--accent);background:var(--bg)}
+.tl-step:nth-child(2) .tl-dot{border-color:var(--green)}
+.tl-step:nth-child(3) .tl-dot{border-color:#3b82f6}
+.tl-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:18px 20px}
+.tl-card h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.tl-card h4 span{font-size:12px;font-weight:400;color:var(--text2);margin-left:8px}
+.tl-tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;margin-bottom:10px}
+.tl-tag.sell{background:rgba(239,68,68,0.15);color:var(--red)}
+.tl-tag.buy{background:rgba(34,197,94,0.15);color:var(--green)}
+.tl-tag.wait{background:rgba(96,165,250,0.15);color:#60a5fa}
+.tl-list{list-style:none;padding:0;font-size:13px}
+.tl-list li{padding:4px 0;display:flex;align-items:flex-start;gap:6px}
+.tl-list li::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--text2);margin-top:9px;flex-shrink:0}
+.tl-cash{margin-top:10px;padding:8px 12px;background:rgba(245,158,11,0.1);border-radius:6px;font-size:13px;font-weight:600;color:var(--accent)}
+
+/* Takeaway cards */
+.takeaway-grid{display:grid;gap:12px}
+.takeaway{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;transition:transform .2s,border-color .2s}
+.takeaway:hover{transform:translateX(4px);border-color:var(--accent)}
+.takeaway-num{background:var(--accent);color:#000;font-size:14px;font-weight:900;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.takeaway-text{font-size:14px;line-height:1.6}
+.takeaway-text strong{color:var(--accent)}
+
+/* Footer */
+.report-footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.8}
+.report-footer .footer-line{margin-bottom:4px}
+.report-footer .brand{font-weight:700;color:var(--accent)}
+
+/* Mobile TOC toggle */
+.mobile-toc-btn{display:none;position:fixed;bottom:20px;right:20px;background:var(--accent);color:#000;border:none;width:48px;height:48px;border-radius:50%;font-size:20px;font-weight:900;cursor:pointer;z-index:100;box-shadow:0 4px 16px rgba(245,158,11,0.3)}
+@media(max-width:1024px){.mobile-toc-btn{display:flex;align-items:center;justify-content:center}}
+.mobile-toc{display:none;position:fixed;bottom:80px;right:20px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.5);max-height:60vh;overflow-y:auto;min-width:220px}
+.mobile-toc.open{display:block}
+.mobile-toc a{display:block;padding:8px 10px;font-size:13px;color:var(--text2);text-decoration:none;border-radius:4px}
+.mobile-toc a:hover{background:rgba(245,158,11,0.1);color:var(--accent)}
+
+/* Sub section headers */
+.sub-header{font-size:17px;font-weight:700;margin:24px 0 12px;padding-left:12px;border-left:3px solid var(--accent);display:flex;align-items:center;gap:8px}
+.sub-header .arrow-up{color:var(--green)}
+.sub-header .arrow-down{color:var(--red)}
+
+/* Disclaimer */
+.disclaimer{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:14px 18px;font-size:12px;color:var(--text2);margin-top:20px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- TOC Sidebar -->
+  <aside class="toc-sidebar">
+    <div class="toc-logo">Chimera AI</div>
+    <div class="toc-date">2026년 5월 3일</div>
+    <nav>
+      <a href="#market"><span class="toc-num">00</span>시장 환경</a>
+      <a href="#top20"><span class="toc-num">01</span>현재 순위 TOP 20</a>
+      <a href="#changes"><span class="toc-num">02</span>순위 급변동</a>
+      <a href="#sectors"><span class="toc-num">03</span>섹터별 정밀 분석</a>
+      <a href="#portfolio"><span class="toc-num">04</span>포트폴리오 점검</a>
+      <a href="#rebalance"><span class="toc-num">05</span>3단계 리밸런싱</a>
+      <a href="#takeaways"><span class="toc-num">06</span>시장 총평</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Hero -->
+    <header class="hero fade-up" id="market">
+      <span class="hero-badge">Weekly Report</span>
+      <h1>키메라 AI <span>주간 리포트</span></h1>
+      <p class="hero-sub">"안전자산을 팔고, 에너지 전환에 올인하는 시장"</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="label">코스피</div>
+          <div class="value accent">6,750</div>
+        </div>
+        <div class="hero-stat">
+          <div class="label">삼성전자 영업이익</div>
+          <div class="value green">57.2조</div>
+        </div>
+        <div class="hero-stat">
+          <div class="label">레버리지 6M</div>
+          <div class="value green">+173%</div>
+        </div>
+        <div class="hero-stat">
+          <div class="label">인버스 모멘텀</div>
+          <div class="value red">-860</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:13px;color:var(--text2);line-height:1.8">
+        <p>코스피 6,750 돌파, 4일 연속 역대 최고치 갱신. 삼성전자 1Q 매출 133조, 영업이익 57.2조 &mdash; 역대급 실적.
+        코스피200 레버리지 ETF 1개월 수익률 +51%, 6개월 +173%. 인버스 ETF 모멘텀 -860점 &rarr; 하락 배팅 대규모 청산 = <strong style="color:var(--green)">강세장 확인</strong>.</p>
+      </div>
+    </header>
+
+    <!-- Section 1: TOP 20 -->
+    <section class="section fade-up" id="top20">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">현재 순위 TOP 20</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>순위</th><th>종목명</th><th>모멘텀</th><th>1개월</th><th>3개월</th><th>6개월</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rank-cell">1</td><td class="name-cell">TIGER 2차전지TOP10레버리지</td><td class="momentum-cell">1,434</td><td class="pct-green">+90.1%</td><td class="pct-green">+63.9%</td><td class="pct-green">+48.8%</td></tr>
+            <tr><td class="rank-cell">2</td><td class="name-cell">PLUS 태양광&amp;ESS</td><td class="momentum-cell">1,413</td><td class="pct-green">+59.0%</td><td class="pct-green">+114.8%</td><td class="pct-green">+123.1%</td></tr>
+            <tr><td class="rank-cell">3</td><td class="name-cell">TIGER 레버리지</td><td class="momentum-cell">1,198</td><td class="pct-green">+51.9%</td><td class="pct-green">+56.9%</td><td class="pct-green">+173.9%</td></tr>
+            <tr><td class="rank-cell">4</td><td class="name-cell">KODEX 레버리지</td><td class="momentum-cell">1,192</td><td class="pct-green">+52.0%</td><td class="pct-green">+55.6%</td><td class="pct-green">+173.0%</td></tr>
+            <tr><td class="rank-cell">5</td><td class="name-cell">TIGER 200선물레버리지</td><td class="momentum-cell">1,187</td><td class="pct-green">+51.4%</td><td class="pct-green">+56.1%</td><td class="pct-green">+173.0%</td></tr>
+            <tr><td class="rank-cell">6</td><td class="name-cell">TIGER 코리아AI전력기기TOP3+</td><td class="momentum-cell">1,175</td><td class="pct-green">+54.1%</td><td class="pct-green">+76.8%</td><td class="pct-green">+109.1%</td></tr>
+            <tr><td class="rank-cell">7</td><td class="name-cell">TIGER 미국필라델피아반도체레버리지</td><td class="momentum-cell">1,162</td><td class="pct-green">+63.9%</td><td class="pct-green">+53.0%</td><td class="pct-green">+91.8%</td></tr>
+            <tr><td class="rank-cell">8</td><td class="name-cell">TIGER 200에너지화학레버리지</td><td class="momentum-cell">1,161</td><td class="pct-green">+66.3%</td><td class="pct-green">+56.9%</td><td class="pct-green">+68.9%</td></tr>
+            <tr><td class="rank-cell">9</td><td class="name-cell">RISE 네트워크인프라</td><td class="momentum-cell">1,129</td><td class="pct-green">+45.7%</td><td class="pct-green">+75.6%</td><td class="pct-green">+139.3%</td></tr>
+            <tr><td class="rank-cell">10</td><td class="name-cell">KODEX 건설</td><td class="momentum-cell">1,058</td><td class="pct-green">+39.9%</td><td class="pct-green">+80.8%</td><td class="pct-green">+127.7%</td></tr>
+            <tr><td class="rank-cell">11</td><td class="name-cell">HANARO Fn K-반도체</td><td class="momentum-cell">1,016</td><td class="pct-green">+39.8%</td><td class="pct-green">+63.5%</td><td class="pct-green">+142.6%</td></tr>
+            <tr><td class="rank-cell">12</td><td class="name-cell">TIGER Fn신재생에너지</td><td class="momentum-cell">1,014</td><td class="pct-green">+45.2%</td><td class="pct-green">+75.3%</td><td class="pct-green">+85.3%</td></tr>
+            <tr><td class="rank-cell">13</td><td class="name-cell">RISE AI전력인프라</td><td class="momentum-cell">992</td><td class="pct-green">+47.8%</td><td class="pct-green">+63.3%</td><td class="pct-green">+82.2%</td></tr>
+            <tr><td class="rank-cell">14</td><td class="name-cell">TIGER 200 IT</td><td class="momentum-cell">985</td><td class="pct-green">+43.2%</td><td class="pct-green">+56.5%</td><td class="pct-green">+120.5%</td></tr>
+            <tr><td class="rank-cell">15</td><td class="name-cell">KODEX 2차전지산업레버리지</td><td class="momentum-cell">975</td><td class="pct-green">+66.0%</td><td class="pct-green">+29.4%</td><td class="pct-green">+33.1%</td></tr>
+            <tr><td class="rank-cell">16</td><td class="name-cell">TIGER 코리아원자력</td><td class="momentum-cell">946</td><td class="pct-green">+30.2%</td><td class="pct-green">+83.1%</td><td class="pct-green">+126.0%</td></tr>
+            <tr><td class="rank-cell">17</td><td class="name-cell">TIGER 200 건설</td><td class="momentum-cell">939</td><td class="pct-green">+36.4%</td><td class="pct-green">+69.2%</td><td class="pct-green">+112.8%</td></tr>
+            <tr><td class="rank-cell">18</td><td class="name-cell">KODEX 신재생에너지액티브</td><td class="momentum-cell">934</td><td class="pct-green">+41.5%</td><td class="pct-green">+68.0%</td><td class="pct-green">+82.4%</td></tr>
+            <tr><td class="rank-cell">19</td><td class="name-cell">TIGER 코리아테크액티브</td><td class="momentum-cell">900</td><td class="pct-green">+38.2%</td><td class="pct-green">+54.7%</td><td class="pct-green">+111.2%</td></tr>
+            <tr><td class="rank-cell">20</td><td class="name-cell">ACE AI반도체TOP3+</td><td class="momentum-cell">869</td><td class="pct-green">+31.8%</td><td class="pct-green">+56.2%</td><td class="pct-green">+131.3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 2: Changes -->
+    <section class="section fade-up" id="changes">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">순위 급변동</div>
+      </div>
+
+      <div class="sub-header"><span class="arrow-up">&#9650;</span> 급상승 TOP (모멘텀 가속)</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>순위</th><th>변동</th><th>종목명</th><th>모멘텀</th><th>1개월</th><th>해석</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rank-cell">8</td><td><span class="change-new">New</span></td><td class="name-cell">TIGER 200에너지화학레버리지</td><td class="momentum-cell">1,161</td><td class="pct-green">+66.3%</td><td class="interpret">에너지화학 급부상</td></tr>
+            <tr><td class="rank-cell">22</td><td><span class="change-new">New</span></td><td class="name-cell">HANARO CAPEX설비투자iSelect</td><td class="momentum-cell">830</td><td class="pct-green">+38.7%</td><td class="interpret">설비투자 사이클 시작</td></tr>
+            <tr><td class="rank-cell">24</td><td><span class="change-new">New</span></td><td class="name-cell">HANARO Fn전기&amp;수소차</td><td class="momentum-cell">807</td><td class="pct-green">+38.8%</td><td class="interpret">전기차/수소 부활</td></tr>
+            <tr><td class="rank-cell">76</td><td><span class="change-new">New</span></td><td class="name-cell">RISE 수소경제테마</td><td class="momentum-cell">509</td><td class="pct-green">+23.7%</td><td class="interpret">수소경제 재부상</td></tr>
+            <tr><td class="rank-cell">91</td><td class="change-up">&#9650;184</td><td class="name-cell">KODEX 조선TOP10</td><td class="momentum-cell">423</td><td class="pct-green">+29.2%</td><td class="interpret">극단적 반등</td></tr>
+            <tr><td class="rank-cell">66</td><td class="change-up">&#9650;24</td><td class="name-cell">TIGER 200 에너지화학</td><td class="momentum-cell">551</td><td class="pct-green">+28.8%</td><td class="interpret">화학 섹터 반등</td></tr>
+            <tr><td class="rank-cell">87</td><td class="change-up">&#9650;22</td><td class="name-cell">ACE 포스코그룹포커스</td><td class="momentum-cell">449</td><td class="pct-green">+25.1%</td><td class="interpret">철강/소재 턴어라운드</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-header"><span class="arrow-down">&#9660;</span> 급하락 TOP (모멘텀 감속)</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>순위</th><th>변동</th><th>종목명</th><th>모멘텀</th><th>1개월</th><th>해석</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rank-cell">92</td><td class="change-down">&#9660;46</td><td class="name-cell">KODEX 방산TOP10레버리지</td><td class="momentum-cell">418</td><td class="pct-green">+20.0%</td><td class="interpret">방산 모멘텀 급격 악화</td></tr>
+            <tr><td class="rank-cell">86</td><td class="change-down">&#9660;42</td><td class="name-cell">PLUS K방산레버리지</td><td class="momentum-cell">450</td><td class="pct-green">+22.3%</td><td class="interpret">방산 전체 하락</td></tr>
+            <tr><td class="rank-cell">68</td><td class="change-down">&#9660;25</td><td class="name-cell">TIGER 미국필라델피아반도체나스닥</td><td class="momentum-cell">544</td><td class="pct-green">+29.4%</td><td class="interpret">미국 반도체 약세</td></tr>
+            <tr><td class="rank-cell">70</td><td class="change-down">&#9660;18</td><td class="name-cell">RISE 2차전지액티브</td><td class="momentum-cell">532</td><td class="pct-green">+30.8%</td><td class="interpret">레버리지만 강하고 일반형 둔화</td></tr>
+            <tr><td class="rank-cell">38</td><td class="change-down">&#9660;15</td><td class="name-cell">PLUS K방산소부장</td><td class="momentum-cell">673</td><td class="pct-green">+39.3%</td><td class="interpret">방산 소부장까지 확산</td></tr>
+            <tr><td class="rank-cell">43</td><td class="change-down">&#9660;13</td><td class="name-cell">SOL 반도체후공정</td><td class="momentum-cell">645</td><td class="pct-green">+19.2%</td><td class="interpret">후공정 모멘텀 꺾임</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 3: Sectors -->
+    <section class="section fade-up" id="sectors">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">섹터별 정밀 분석</div>
+      </div>
+
+      <!-- Tier 1 -->
+      <div class="sub-header">Tier 1 &mdash; 최강 모멘텀 (800+)</div>
+      <div class="tier-grid">
+        <div class="tier-card tier-1">
+          <div class="tier-label">Tier 1 &middot; 최강</div>
+          <h4>AI 전력 인프라</h4>
+          <div class="tier-score">평균 <strong style="color:var(--accent)">1,098점</strong> &middot; 3개 ETF &middot; 가장 강한 테마</div>
+          <ul class="tier-items">
+            <li><span class="ti-rank">6위</span><span class="ti-name">TIGER 코리아AI전력기기TOP3+</span><span class="ti-score" style="color:var(--green)">1,175</span></li>
+            <li><span class="ti-rank">9위</span><span class="ti-name">RISE 네트워크인프라</span><span class="ti-score" style="color:var(--green)">1,129</span></li>
+            <li><span class="ti-rank">13위</span><span class="ti-name">RISE AI전력인프라</span><span class="ti-score" style="color:var(--green)">992</span></li>
+          </ul>
+        </div>
+        <div class="tier-card tier-1">
+          <div class="tier-label">Tier 1 &middot; 최강</div>
+          <h4>신재생 / 태양광</h4>
+          <div class="tier-score">평균 <strong style="color:var(--accent)">933점</strong> &middot; 6개 ETF</div>
+          <ul class="tier-items">
+            <li><span class="ti-rank">2위</span><span class="ti-name">PLUS 태양광&amp;ESS</span><span class="ti-score" style="color:var(--green)">1,413</span></li>
+            <li><span class="ti-rank">12위</span><span class="ti-name">TIGER Fn신재생에너지</span><span class="ti-score" style="color:var(--green)">1,014</span></li>
+          </ul>
+          <div style="margin-top:8px;font-size:12px;color:var(--accent)">12개월 수익률 +346% (태양광&amp;ESS)</div>
+        </div>
+        <div class="tier-card tier-1">
+          <div class="tier-label">Tier 1 &middot; 최강</div>
+          <h4>원자력 / SMR</h4>
+          <div class="tier-score">평균 <strong style="color:var(--accent)">810점</strong> &middot; 5개 ETF</div>
+          <ul class="tier-items">
+            <li><span class="ti-rank">16위</span><span class="ti-name">TIGER 코리아원자력</span><span class="ti-score" style="color:var(--green)">946</span></li>
+          </ul>
+          <div style="margin-top:8px;font-size:12px;color:var(--accent)">3개월 수익률 +83%</div>
+        </div>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="sub-header">Tier 2 &mdash; 강세 유지 (600~800)</div>
+      <div class="tier-grid">
+        <div class="tier-card tier-2">
+          <div class="tier-label">Tier 2 &middot; 강세</div>
+          <h4>2차전지 / 배터리</h4>
+          <div class="tier-score">평균 <strong style="color:#60a5fa">698점</strong> &middot; 9개 ETF &middot; <span style="color:var(--red)">양극화 주의</span></div>
+          <p style="font-size:13px;color:var(--text2);margin-top:6px">레버리지만 1위(1,434점), 비레버리지 ETF는 하락 중. 과도한 레버리지 쏠림 경고.</p>
+        </div>
+        <div class="tier-card tier-2">
+          <div class="tier-label">Tier 2 &middot; 강세</div>
+          <h4>건설 / CAPEX</h4>
+          <div class="tier-score">평균 <strong style="color:#60a5fa">698점</strong> &middot; 7개 ETF</div>
+          <p style="font-size:13px;color:var(--text2);margin-top:6px">건설 강세 vs 조선 모멘텀 소진. 섹터 내 분화 진행.</p>
+        </div>
+        <div class="tier-card tier-2">
+          <div class="tier-label">Tier 2 &middot; 강세</div>
+          <h4>반도체 / AI</h4>
+          <div class="tier-score">평균 <strong style="color:#60a5fa">687점</strong> &middot; 21개 ETF &middot; 최다 종목</div>
+          <p style="font-size:13px;color:var(--text2);margin-top:6px">가장 넓은 강세. 한국 반도체 > 미국 반도체.</p>
+        </div>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="sub-header">Tier 3 &mdash; 약세 / 경고 (600 미만)</div>
+      <div class="tier-grid">
+        <div class="tier-card tier-3">
+          <div class="tier-label">Tier 3 &middot; 경고</div>
+          <h4>방산</h4>
+          <div class="tier-score">평균 <strong style="color:var(--red)">514점</strong> &middot; 3개 ETF &middot; <span style="color:var(--red);font-weight:700">&#9660;42~46 급락, 최대 경고</span></div>
+        </div>
+        <div class="tier-card tier-3">
+          <div class="tier-label">Tier 3 &middot; 약세</div>
+          <h4>미국 시장</h4>
+          <div class="tier-score">평균 <strong style="color:var(--red)">568점</strong> &middot; 5개 ETF &middot; 한국 대비 극도 약세</div>
+        </div>
+        <div class="tier-card tier-3">
+          <div class="tier-label">Tier 3 &middot; 약세</div>
+          <h4>커버드콜</h4>
+          <div class="tier-score">평균 <strong style="color:var(--red)">456점</strong> &middot; 3개 ETF &middot; 강세장 구조적 언더퍼폼</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Portfolio -->
+    <section class="section fade-up" id="portfolio">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">포트폴리오 점검</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>종목</th><th>계좌 / 금액</th><th>순위</th><th>모멘텀</th><th>변동</th><th>1개월</th><th>6개월</th><th>판정</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">RISE 네트워크인프라</td>
+              <td>개인연금 2,369만</td>
+              <td class="rank-cell">9</td>
+              <td class="momentum-cell">1,129</td>
+              <td class="change-down">&#9660;5</td>
+              <td class="pct-green">+45.7%</td>
+              <td class="pct-green">+139.3%</td>
+              <td><span class="pf-action pf-buy">추가 매수</span></td>
+            </tr>
+            <tr>
+              <td class="name-cell">TIGER 코리아원자력</td>
+              <td>퇴직연금 303만</td>
+              <td class="rank-cell">16</td>
+              <td class="momentum-cell">946</td>
+              <td class="change-down">&#9660;6</td>
+              <td class="pct-green">+30.2%</td>
+              <td class="pct-green">+126.0%</td>
+              <td><span class="pf-action pf-buy">대폭 확대</span></td>
+            </tr>
+            <tr>
+              <td class="name-cell">TIGER 반도체TOP10</td>
+              <td>퇴직연금 1.13억</td>
+              <td class="rank-cell">29</td>
+              <td class="momentum-cell">745</td>
+              <td class="change-up">&#9650;11</td>
+              <td class="pct-green">+28.3%</td>
+              <td class="pct-green">+118.6%</td>
+              <td><span class="pf-action pf-hold">유지</span></td>
+            </tr>
+            <tr>
+              <td class="name-cell">TIGER 200타겟위클리커버드콜</td>
+              <td>퇴직연금 3,088만</td>
+              <td class="rank-cell">69</td>
+              <td class="momentum-cell">543</td>
+              <td class="change-up">&#9650;11</td>
+              <td class="pct-green">+24.1%</td>
+              <td class="pct-green">+68.6%</td>
+              <td><span class="pf-action pf-reduce">축소</span></td>
+            </tr>
+            <tr>
+              <td class="name-cell">SOL 조선TOP3플러스</td>
+              <td>퇴직연금 2,204만</td>
+              <td class="rank-cell">97</td>
+              <td class="momentum-cell">382</td>
+              <td class="change-up">&#9650;3</td>
+              <td class="pct-green">+26.8%</td>
+              <td class="pct-green">+8.5%</td>
+              <td><span class="pf-action pf-sell">매도</span></td>
+            </tr>
+            <tr>
+              <td class="name-cell">ACE KRX금현물</td>
+              <td>합산 5,057만</td>
+              <td>&mdash;</td>
+              <td class="momentum-cell" style="color:var(--red)">-55</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td><span class="pf-action pf-sell">매도</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 5: Rebalance -->
+    <section class="section fade-up" id="rebalance">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">3단계 리밸런싱</div>
+      </div>
+
+      <div class="timeline">
+        <!-- Step 1 -->
+        <div class="tl-step">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <h4>1단계: 5월 즉시<span>긴급 실행</span></h4>
+            <div style="margin-bottom:10px">
+              <span class="tl-tag sell">매도</span>
+            </div>
+            <ul class="tl-list">
+              <li>금 전량 매도 (5,057만)</li>
+              <li>조선 전량 매도 (2,204만)</li>
+              <li>방산 절반 매도 (2,192만)</li>
+              <li>구글 절반 매도 (1,140만)</li>
+            </ul>
+            <div style="margin-top:12px">
+              <span class="tl-tag buy">매수</span>
+            </div>
+            <ul class="tl-list">
+              <li>원자력 추가 매수 (2,500만)</li>
+              <li>네트워크인프라 추가 매수 (1,500만)</li>
+            </ul>
+            <div class="tl-cash">현금 확보: ~6,500만 (포트폴리오의 12%)</div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="tl-step">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <h4>2단계: 6~8월<span>셀인메이 조정 시 매수</span></h4>
+            <div style="margin-bottom:10px">
+              <span class="tl-tag wait">매수 대기</span>
+            </div>
+            <ul class="tl-list">
+              <li>태양광 (2,000만)</li>
+              <li>건설 (1,500만)</li>
+              <li>AI전력기기 (1,000만)</li>
+            </ul>
+            <div style="margin-top:12px">
+              <span class="tl-tag sell">추가 정리</span>
+            </div>
+            <ul class="tl-list">
+              <li>커버드콜 절반 매도 (3,100만)</li>
+              <li>방산 잔여 매도 (1,100만)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="tl-step">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <h4>3단계: 9~10월<span>중간선거 전 최종 세팅</span></h4>
+            <div style="margin-bottom:10px">
+              <span class="tl-tag wait">포지션 구축</span>
+            </div>
+            <ul class="tl-list">
+              <li>2026 미국 중간선거일: 11월 3일</li>
+              <li>역사적 패턴: 선거 후 12개월 평균 +12.4% 랠리</li>
+              <li>최종 포지션 구축 완료 목표</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Takeaways -->
+    <section class="section fade-up" id="takeaways">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">시장 총평</div>
+      </div>
+
+      <div class="takeaway-grid">
+        <div class="takeaway">
+          <div class="takeaway-num">1</div>
+          <div class="takeaway-text"><strong>에너지가 이 시장의 키워드.</strong> 상위 20개 중 에너지 관련 8개. AI 전력, 신재생, 원자력, 에너지화학이 시장을 지배.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">2</div>
+          <div class="takeaway-text"><strong>인버스 -860점은 역대급 강세 확인.</strong> 하락 배팅 대규모 청산. 시장이 방향을 정했다.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">3</div>
+          <div class="takeaway-text"><strong>한국이 미국을 압도.</strong> 코스피 레버리지 6M +173% vs 나스닥 +9.6%. 자금 흐름의 대전환.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">4</div>
+          <div class="takeaway-text"><strong>방산은 끝났다.</strong> 순위 42~46 급락. 모멘텀이 구조적으로 꺾였다. 즉시 비중 축소.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">5</div>
+          <div class="takeaway-text"><strong>2차전지는 양극화.</strong> 레버리지(1위, 1,434점)와 비레버리지(41~95위) 괴리. 단기 투기 신호에 주의.</div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <strong>면책 조항:</strong> 본 리포트는 정보 제공 목적이며 투자 권유가 아닙니다. 모든 투자 결정은 본인의 책임 하에 이루어져야 합니다. 과거 수익률은 미래 수익을 보장하지 않습니다.
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="report-footer">
+      <div class="footer-line"><span class="brand">분석 기준:</span> ETF 모멘텀 계산기 (1주 0 / 2주 0 / 1개월 12 / 3개월 4 / 6개월 2), 2026-05-03 기준</div>
+      <div class="footer-line"><span class="brand">데이터:</span> 공공데이터포털 API, 281개 ETF 중 100개 분석</div>
+      <div class="footer-line"><span class="brand">작성:</span> 키메라 AI &middot; Nakcho Choi</div>
+    </footer>
+  </main>
+</div>
+
+<!-- Mobile TOC -->
+<button class="mobile-toc-btn" onclick="document.querySelector('.mobile-toc').classList.toggle('open')" aria-label="목차 열기">&#9776;</button>
+<div class="mobile-toc">
+  <a href="#market" onclick="this.parentElement.classList.remove('open')">시장 환경</a>
+  <a href="#top20" onclick="this.parentElement.classList.remove('open')">현재 순위 TOP 20</a>
+  <a href="#changes" onclick="this.parentElement.classList.remove('open')">순위 급변동</a>
+  <a href="#sectors" onclick="this.parentElement.classList.remove('open')">섹터별 정밀 분석</a>
+  <a href="#portfolio" onclick="this.parentElement.classList.remove('open')">포트폴리오 점검</a>
+  <a href="#rebalance" onclick="this.parentElement.classList.remove('open')">3단계 리밸런싱</a>
+  <a href="#takeaways" onclick="this.parentElement.classList.remove('open')">시장 총평</a>
+</div>
+
+<script>
+// Scroll-based fade-in animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => {
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+
+// Active TOC highlight on scroll
+const tocLinks = document.querySelectorAll('.toc-sidebar nav a');
+const sections = document.querySelectorAll('.hero, .section');
+
+function updateActiveToc() {
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 120) {
+      current = section.id;
+    }
+  });
+  tocLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+window.addEventListener('scroll', updateActiveToc, { passive: true });
+updateActiveToc();
+</script>
+</body>
+</html>

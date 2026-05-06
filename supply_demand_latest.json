@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-05-06 21:51:09",
+  "results": {
+    "KOSPI_전체": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음"
+    },
+    "TIGER 반도체TOP10": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "396500"
+    },
+    "KODEX 200": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "069500"
+    },
+    "RISE 네트워크인프라": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "464290"
+    },
+    "TIGER 코리아원자력": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "462290"
+    },
+    "SOL 조선TOP3플러스": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "466920"
+    },
+    "ACE 구글밸류체인액티브": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "487230"
+    },
+    "KODEX 미국S&P500": {
+      "score": 50,
+      "foreign_score": 25,
+      "inst_score": 25,
+      "momentum_score": 25,
+      "detail": "데이터 없음",
+      "ticker": "379800"
+    }
+  }
+}

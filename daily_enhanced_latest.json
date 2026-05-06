@@ -1,0 +1,136 @@
+{
+  "sentiment": {
+    "timestamp": "2026-05-06 21:54:12",
+    "overall_score": 49,
+    "overall_label": "중립",
+    "topics": {
+      "KOSPI": {
+        "score": 45,
+        "label": "약간 비관",
+        "bullish_count": 5,
+        "bearish_count": 5,
+        "top_bullish": "ETF가 자금 유입을 촉진하며 코스피의 상승 선순환을 이끌고 있다.",
+        "top_bearish": "경제 상황이 어렵지만 주가는 지속 상승하여 기초 경제와의 괴리 우려가 크다.",
+        "summary": "코스피 7000 시대 진입과 외국인 매수, ETF발 선순환 등 긍정적 요인이 존재한다.\n그러나 고점 공포, 탈세 세무조사, 경제 기초체력과의 괴리 등 시장 과열에 대한 경계와 의구심이 큰 상황이다.",
+        "headline_count": 10
+      },
+      "반도체": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      },
+      "2차전지": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      },
+      "원자력": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      },
+      "AI": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      },
+      "유가": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      },
+      "환율": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      },
+      "미국증시": {
+        "score": 50,
+        "label": "중립",
+        "summary": "API 오류: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+        "headline_count": 10
+      }
+    }
+  },
+  "supply_demand": {
+    "timestamp": "2026-05-06 21:54:19",
+    "results": {
+      "KOSPI_전체": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음"
+      },
+      "TIGER 반도체TOP10": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "396500"
+      },
+      "KODEX 200": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "069500"
+      },
+      "RISE 네트워크인프라": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "464290"
+      },
+      "TIGER 코리아원자력": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "462290"
+      },
+      "SOL 조선TOP3플러스": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "466920"
+      },
+      "ACE 구글밸류체인액티브": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "487230"
+      },
+      "KODEX 미국S&P500": {
+        "score": 50,
+        "foreign_score": 25,
+        "inst_score": 25,
+        "momentum_score": 25,
+        "detail": "데이터 없음",
+        "ticker": "379800"
+      }
+    }
+  },
+  "hit_rate": {
+    "total": 0,
+    "hits": 0,
+    "rate": 0,
+    "alert": false,
+    "message": "검증된 판정 없음"
+  }
+}

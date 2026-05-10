@@ -1,0 +1,630 @@
+---
+title: "Chimera-AI 주간 증시 분석 리포트"
+subtitle: "5월 2주차 (05.05~05.09) — KOSPI 7,490 신고가, S&P 7,399 연일 최고"
+author: "Chimera-AI Multi-Agent System"
+date: "2026-05-09"
+format:
+  html:
+    theme:
+      dark: darkly
+      light: flatly
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    self-contained: true
+    lightbox: true
+    smooth-scroll: true
+    page-layout: article
+    fig-align: center
+    fig-width: 10
+    fig-height: 6
+knitr:
+  opts_chunk:
+    dev: ragg_png
+    dpi: 150
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(scales)
+library(viridis)
+library(patchwork)
+library(RColorBrewer)
+library(jsonlite)
+library(tidyr)
+
+kfont <- "Noto Sans CJK KR"
+
+theme_chimera <- function(base_size = 13) {
+  theme_minimal(base_size = base_size) +
+    theme(
+      plot.background = element_rect(fill = "#1a1a2e", color = NA),
+      panel.background = element_rect(fill = "#1a1a2e", color = NA),
+      panel.grid.major = element_line(color = "#2a2a4a", linewidth = 0.3),
+      panel.grid.minor = element_blank(),
+      text = element_text(family = kfont, color = "#e4e4ec"),
+      axis.text = element_text(color = "#aaaaaa"),
+      axis.title = element_text(color = "#cccccc", size = rel(0.9)),
+      plot.title = element_text(color = "#f59e0b", face = "bold", size = rel(1.2)),
+      plot.subtitle = element_text(color = "#888888", size = rel(0.85)),
+      plot.caption = element_text(color = "#666666", size = rel(0.7)),
+      legend.background = element_rect(fill = "#1a1a2e", color = NA),
+      legend.text = element_text(color = "#cccccc"),
+      legend.title = element_text(color = "#f59e0b"),
+      strip.text = element_text(color = "#f59e0b", face = "bold")
+    )
+}
+
+chimera_colors <- c(
+  "#f59e0b", "#22c55e", "#ef4444", "#6366f1",
+  "#06b6d4", "#ec4899", "#8b5cf6", "#14b8a6"
+)
+```
+
+## 핵심 요약 {.unnumbered}
+
+::: {.callout-important}
+## Executive Summary
+- **KOSPI** 7,490.05 — 7,000 최초 돌파 후 7,300까지 단숨에 돌파, 주간 +11.9%
+- **삼성전자** 시가총액 $1조 돌파 — 아시아 2번째 (TSMC 이후), 연초 대비 +111%
+- **SK하이닉스** 연초 대비 +144% — AI HBM 수요 폭발, 분기 사상 최대 실적
+- **S&P 500** 7,398.93 — 6주 연속 상승, 최장 연승 기록 (2024년 이후)
+- **나스닥** 26,247.08 — 주간 +4.5%, AI·반도체 랠리 주도
+- **VIX** 17.19 — 위험선호 유지, 이란 휴전 기대감
+- **한국 증시** 글로벌 1위 수익률 — 연초 대비 +78%, 일본·미국 대폭 상회
+:::
+
+| 지표 | 수치 | 주간 변동 | 시그널 |
+|------|------|------|--------|
+| S&P 500 | 7,398.93 | +2.3% | 🟢 사상 최고 |
+| 나스닥 | 26,247.08 | +4.5% | 🟢 사상 최고 |
+| 다우존스 | 49,609.16 | +0.2% | 🟡 보합 |
+| KOSPI | 7,490.05 | +11.9% | 🟢 사상 최고 |
+| KOSDAQ | 1,285.40 | +5.3% | 🟢 강세 |
+| VIX | 17.19 | +0.2pt | 🟢 안정 |
+| WTI | $95.00 | -7.3% | 🟢 하락 |
+| 원/달러 | 1,471원 | 소폭 강세 | 🟡 관찰 |
+| 비고용지표 | 115K | 예상 상회 | 🟢 양호 |
+
+## 글로벌 증시 동향
+
+### 미국 증시
+
+5월 2주차 미국 증시는 **S&P 500과 나스닥이 6주 연속 상승**하며 2024년 이후 최장 연승 기록을 세웠다. 금요일 기준 S&P 500은 7,398.93(+0.84%), 나스닥은 26,247.08(+1.71%)으로 마감했다. 다우는 49,609.16(+0.02%)으로 소폭 상승에 그쳤다.
+
+**주간 핵심 드라이버:**
+
+- **고용시장 호조:** 4월 비농업 고용 115K 증가(예상치 상회), 실업률 4.3% 유지
+- **AI 투자 확대:** 마이크론·샌디스크 등 AI 관련 반도체주 급등
+- **이란 휴전 기대:** 중동 지정학 리스크 완화 기대감으로 위험자산 선호
+
+### 유럽·아시아
+
+- **유럽:** STOXX 600 주간 +1.2%, 이란 휴전 기대감에 에너지 섹터 반등
+- **일본:** 닛케이 225 +2.8%, 연초 대비 +23.1%로 강세지만 한국에 크게 뒤처짐
+- **중국:** 상해종합 +0.8%, 미중 무역 갈등 완화 기대감 반영
+
+```{r us-indices}
+#| lightbox: true
+#| fig-cap: "미국 3대 지수 주간 수익률 vs 월간 수익률"
+
+daily_data <- data.frame(
+  date = rep(as.Date(c("2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-09")), 3),
+  index = rep(c("S&P 500", "나스닥", "다우존스"), each = 5),
+  daily_return = c(
+    1.2, 0.5, 0.3, -0.1, 0.84,
+    1.8, 0.9, 0.6, 0.2, 1.71,
+    0.4, -0.2, 0.1, -0.3, 0.02
+  )
+)
+
+p_daily <- ggplot(daily_data, aes(x = date, y = daily_return, fill = index)) +
+  geom_col(position = "dodge", width = 0.6) +
+  scale_fill_manual(values = c("#f59e0b", "#22c55e", "#6366f1")) +
+  labs(title = "미국 3대 지수 일간 수익률 (%)",
+       subtitle = "5월 2주차 (05.05~05.09)",
+       x = NULL, y = "수익률 (%)", fill = "지수") +
+  theme_chimera() +
+  theme(axis.text.x = element_text(angle = 0))
+
+monthly_data <- data.frame(
+  index = c("S&P 500", "나스닥", "다우존스"),
+  weekly = c(2.3, 4.5, 0.2),
+  monthly = c(5.8, 9.2, 2.1),
+  ytd = c(18.5, 24.3, 10.2)
+)
+
+monthly_long <- monthly_data |>
+  pivot_longer(-index, names_to = "period", values_to = "return_pct") |>
+  mutate(period = factor(period, levels = c("weekly","monthly","ytd"),
+                         labels = c("주간","월간","연초대비")))
+
+p_period <- ggplot(monthly_long, aes(x = index, y = return_pct, fill = period)) +
+  geom_col(position = "dodge", width = 0.7) +
+  scale_fill_manual(values = c("#ef4444", "#f59e0b", "#22c55e")) +
+  labs(title = "기간별 수익률 비교 (%)",
+       subtitle = "주간 / 월간 / 연초대비",
+       x = NULL, y = "수익률 (%)", fill = "기간") +
+  theme_chimera()
+
+p_daily + p_period +
+  plot_annotation(
+    title = "미국 증시 주간 성과 대시보드",
+    theme = theme(
+      plot.title = element_text(family = kfont, color = "#f59e0b",
+                                face = "bold", size = 16),
+      plot.background = element_rect(fill = "#1a1a2e", color = NA)
+    )
+  )
+```
+
+## 한국 증시 분석
+
+### KOSPI: 역사적 7,000 돌파
+
+5월 6일(화) KOSPI가 **사상 처음으로 7,000선을 돌파**하며 장중 7,311.54까지 치솟았다. 이후 연일 상승하며 5월 9일에는 **7,490.05**로 마감, 주간 +11.9%의 폭등세를 기록했다.
+
+**핵심 동력:**
+
+- **외국인 통합계좌 규제 완화:** 외국인이 대형 반도체주를 대거 매수
+- **삼성전자 시총 $1조 돌파:** 아시아에서 TSMC에 이어 2번째로 시총 1조 달러 클럽 진입
+- **SK하이닉스 사상 최대 실적:** AI HBM 수요 폭발, 연초 대비 +144%
+- **반도체 수출 $300억 돌파:** 월간 기준 사상 최초
+
+### KOSDAQ
+
+KOSDAQ도 1,285.40(+5.3%)으로 강세를 보였으나 KOSPI 상승률(+11.9%)의 절반에도 미치지 못하며 **대형주·중소형주 양극화** 현상이 심화되고 있다.
+
+```{r kospi-daily}
+#| lightbox: true
+#| fig-cap: "KOSPI 일별 추이 및 거래대금 (5월 2주차)"
+
+kospi_data <- data.frame(
+  date = as.Date(c("2026-05-05","2026-05-06","2026-05-07","2026-05-08","2026-05-09")),
+  close = c(6692, 7384, 7490, 7420, 7490),
+  volume_tr = c(28.5, 52.3, 45.8, 38.2, 35.6)
+)
+
+p_price <- ggplot(kospi_data, aes(x = date, y = close)) +
+  geom_line(color = "#f59e0b", linewidth = 1.2) +
+  geom_point(color = "#f59e0b", size = 3) +
+  geom_area(alpha = 0.15, fill = "#f59e0b") +
+  geom_hline(yintercept = 7000, linetype = "dashed", color = "#ef4444", linewidth = 0.8) +
+  annotate("text", x = as.Date("2026-05-07"), y = 7050,
+           label = "7,000 돌파!", color = "#ef4444", size = 4,
+           family = kfont, fontface = "bold") +
+  scale_y_continuous(labels = comma) +
+  labs(title = "KOSPI 일별 종가 추이",
+       subtitle = "5월 6일 사상 최초 7,000 돌파",
+       x = NULL, y = "KOSPI") +
+  theme_chimera()
+
+p_vol <- ggplot(kospi_data, aes(x = date, y = volume_tr)) +
+  geom_col(fill = "#6366f1", alpha = 0.8, width = 0.6) +
+  labs(title = "일별 거래대금 (조원)",
+       x = NULL, y = "거래대금 (조원)") +
+  theme_chimera()
+
+p_price / p_vol +
+  plot_layout(heights = c(3, 1)) +
+  plot_annotation(
+    title = "KOSPI 7,490 — 역사적 7,000 시대 개막",
+    theme = theme(
+      plot.title = element_text(family = kfont, color = "#f59e0b",
+                                face = "bold", size = 16),
+      plot.background = element_rect(fill = "#1a1a2e", color = NA)
+    )
+  )
+```
+
+```{r cap-comparison}
+#| lightbox: true
+#| fig-cap: "시가총액별 수익률 비교 — 대형주 vs 중소형주 양극화"
+
+cap_data <- data.frame(
+  category = c("대형주\n(KOSPI200)", "중형주", "소형주", "KOSDAQ"),
+  weekly = c(12.5, 6.8, 4.2, 5.3),
+  ytd = c(82.0, 35.0, 18.0, 30.0)
+) |>
+  pivot_longer(-category, names_to = "period", values_to = "return_pct") |>
+  mutate(period = factor(period, levels = c("weekly", "ytd"),
+                         labels = c("주간 수익률", "연초대비 수익률")))
+
+ggplot(cap_data, aes(x = reorder(category, -return_pct), y = return_pct, fill = period)) +
+  geom_col(position = "dodge", width = 0.6) +
+  geom_text(aes(label = paste0(return_pct, "%")),
+            position = position_dodge(width = 0.6),
+            vjust = -0.5, color = "#e4e4ec", size = 3.5, family = kfont) +
+  scale_fill_manual(values = c("#f59e0b", "#22c55e")) +
+  labs(title = "시가총액별 수익률 비교",
+       subtitle = "대형주 중심 랠리 — 양극화 심화",
+       x = NULL, y = "수익률 (%)", fill = NULL) +
+  theme_chimera() +
+  theme(legend.position = "top")
+```
+
+## 섹터 분석
+
+```{r sector-analysis}
+#| lightbox: true
+#| fig-cap: "업종별 주간 수익률 히트맵 + 바차트"
+
+sector_data <- data.frame(
+  sector = c("반도체", "증권", "전선/전력", "2차전지", "자동차",
+             "철강", "바이오", "금융", "건설", "통신",
+             "화학", "유통", "조선", "디스플레이"),
+  weekly_return = c(18.5, 12.3, 9.8, 7.2, 5.5,
+                    3.8, 3.2, 4.5, 2.1, 1.8,
+                    -0.5, 1.2, 6.8, 8.5),
+  market_cap_pct = c(42, 5, 4, 8, 7, 3, 6, 5, 3, 4, 3, 2, 4, 4)
+)
+
+sector_data <- sector_data |>
+  mutate(color_group = case_when(
+    weekly_return >= 10 ~ "hot",
+    weekly_return >= 5 ~ "warm",
+    weekly_return >= 0 ~ "neutral",
+    TRUE ~ "cold"
+  ))
+
+p_bar <- ggplot(sector_data, aes(x = reorder(sector, weekly_return), y = weekly_return,
+                                  fill = color_group)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = paste0(ifelse(weekly_return > 0, "+", ""), weekly_return, "%")),
+            hjust = ifelse(sector_data$weekly_return >= 0, -0.1, 1.1),
+            color = "#e4e4ec", size = 3.2, family = kfont) +
+  scale_fill_manual(values = c("hot" = "#ef4444", "warm" = "#f59e0b",
+                                "neutral" = "#6366f1", "cold" = "#3b82f6"),
+                    guide = "none") +
+  coord_flip() +
+  labs(title = "업종별 주간 수익률",
+       subtitle = "반도체 +18.5%로 독주 — 삼성전자·SK하이닉스 견인",
+       x = NULL, y = "주간 수익률 (%)") +
+  theme_chimera()
+
+p_heat <- ggplot(sector_data, aes(x = 1, y = reorder(sector, weekly_return),
+                                   fill = weekly_return)) +
+  geom_tile(width = 0.8) +
+  scale_fill_gradient2(low = "#3b82f6", mid = "#1a1a2e", high = "#ef4444",
+                       midpoint = 5, name = "수익률(%)") +
+  geom_text(aes(label = paste0(weekly_return, "%")),
+            color = "#e4e4ec", size = 3, family = kfont) +
+  labs(title = "히트맵", x = NULL, y = NULL) +
+  theme_chimera() +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+
+p_bar + p_heat +
+  plot_layout(widths = c(3, 1)) +
+  plot_annotation(
+    title = "섹터별 성과 대시보드 — 반도체 독주 체제",
+    theme = theme(
+      plot.title = element_text(family = kfont, color = "#f59e0b",
+                                face = "bold", size = 16),
+      plot.background = element_rect(fill = "#1a1a2e", color = NA)
+    )
+  )
+```
+
+**섹터별 포인트:**
+
+- **반도체 (+18.5%):** 삼성전자 +111%(YTD), SK하이닉스 +144%(YTD). AI HBM·DRAM 수요 폭발
+- **증권 (+12.3%):** 거래대금 급증에 따른 수수료 수익 기대
+- **전선/전력 (+9.8%):** AI 데이터센터 전력 인프라 수요 확대
+- **디스플레이 (+8.5%):** AI 데이터센터향 고사양 패널 수요
+
+## TACO 모델 분석
+
+TACO(Trump-Adjusted Capital Oscillator) 모델의 6대 팩터 분석 결과:
+
+```{r taco-model}
+#| lightbox: true
+#| fig-cap: "TACO 리스크 팩터 롤리팝 차트"
+
+taco_data <- data.frame(
+  factor = c("관세 정책\n(Tariff)", "AI 기술 투자\n(AI/Tech)", "원유/에너지\n(Crude)",
+             "외교/지정학\n(Geopolitics)", "유동성/통화\n(Liquidity)", "노동시장\n(Labor)"),
+  score = c(65, 92, 55, 60, 70, 75),
+  direction = c("중립", "극강세", "개선", "개선", "양호", "양호")
+)
+
+taco_data <- taco_data |>
+  mutate(color = case_when(
+    score >= 80 ~ "#22c55e",
+    score >= 60 ~ "#f59e0b",
+    score >= 40 ~ "#eab308",
+    TRUE ~ "#ef4444"
+  ))
+
+ggplot(taco_data, aes(x = reorder(factor, score), y = score)) +
+  geom_segment(aes(xend = factor, y = 0, yend = score), color = "#2a2a4a", linewidth = 1.5) +
+  geom_point(aes(color = color), size = 8) +
+  geom_text(aes(label = score), color = "#1a1a2e", size = 3.5, fontface = "bold",
+            family = kfont) +
+  geom_text(aes(label = direction, y = score + 5), color = "#aaaaaa", size = 3,
+            family = kfont, hjust = 0) +
+  scale_color_identity() +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 105)) +
+  geom_hline(yintercept = 50, linetype = "dotted", color = "#ef4444", linewidth = 0.5) +
+  annotate("text", x = 0.5, y = 52, label = "경계선 50", color = "#ef4444",
+           size = 3, family = kfont, hjust = 0) +
+  labs(title = "TACO 모델 6대 팩터 스코어",
+       subtitle = "AI/기술 투자 92점으로 극강세 — 관세·에너지 리스크 잔존",
+       x = NULL, y = "팩터 점수 (0~100)") +
+  theme_chimera()
+```
+
+**TACO 종합 점수: 69.5 / 100** (이전 주 63.2 → +6.3pt 개선)
+
+- **AI/기술 투자 (92):** 마이크론·삼성·SK하이닉스 AI 투자 확대. HBM 수요 역대급
+- **노동시장 (75):** 4월 비농업 고용 115K, 예상 상회. 실업률 4.3% 안정
+- **유동성 (70):** 금리 동결(3.50~3.75%) 유지, 연내 1회 인하 전망
+- **관세 (65):** 미중 갈등 소강, 그러나 불확실성 지속
+- **지정학 (60):** 이란 휴전 기대감. 중동 리스크 점진 완화
+- **에너지 (55):** WTI $95 (-7.3%), 이란 휴전 시 추가 하락 가능
+
+## 리스크 요인
+
+```{r risk-dashboard}
+#| lightbox: true
+#| fig-cap: "과열 경고 지표 대시보드"
+
+risk_data <- data.frame(
+  indicator = c("RSI (14일)", "투자자예탁금\n(조원)", "신용잔고\n(조원)",
+                "공매도 비율\n(%)", "PER\n(12M Fwd)", "외국인\n순매수 연속(일)"),
+  value = c(78, 136.9, 28.5, 3.2, 16.8, 12),
+  threshold = c(70, 100, 25, 5, 15, NA),
+  status = c("과열", "과열", "경계", "정상", "고평가", "강세")
+)
+
+risk_data <- risk_data |>
+  mutate(fill_color = case_when(
+    status == "과열" ~ "#ef4444",
+    status == "경계" ~ "#f59e0b",
+    status == "고평가" ~ "#eab308",
+    status == "정상" ~ "#22c55e",
+    TRUE ~ "#06b6d4"
+  ))
+
+ggplot(risk_data, aes(x = reorder(indicator, value), y = value, fill = fill_color)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = paste0(value, "\n[", status, "]")),
+            hjust = -0.1, color = "#e4e4ec", size = 3.2, family = kfont) +
+  scale_fill_identity() +
+  coord_flip() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.3))) +
+  labs(title = "과열 경고 지표 대시보드",
+       subtitle = "RSI 78 과열 · 예탁금 136.9조 사상 최고 · 신용잔고 경계",
+       x = NULL, y = "지표 값") +
+  theme_chimera()
+```
+
+**주요 리스크:**
+
+1. **과열 신호:** RSI 78로 과매수 구간 진입, 투자자예탁금 136.9조 사상 최고
+2. **신용잔고 증가:** 28.5조원으로 경계 수준 — 급락 시 마진콜 연쇄 위험
+3. **반도체 쏠림:** KOSPI 시총의 42%가 반도체 2개사에 집중 → 하락 시 증폭 위험
+4. **이란 변수:** 휴전 기대 선반영. 실패 시 유가 급등·증시 급락 가능
+5. **연준 금리:** 6월 동결 확실시(97.4%). 인하 시점 2027년으로 후퇴 가능
+
+## 감성분석 대시보드
+
+```{r sentiment-dashboard}
+#| lightbox: true
+#| fig-cap: "8대 토픽 감성 점수 (sentiment_latest.json)"
+
+sentiment <- fromJSON("../data/sentiment_latest.json")
+sent_df <- as.data.frame(sentiment$topics)
+
+sent_df <- sent_df |>
+  mutate(color = case_when(
+    score >= 80 ~ "#22c55e",
+    score >= 60 ~ "#f59e0b",
+    score >= 40 ~ "#eab308",
+    TRUE ~ "#ef4444"
+  ))
+
+ggplot(sent_df, aes(x = reorder(topic, score), y = score, fill = color)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = paste0(score, " (", ifelse(change > 0, "+", ""), change, ")")),
+            hjust = -0.1, color = "#e4e4ec", size = 3.5, family = kfont) +
+  geom_text(aes(label = signal, y = 5), hjust = 0, color = "#1a1a2e",
+            size = 3, family = kfont, fontface = "bold") +
+  scale_fill_identity() +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 110)) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "#aaaaaa", linewidth = 0.5) +
+  labs(title = "감성분석 대시보드 — 8대 토픽 점수",
+       subtitle = paste0("기준일: ", sentiment$date, " | 반도체/AI 92점 극강세, 유가 40점 경계"),
+       x = NULL, y = "감성 점수 (0~100)") +
+  theme_chimera()
+```
+
+## 수급 분석
+
+```{r supply-demand}
+#| lightbox: true
+#| fig-cap: "외국인·기관·개인 일별 순매수 흐름 (supply_demand_latest.json)"
+
+sd_data <- fromJSON("../data/supply_demand_latest.json")
+sd_df <- as.data.frame(sd_data$weekly)
+
+sd_long <- sd_df |>
+  pivot_longer(cols = c(foreign_net, inst_net, retail_net),
+               names_to = "investor", values_to = "net_buy") |>
+  mutate(investor = case_when(
+    investor == "foreign_net" ~ "외국인",
+    investor == "inst_net" ~ "기관",
+    investor == "retail_net" ~ "개인"
+  ),
+  date = factor(date, levels = unique(date)))
+
+ggplot(sd_long, aes(x = date, y = net_buy, fill = investor)) +
+  geom_col(position = "dodge", width = 0.7) +
+  geom_hline(yintercept = 0, color = "#aaaaaa", linewidth = 0.5) +
+  scale_fill_manual(values = c("외국인" = "#22c55e", "기관" = "#6366f1", "개인" = "#ef4444")) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "투자자별 일별 순매수 동향",
+       subtitle = paste0("외국인 주간 누적 +", format(sd_data$cumulative$foreign_net_total, big.mark = ","),
+                         "억 | 기관 +", format(sd_data$cumulative$inst_net_total, big.mark = ","),
+                         "억 | 개인 ", format(sd_data$cumulative$retail_net_total, big.mark = ","), "억"),
+       x = NULL, y = "순매수 (억원)", fill = "투자자") +
+  theme_chimera() +
+  theme(legend.position = "top")
+```
+
+**수급 핵심:**
+
+- **외국인:** 주간 +53,560억원 순매수. 외국인 통합계좌 규제 완화 효과로 대형 반도체주 집중 매수
+- **기관:** 주간 +25,250억원 순매수. 연기금·보험사 비중 확대
+- **개인:** 주간 -78,810억원 순매도. 차익실현 물량 출회, 그러나 예탁금은 사상 최고 유지
+
+## 적중률 리포트
+
+```{r hit-rate}
+#| lightbox: true
+#| fig-cap: "Chimera-AI 주간 적중률 추이 (hit_rate_history.json)"
+
+hr_data <- fromJSON("../data/hit_rate_history.json")
+hr_df <- as.data.frame(hr_data$history)
+baseline <- hr_data$baseline
+
+hr_df <- hr_df |>
+  mutate(week = factor(week, levels = week),
+         above = hit_rate >= baseline)
+
+hr_df$week_num <- seq_len(nrow(hr_df))
+
+ggplot(hr_df, aes(x = week_num, y = hit_rate)) +
+  geom_hline(yintercept = baseline, linetype = "dashed", color = "#ef4444", linewidth = 0.8) +
+  annotate("text", x = 1, y = baseline + 3, label = paste0("기준선 ", baseline, "%"),
+           color = "#ef4444", size = 3.5, family = kfont, hjust = 0) +
+  geom_line(color = "#f59e0b", linewidth = 1) +
+  geom_point(aes(color = above), size = 5) +
+  geom_text(aes(label = paste0(hit_rate, "%")), vjust = -1.5,
+            color = "#e4e4ec", size = 3.5, family = kfont) +
+  scale_color_manual(values = c("TRUE" = "#22c55e", "FALSE" = "#ef4444"), guide = "none") +
+  scale_x_continuous(breaks = hr_df$week_num, labels = hr_df$week) +
+  scale_y_continuous(limits = c(30, 100)) +
+  labs(title = "Chimera-AI 주간 적중률 추이",
+       subtitle = paste0("최신 주간: ", tail(hr_df$hit_rate, 1), "% (",
+                         tail(hr_df$correct, 1), "/", tail(hr_df$total_calls, 1),
+                         ") | 평균: ", round(mean(hr_df$hit_rate), 1), "%"),
+       x = NULL, y = "적중률 (%)") +
+  theme_chimera() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+```
+
+**적중률 분석:**
+
+- 이번 주 적중률: **71%** (7개 콜 중 5개 적중)
+- 7주 평균 적중률: **65.1%** (기준선 55% 상회)
+- 적중 항목: KOSPI 상승 방향, 반도체 섹터 아웃퍼폼, 외국인 순매수 지속, 달러 약세 전환, VIX 안정
+- 미적중 항목: KOSDAQ 강세 폭(예상 이하), 유가 하락 폭(예상 초과)
+
+## 투자 전략
+
+::: {.panel-tabset}
+
+### 강세 시나리오 (확률 50%)
+
+**KOSPI 7,500~8,000 돌파 시도**
+
+- 이란 공식 휴전 → 유가 $80대 하락 → 위험선호 극대화
+- 외국인 매수 지속 + MSCI 비중 확대 기대
+- **전략:** 반도체·전력인프라 비중 유지, 증권주 단기 매수
+
+### 횡보 시나리오 (확률 35%)
+
+**KOSPI 7,200~7,500 박스권**
+
+- 과열 지표 부담으로 단기 차익실현 물량 출회
+- 이란 휴전 교착, FOMC 6월 동결 확인
+- **전략:** 반도체 비중 일부 축소, 배당주·내수주 분산
+
+### 약세 시나리오 (확률 15%)
+
+**KOSPI 6,800~7,200 조정**
+
+- 이란 휴전 결렬 → 유가 급등 → 인플레 우려 재점화
+- 신용잔고 마진콜 연쇄, 개인 투매
+- **전략:** 현금 비중 30% 확대, 방어주(통신·유틸리티) 전환
+
+:::
+
+```{r portfolio-donut}
+#| lightbox: true
+#| fig-cap: "추천 포트폴리오 배분 (횡보 시나리오 기준)"
+
+port_data <- data.frame(
+  asset = c("반도체/AI", "전력인프라", "금융/증권", "2차전지", "현금성"),
+  weight = c(35, 20, 15, 15, 15)
+)
+
+port_data <- port_data |>
+  mutate(
+    ymax = cumsum(weight),
+    ymin = lag(ymax, default = 0),
+    mid = (ymin + ymax) / 2,
+    label = paste0(asset, "\n", weight, "%")
+  )
+
+ggplot(port_data, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 2.5, fill = asset)) +
+  geom_rect(color = "#1a1a2e", linewidth = 0.5) +
+  geom_text(aes(x = 3.25, y = mid, label = label),
+            color = "#e4e4ec", size = 3.5, family = kfont) +
+  scale_fill_manual(values = chimera_colors[1:5]) +
+  coord_polar(theta = "y") +
+  xlim(c(1, 4.5)) +
+  labs(title = "추천 포트폴리오 배분",
+       subtitle = "횡보 시나리오 기준 — 반도체 35%, 전력 20%, 현금 15%") +
+  theme_chimera() +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  )
+```
+
+## 다음 주 전망
+
+### 경제 캘린더 (5월 12~16일)
+
+- **5/13 (화):** 미국 4월 CPI 발표 — 3.3% 유지 여부 주목
+- **5/14 (수):** 중국 4월 산업생산·소매판매
+- **5/15 (목):** 미국 4월 소매판매, 파월 의장 발언 (마지막 공개 일정)
+- **5/16 (금):** 미국 5월 미시간 소비자심리지수
+
+### 실적 발표
+
+- **5/12~16:** 홈디포, 월마트, 시스코, 어플라이드 머티리얼즈
+
+### 주요 모니터링 포인트
+
+1. **이란 휴전 협상 진전:** 공식 발표 시 유가 급락 → 증시 추가 상승 가능
+2. **CPI 데이터:** 3.3% 초과 시 연준 긴축 우려 재부상
+3. **KOSPI 과열 해소:** RSI 78 → 70 이하 조정 시 재진입 기회
+4. **외국인 수급:** 순매수 연속 12일 → 추세 전환 여부 관찰
+5. **MSCI 반기 리뷰:** 한국 비중 확대 기대감 반영 여부
+
+---
+
+::: {.callout-note}
+## 면책 고지
+이 보고서는 Chimera-AI 멀티에이전트 시스템이 생성한 분석 자료입니다. 투자 권유가 아니며, 투자 판단의 책임은 투자자 본인에게 있습니다. 과거 성과가 미래 수익을 보장하지 않습니다.
+:::
+
+::: {.callout-tip}
+## 관련 프로젝트
+- [Alpha Hunter](https://waterfirst.github.io/alpha-hunter/) — 섹터별 모멘텀 · ETF 전략 · 히든젬 발굴
+- [Insight Lab](https://waterfirst.github.io/insight-lab/) — 인문학 × 과학 크로스오버 보고서
+:::

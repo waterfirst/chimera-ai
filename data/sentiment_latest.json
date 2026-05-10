@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-09",
+  "topics": [
+    {"topic": "반도체/AI", "score": 92, "change": 8, "signal": "극강세"},
+    {"topic": "미국 증시", "score": 85, "change": 5, "signal": "강세"},
+    {"topic": "한국 증시", "score": 88, "change": 12, "signal": "강세"},
+    {"topic": "중동 지정학", "score": 45, "change": 10, "signal": "개선"},
+    {"topic": "금리/통화정책", "score": 55, "change": -3, "signal": "중립"},
+    {"topic": "유가/원자재", "score": 40, "change": 5, "signal": "경계"},
+    {"topic": "환율", "score": 50, "change": 2, "signal": "중립"},
+    {"topic": "글로벌 무역", "score": 65, "change": 8, "signal": "개선"}
+  ]
+}

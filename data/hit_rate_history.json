@@ -1,0 +1,12 @@
+{
+  "history": [
+    {"week": "3월4주", "date": "2026-03-27", "hit_rate": 57, "total_calls": 7, "correct": 4},
+    {"week": "4월1주", "date": "2026-04-03", "hit_rate": 71, "total_calls": 7, "correct": 5},
+    {"week": "4월2주", "date": "2026-04-10", "hit_rate": 57, "total_calls": 7, "correct": 4},
+    {"week": "4월3주", "date": "2026-04-18", "hit_rate": 43, "total_calls": 7, "correct": 3},
+    {"week": "4월4주", "date": "2026-04-25", "hit_rate": 71, "total_calls": 7, "correct": 5},
+    {"week": "5월1주", "date": "2026-05-02", "hit_rate": 86, "total_calls": 7, "correct": 6},
+    {"week": "5월2주", "date": "2026-05-09", "hit_rate": 71, "total_calls": 7, "correct": 5}
+  ],
+  "baseline": 55
+}

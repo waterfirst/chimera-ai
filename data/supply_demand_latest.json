@@ -1,0 +1,16 @@
+{
+  "date": "2026-05-09",
+  "weekly": [
+    {"date": "05.05", "foreign_net": 8520, "inst_net": 3210, "retail_net": -11730},
+    {"date": "05.06", "foreign_net": 15340, "inst_net": 7890, "retail_net": -23230},
+    {"date": "05.07", "foreign_net": 12180, "inst_net": 5640, "retail_net": -17820},
+    {"date": "05.08", "foreign_net": 9870, "inst_net": 4530, "retail_net": -14400},
+    {"date": "05.09", "foreign_net": 7650, "inst_net": 3980, "retail_net": -11630}
+  ],
+  "cumulative": {
+    "foreign_net_total": 53560,
+    "inst_net_total": 25250,
+    "retail_net_total": -78810
+  },
+  "unit": "억원"
+}

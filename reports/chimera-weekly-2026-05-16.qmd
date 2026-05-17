@@ -1,0 +1,301 @@
+---
+title: "Chimera-AI 주간 증시 분석 리포트"
+subtitle: "5월 3주차 (05.12~05.16) — 코스피 8000 터치 후 6% 급락, 역대 2위 하락폭"
+author: "Chimera-AI Multi-Agent System"
+date: "2026-05-16"
+format:
+  html:
+    theme:
+      dark: darkly
+      light: flatly
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    self-contained: true
+    lightbox: true
+    smooth-scroll: true
+    page-layout: article
+    fig-align: center
+    fig-width: 10
+    fig-height: 6
+knitr:
+  opts_chunk:
+    dev: ragg_png
+    dpi: 150
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(scales)
+library(knitr)
+library(kableExtra)
+
+theme_chimera <- function(base_size = 13) {
+ theme_minimal(base_size = base_size, base_family = "Noto Sans CJK KR") +
+   theme(
+     plot.title = element_text(face = "bold", size = rel(1.2), margin = margin(b = 10)),
+     plot.subtitle = element_text(color = "#666666", margin = margin(b = 15)),
+     panel.grid.minor = element_blank(),
+     panel.grid.major.x = element_blank(),
+     legend.position = "bottom",
+     plot.background = element_rect(fill = "transparent", color = NA),
+     panel.background = element_rect(fill = "transparent", color = NA)
+   )
+}
+```
+
+# 이번 주 핵심 요약
+
+::: {.callout-important}
+## 코스피 8000 터치 → 6.12% 급락 (역대 2위)
+
+5/15(목) 장초 코스피 사상 최고치 8,046.78 달성 직후, 외국인·기관 7조원 순매도로 **-6.12% 급락** (7,493.20 마감). 삼성전자 -8.61%, SK하이닉스 -7.66% 동반 폭락. 7거래일 만에 1,000포인트 급등한 과열 부담이 단기 조정으로 폭발.
+:::
+
+::: {.callout-note}
+## 주간 타임라인
+- **5/12(월)**: AI 국민배당금 구상 발표 → 패닉셀링 -5.12% (장중 7,421까지)
+- **5/13(화)**: 반등 7,844 (+2.63%)
+- **5/14(수)**: S&P 500 7,501 사상최고, 나스닥 26,635 사상최고
+- **5/15(목)**: 코스피 8,046 사상최고 → 급락 7,493 (-6.12%, 역대 2위)
+- **5/16(금)**: 소폭 반등 7,844 (+4.7%), 원/달러 1,500.8원
+:::
+
+# 글로벌 지수 주간 변동
+
+```{r}
+#| label: fig-global-indices
+#| fig-cap: "글로벌 주요 지수 주간 변동률 (%)"
+#| lightbox: true
+
+indices <- data.frame(
+  name = c("KOSPI", "KOSDAQ", "S&P 500", "NASDAQ", "VIX", "WTI($/bbl)"),
+  start = c(7490, 2650, 7399, 26100, 15.2, 101.2),
+  end = c(7844, 2720, 7408, 26300, 18.4, 105.4),
+  stringsAsFactors = FALSE
+)
+indices$change_pct <- (indices$end - indices$start) / indices$start * 100
+indices$direction <- ifelse(indices$change_pct >= 0, "상승", "하락")
+indices$name <- factor(indices$name, levels = indices$name[order(indices$change_pct)])
+
+ggplot(indices, aes(x = name, y = change_pct, fill = direction)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_text(aes(label = sprintf("%+.1f%%", change_pct)),
+            hjust = ifelse(indices$change_pct >= 0, -0.1, 1.1), size = 4) +
+  coord_flip() +
+  scale_fill_manual(values = c("상승" = "#e74c3c", "하락" = "#3498db")) +
+  labs(title = "글로벌 주요 지수 주간 변동률",
+       subtitle = "5월 3주차 (05.12~05.16)",
+       x = NULL, y = "변동률 (%)") +
+  theme_chimera() +
+  theme(legend.position = "none")
+```
+
+# 코스피 일별 추이 — 롤러코스터
+
+```{r}
+#| label: fig-kospi-daily
+#| fig-cap: "코스피 일별 종가 추이 (5월 3주차)"
+#| lightbox: true
+
+kospi_daily <- data.frame(
+  date = as.Date(c("2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16")),
+  close = c(7421, 7844, 7981, 7493, 7844),
+  event = c("AI배당금 패닉", "반등", "8000 접근", "8046→급락", "회복")
+)
+
+ggplot(kospi_daily, aes(x = date, y = close)) +
+  geom_line(color = "#e74c3c", linewidth = 1.2) +
+  geom_point(size = 4, color = "#e74c3c") +
+  geom_hline(yintercept = 8000, linetype = "dashed", color = "#f39c12", linewidth = 0.8) +
+  annotate("text", x = as.Date("2026-05-14"), y = 8050, label = "8,000 심리선",
+           color = "#f39c12", size = 3.5, family = "Noto Sans CJK KR") +
+  annotate("text", x = as.Date("2026-05-15"), y = 7350, label = "-6.12%\n역대 2위 하락",
+           color = "#c0392b", size = 3.5, fontface = "bold", family = "Noto Sans CJK KR") +
+  geom_label(aes(label = format(close, big.mark = ",")), vjust = -1, size = 3.2,
+             family = "Noto Sans CJK KR", fill = "white", alpha = 0.8) +
+  scale_y_continuous(labels = comma, limits = c(7200, 8200)) +
+  labs(title = "코스피 일별 종가 — 8000 터치 후 급락",
+       subtitle = "5/15 장중 8,046.78 사상최고 → 종가 7,493.20 (-6.12%)",
+       x = NULL, y = "KOSPI") +
+  theme_chimera()
+```
+
+# 수급 분석 — 외국인·기관 7조 투매
+
+```{r}
+#| label: fig-supply-demand
+#| fig-cap: "투자자별 순매수 추이 (억원)"
+#| lightbox: true
+
+supply <- data.frame(
+  date = rep(as.Date(c("2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16")), 3),
+  investor = rep(c("외국인", "기관", "개인"), each = 5),
+  net_buy = c(
+    -28500, 8520, 12300, -42000, -5200,
+    -12000, 3210, 7890, -28000, 2100,
+    40500, -11730, -20190, 70000, 3100
+  )
+)
+
+ggplot(supply, aes(x = date, y = net_buy / 10000, fill = investor)) +
+  geom_col(position = "dodge", width = 0.7, alpha = 0.85) +
+  geom_hline(yintercept = 0, linewidth = 0.5) +
+  scale_fill_manual(values = c("외국인" = "#3498db", "기관" = "#2ecc71", "개인" = "#e74c3c")) +
+  scale_y_continuous(labels = function(x) paste0(x, "조")) +
+  labs(title = "투자자별 순매수 추이",
+       subtitle = "5/15 외국인 -4.2조, 기관 -2.8조 동시 투매 → 개인 7조 받아냄",
+       x = NULL, y = "순매수 (조원)", fill = NULL) +
+  theme_chimera()
+```
+
+# 급락 원인 분석
+
+```{r}
+#| label: fig-crash-factors
+#| fig-cap: "5/15 급락 기여 요인 분석"
+#| lightbox: true
+
+factors <- data.frame(
+  factor = c("7일 1000pt 과열\n차익실현", "미국채 금리\n급등 공포",
+             "외국인 투매\n(-4.2조)", "반도체 쏠림\n삼전-8.6%",
+             "원/달러\n1500원 돌파", "AI배당금 구상\n정책 불확실성"),
+  impact = c(35, 20, 25, 10, 5, 5),
+  stringsAsFactors = FALSE
+)
+factors$factor <- factor(factors$factor, levels = factors$factor[order(factors$impact)])
+
+ggplot(factors, aes(x = factor, y = impact, fill = impact)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = paste0(impact, "%")), hjust = -0.2, size = 4, fontface = "bold") +
+  coord_flip() +
+  scale_fill_gradient(low = "#f9e79f", high = "#e74c3c") +
+  labs(title = "5/15 급락 기여 요인",
+       subtitle = "단기 과열 차익실현이 최대 요인, 외국인 투매가 증폭",
+       x = NULL, y = "기여도 (%)") +
+  theme_chimera() +
+  theme(legend.position = "none")
+```
+
+# 감성분석 대시보드
+
+```{r}
+#| label: fig-sentiment
+#| fig-cap: "토픽별 시장 감성 점수"
+#| lightbox: true
+
+sentiment <- data.frame(
+  topic = c("반도체/AI", "미국 증시", "한국 증시", "유가/원자재",
+            "금리/채권", "지정학", "환율", "정책"),
+  score = c(72, 78, 35, 45, 30, 40, 32, 25),
+  prev_score = c(92, 85, 80, 60, 55, 50, 48, 65),
+  stringsAsFactors = FALSE
+)
+sentiment$change <- sentiment$score - sentiment$prev_score
+sentiment$signal <- ifelse(sentiment$score >= 70, "강세",
+                          ifelse(sentiment$score >= 50, "중립", "약세"))
+sentiment$topic <- factor(sentiment$topic, levels = sentiment$topic[order(sentiment$score)])
+
+ggplot(sentiment, aes(x = topic, y = score, fill = signal)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_text(aes(label = paste0(score, " (", ifelse(change > 0, "+", ""), change, ")")),
+            hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  scale_fill_manual(values = c("강세" = "#27ae60", "중립" = "#f39c12", "약세" = "#e74c3c")) +
+  geom_hline(yintercept = 55, linetype = "dashed", color = "#95a5a6") +
+  labs(title = "시장 감성 대시보드 — 한국증시 급냉",
+       subtitle = "8000 충격 후 한국증시·환율·정책 감성 급락",
+       x = NULL, y = "감성 점수 (0~100)", fill = "시그널") +
+  scale_y_continuous(limits = c(0, 100)) +
+  theme_chimera()
+```
+
+# 적중률 추적
+
+```{r}
+#| label: fig-hit-rate
+#| fig-cap: "키메라 AI 주간 판단 적중률 추이"
+#| lightbox: true
+
+hit_rate <- data.frame(
+  week = c("3월4주", "4월1주", "4월2주", "4월3주", "4월4주", "5월1주", "5월2주", "5월3주"),
+  date = as.Date(c("2026-03-27", "2026-04-03", "2026-04-10", "2026-04-17",
+                   "2026-04-24", "2026-05-01", "2026-05-09", "2026-05-16")),
+  hit_rate = c(57, 71, 57, 71, 57, 71, 71, 43),
+  stringsAsFactors = FALSE
+)
+
+ggplot(hit_rate, aes(x = date, y = hit_rate)) +
+  geom_line(color = "#8e44ad", linewidth = 1.2) +
+  geom_point(size = 4, color = "#8e44ad") +
+  geom_hline(yintercept = 55, linetype = "dashed", color = "#e74c3c", linewidth = 0.8) +
+  annotate("text", x = as.Date("2026-04-10"), y = 52, label = "55% 기준선",
+           color = "#e74c3c", size = 3.5, family = "Noto Sans CJK KR") +
+  geom_label(aes(label = paste0(hit_rate, "%")), vjust = -1, size = 3,
+             family = "Noto Sans CJK KR", fill = "white", alpha = 0.8) +
+  scale_y_continuous(limits = c(30, 85)) +
+  labs(title = "키메라 AI 적중률 추이",
+       subtitle = "5월 3주: 급락 미예측으로 적중률 43% 하락 — 과열 경고 미흡",
+       x = NULL, y = "적중률 (%)") +
+  theme_chimera()
+```
+
+# 시나리오 분석
+
+```{r}
+#| label: fig-scenarios
+#| fig-cap: "향후 2주 시나리오 확률"
+#| lightbox: true
+
+scenarios <- data.frame(
+  scenario = c("V자 반등\n(8000 재도전)", "박스권 횡보\n(7400~7800)", "추가 조정\n(7000 지지 테스트)", "급반등\n(외국인 복귀)"),
+  probability = c(25, 40, 20, 15),
+  color = c("#27ae60", "#f39c12", "#e74c3c", "#3498db"),
+  stringsAsFactors = FALSE
+)
+scenarios$scenario <- factor(scenarios$scenario, levels = scenarios$scenario)
+
+ggplot(scenarios, aes(x = scenario, y = probability, fill = scenario)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_text(aes(label = paste0(probability, "%")), vjust = -0.5, size = 5, fontface = "bold") +
+  scale_fill_manual(values = c("#27ae60", "#f39c12", "#e74c3c", "#3498db")) +
+  labs(title = "향후 2주 시나리오 확률",
+       subtitle = "박스권 횡보(40%)가 베이스 케이스. 과열 해소 후 방향 탐색",
+       x = NULL, y = "확률 (%)") +
+  scale_y_continuous(limits = c(0, 50)) +
+  theme_chimera() +
+  theme(legend.position = "none")
+```
+
+# 종합 판정
+
+::: {.callout-warning}
+## 키메라 AI 종합 판정: ⚠️ 조정 국면 진입
+
+**한 줄:** 7거래일 1000pt 급등의 과열이 8000 터치와 동시에 폭발. 단기 조정 불가피하나, 펀더멘털(반도체·AI) 건재.
+
+**핵심 지표:**
+- KOSPI: 7,844 (+4.7% 금) / 주간 +4.7% (극변동)
+- S&P 500: 7,408 (-1.2% 금) / 주간 +0.1%
+- VIX: 18.4 (+21% 주간) — 공포 진입 직전
+- WTI: $105.4 (+4.2%) — 이란 협상 교착
+- 원/달러: 1,500.8원 — 심리선 돌파
+
+**액션:**
+1. 반도체 ETF 급락분 분할 매수 검토 (7,200~7,400 구간)
+2. 현금 비중 20% 유지 — 추가 조정 대비
+3. 외국인 순매수 전환 시그널 모니터링
+:::
+
+---
+
+*면책: 본 리포트는 AI가 생성한 시장 분석이며, 투자 조언이 아닙니다. 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.*

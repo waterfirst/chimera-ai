@@ -276,24 +276,172 @@ ggplot(scenarios, aes(x = scenario, y = probability, fill = scenario)) +
   theme(legend.position = "none")
 ```
 
+# 섹터별 매수/매도 시그널
+
+```{r}
+#| label: fig-sector-signal
+#| fig-cap: "10대 섹터 매수/매도 시그널 (모멘텀+수급+실적 종합)"
+#| lightbox: true
+
+sector_signal <- data.frame(
+  sector = c("자동차", "반도체", "금융", "2차전지", "조선", "바이오", "AI전력", "에너지", "방산", "소비재"),
+  score = c(82, 78, 70, 62, 55, 50, 45, 40, 35, 30),
+  signal = c("매수", "매수", "매수", "관망", "관망", "관망", "관망", "관망", "매도", "매도"),
+  rank_change = c(36, 4, 7, 10, -5, 0, -16, -10, -20, -15),
+  stringsAsFactors = FALSE
+)
+sector_signal$sector <- factor(sector_signal$sector, levels = sector_signal$sector[order(sector_signal$score)])
+sector_signal$signal <- factor(sector_signal$signal, levels = c("매수", "관망", "매도"))
+
+ggplot(sector_signal, aes(x = sector, y = score, fill = signal)) +
+  geom_col(width = 0.65, alpha = 0.9) +
+  geom_text(aes(label = paste0(score, "  (", ifelse(rank_change > 0, "+", ""), rank_change, ")")),
+            hjust = -0.1, size = 3.8, color = "#e4e4ec") +
+  geom_hline(yintercept = c(40, 65), linetype = "dashed", color = "#555555", linewidth = 0.4) +
+  annotate("text", x = 1.5, y = 67, label = "매수 기준선", color = "#27ae60", size = 3, family = "Noto Sans CJK KR") +
+  annotate("text", x = 1.5, y = 42, label = "매도 기준선", color = "#ef4444", size = 3, family = "Noto Sans CJK KR") +
+  coord_flip(ylim = c(0, 100)) +
+  scale_fill_manual(values = c("매수" = "#22c55e", "관망" = "#f59e0b", "매도" = "#ef4444")) +
+  labs(title = "10대 섹터 매수/매도 시그널",
+       subtitle = "자동차 ▲36 최강 가속 | AI전력 ▼16 급감속 | 방산·소비재 매도 전환",
+       x = NULL, y = "시그널 점수 (0~100)", fill = "판정") +
+  theme_chimera()
+```
+
+::: {.callout-tip}
+## 섹터 시그널 해석
+
+**🟢 매수 (65점+):** 자동차(▲36 폭발적 가속), 반도체(HBM 구조적), 금융(고배당 수혜)
+**🟡 관망 (40~65점):** AI전력(▼16 급감속, 추매 금물), 2차전지(조정 시 진입 대기), 조선(6월 매도 예정)
+**🔴 매도 (40점-):** 방산(미중 전략안정 → 긴장완화), 소비재(내수부진 + 환율 1,500원)
+:::
+
+# NS 자본흐름 분석 (Navier-Stokes Capital Flow)
+
+::: {.callout-important}
+## 🔴 현재 시장 국면: 난류 (Turbulent)
+
+**레이놀즈 수: 4,200** (임계값 2,300 초과 → 난류 확정)
+
+5/15 코스피 8,000 터치 후 -6.12% 급락으로 층류→난류 전환. 자금 흐름 방향성 상실, 섹터간 급격한 로테이션 발생. **추세 추종 전략 무효화, 현금 비중 확대 권고.**
+
+| 지표 | 값 | 의미 |
+|------|-----|------|
+| V-KOSPI | 28.5 (+45%) | 공포 진입 직전 |
+| 섹터 로테이션 속도 | 고속 | 방향성 없는 회전 |
+| 외국인 방향 일관도 | 0.3 (1.0 만점) | 극도로 불안정 |
+| 장중 반전 횟수 | 4회/일 | 난류 확정 |
+:::
+
+```{r}
+#| label: fig-ns-flow
+#| fig-cap: "NS 자본흐름 — 섹터간 자금 이동 벡터 (1주간, 억원)"
+#| lightbox: true
+
+flow_data <- data.frame(
+  from = c("방산", "금", "AI전력", "주식", "소비재", "해외(미국)"),
+  to = c("반도체", "현금", "자동차", "채권/MMF", "고배당", "국내(한국)"),
+  magnitude = c(8500, 5200, 3800, 6500, 2100, -12000),
+  stringsAsFactors = FALSE
+)
+flow_data$label <- paste0(flow_data$from, " → ", flow_data$to)
+flow_data$direction <- ifelse(flow_data$magnitude > 0, "유입", "유출")
+flow_data$label <- factor(flow_data$label, levels = flow_data$label[order(abs(flow_data$magnitude))])
+
+ggplot(flow_data, aes(x = label, y = magnitude / 10000, fill = direction)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_text(aes(label = paste0(format(magnitude, big.mark = ","), "억")),
+            hjust = ifelse(flow_data$magnitude >= 0, -0.1, 1.1), size = 3.5, color = "#e4e4ec") +
+  coord_flip() +
+  scale_fill_manual(values = c("유입" = "#22c55e", "유출" = "#ef4444")) +
+  scale_y_continuous(labels = function(x) paste0(x, "조")) +
+  labs(title = "자본흐름 벡터 — 돈은 어디로 흐르나",
+       subtitle = "방산→반도체 8,500억 | 주식→채권 6,500억 | 해외→국내 -1.2조 유출",
+       x = NULL, y = "자금 이동량 (조원)", fill = NULL) +
+  theme_chimera()
+```
+
+```{r}
+#| label: fig-ns-regime
+#| fig-cap: "NS 레이놀즈 수 게이지 — 층류/난류 판정"
+#| lightbox: true
+#| fig-height: 4
+
+regime_history <- data.frame(
+  week = c("4월3주", "4월4주", "5월1주", "5월2주", "5월3주"),
+  date = as.Date(c("2026-04-17", "2026-04-24", "2026-05-01", "2026-05-09", "2026-05-16")),
+  reynolds = c(1200, 1800, 2100, 1900, 4200),
+  stringsAsFactors = FALSE
+)
+regime_history$regime <- ifelse(regime_history$reynolds < 2300, "층류", "난류")
+
+ggplot(regime_history, aes(x = date, y = reynolds)) +
+  geom_area(fill = "#7c3aed", alpha = 0.15) +
+  geom_line(color = "#7c3aed", linewidth = 1.5) +
+  geom_point(aes(color = regime), size = 5) +
+  geom_hline(yintercept = 2300, linetype = "dashed", color = "#ef4444", linewidth = 1) +
+  annotate("text", x = as.Date("2026-04-24"), y = 2500,
+           label = "임계값 2,300 (층류↔난류)", color = "#ef4444", size = 3.5,
+           family = "Noto Sans CJK KR") +
+  annotate("rect", xmin = as.Date("2026-04-14"), xmax = as.Date("2026-05-12"),
+           ymin = 0, ymax = 2300, fill = "#22c55e", alpha = 0.05) +
+  annotate("rect", xmin = as.Date("2026-05-12"), xmax = as.Date("2026-05-18"),
+           ymin = 2300, ymax = 5000, fill = "#ef4444", alpha = 0.05) +
+  annotate("text", x = as.Date("2026-04-25"), y = 800, label = "층류 구간\n(추세 추종 유효)",
+           color = "#22c55e", size = 3, family = "Noto Sans CJK KR") +
+  annotate("text", x = as.Date("2026-05-15"), y = 3800, label = "난류 구간\n(추세 무효화)",
+           color = "#ef4444", size = 3, family = "Noto Sans CJK KR") +
+  geom_label(aes(label = format(reynolds, big.mark = ",")), vjust = -1.2, size = 3,
+             family = "Noto Sans CJK KR", fill = "#1a1a2e", color = "#e4e4ec") +
+  scale_color_manual(values = c("층류" = "#22c55e", "난류" = "#ef4444")) +
+  scale_y_continuous(limits = c(0, 5000)) +
+  labs(title = "NS 레이놀즈 수 추이 — 5/15 난류 전환",
+       subtitle = "V-KOSPI 28.5(+45%) + 외국인 방향 일관도 0.3 → 레이놀즈 4,200 돌파",
+       x = NULL, y = "레이놀즈 수", color = "국면") +
+  theme_chimera()
+```
+
+::: {.callout-note}
+## 압력 구배 (Pressure Gradient)
+
+| 압력원 | 방향 | 자금 압력 | 강도 |
+|--------|------|-----------|------|
+| **금리** | 상승 | 주식 → 채권 이동 압력 | 🔴 강 |
+| **환율** | 원화약세 1,500원 | 수출주 유리 but 외국인 이탈 | 🔴 강 |
+| **유가** | 상승 $105 | 에너지 인플레 → 금리 인상 압력 | 🟡 중 |
+
+## 와류(Vortex) 감지
+
+- **반도체**: 외국인 매도에도 개인 7조 순매수 → 자금 유입은 있으나 방향성 갈등. **와류 형성 초기** ⚠️
+- **AI전력**: 급격한 이탈 중 (1주 -10.9%). **와류 해소 단계** — 바닥 확인 후 재진입 기회
+:::
+
 # 종합 판정
 
 ::: {.callout-warning}
-## 키메라 AI 종합 판정: ⚠️ 조정 국면 진입
+## 키메라 AI 종합 판정: ⚠️ 조정 국면 + 난류
 
-**한 줄:** 7거래일 1000pt 급등의 과열이 8000 터치와 동시에 폭발. 단기 조정 불가피하나, 펀더멘털(반도체·AI) 건재.
+**한 줄:** 7거래일 1000pt 급등의 과열이 8000 터치와 동시에 폭발. NS 분석 난류 전환(Re=4,200). 추세 추종 무효, 현금 확보 우선.
 
 **핵심 지표:**
-- KOSPI: 7,844 (+4.7% 금) / 주간 +4.7% (극변동)
+- KOSPI: 7,844 (+4.7% 금) / 주간 극변동
 - S&P 500: 7,408 (-1.2% 금) / 주간 +0.1%
-- VIX: 18.4 (+21% 주간) — 공포 진입 직전
+- VIX: 18.4 (+21%) / V-KOSPI: 28.5 (+45%)
 - WTI: $105.4 (+4.2%) — 이란 협상 교착
 - 원/달러: 1,500.8원 — 심리선 돌파
+- **NS 레이놀즈: 4,200 → 난류 확정**
 
-**액션:**
-1. 반도체 ETF 급락분 분할 매수 검토 (7,200~7,400 구간)
-2. 현금 비중 20% 유지 — 추가 조정 대비
-3. 외국인 순매수 전환 시그널 모니터링
+**섹터 액션:**
+- 🟢 매수: 자동차(▲36), 반도체(분할), 금융(고배당)
+- 🟡 관망: AI전력(급감속), 2차전지(진입 대기)
+- 🔴 매도: 방산(미중 안정), 소비재(내수부진)
+
+**포트폴리오 액션:**
+1. AI전력기기 30% 축소 (120주 매도) → 현금 확보
+2. SOL 자동차TOP3 100~200주 매수 (최강 가속 섹터)
+3. 현금 비중 15~20% 유지 — 난류 국면 방어
+4. 코스피 7,200 터치 시 반도체 분할 매수 대기
+5. 외국인 순매수 전환 = 층류 복귀 신호 → 공격 전환
 :::
 
 ---

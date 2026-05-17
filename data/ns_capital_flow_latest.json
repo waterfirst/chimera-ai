@@ -1,0 +1,35 @@
+{
+  "date": "2026-05-16",
+  "regime": {
+    "type": "turbulent",
+    "reynolds_number": 4200,
+    "threshold": 2300,
+    "description": "난류 국면 — 8000 터치 후 급락으로 자금 흐름 방향성 상실. 섹터간 급격한 로테이션 발생. 추세 추종 전략 무효화, 현금 비중 확대 권고.",
+    "prev_regime": "laminar",
+    "regime_change_date": "2026-05-15",
+    "indicators": {
+      "vkospi": 28.5,
+      "vkospi_change": 45,
+      "sector_rotation_speed": "high",
+      "foreign_direction_consistency": 0.3,
+      "intraday_reversal_count": 4
+    }
+  },
+  "velocity_vectors": [
+    {"from": "방산", "to": "반도체", "magnitude": 8500, "unit": "억원", "period": "1주"},
+    {"from": "금", "to": "현금", "magnitude": 5200, "unit": "억원", "period": "1주"},
+    {"from": "AI전력", "to": "자동차", "magnitude": 3800, "unit": "억원", "period": "1주"},
+    {"from": "해외(미국)", "to": "국내(한국)", "magnitude": -12000, "unit": "억원", "period": "1주"},
+    {"from": "주식", "to": "채권/MMF", "magnitude": 6500, "unit": "억원", "period": "1주"},
+    {"from": "소비재", "to": "고배당", "magnitude": 2100, "unit": "억원", "period": "1주"}
+  ],
+  "pressure_gradient": {
+    "interest_rate": {"direction": "상승", "impact": "주식→채권 압력", "strength": "강"},
+    "exchange_rate": {"direction": "원화약세 1500원", "impact": "수출주 유리 but 외국인 이탈", "strength": "강"},
+    "oil_price": {"direction": "상승 $105", "impact": "에너지 인플레 → 금리 인상 압력", "strength": "중"}
+  },
+  "vortex_detection": [
+    {"sector": "반도체", "type": "accumulation", "description": "외국인 매도에도 개인 7조 순매수 — 자금 유입은 있으나 방향성 갈등. 와류 형성 초기."},
+    {"sector": "AI전력", "type": "dispersion", "description": "급격한 이탈 중. 1주 -10.9%. 와류 해소 단계."}
+  ]
+}

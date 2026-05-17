@@ -1,0 +1,15 @@
+{
+  "date": "2026-05-16",
+  "sectors": [
+    {"sector": "반도체", "score": 78, "signal": "buy", "momentum_rank": 17, "rank_change": 4, "foreign_flow": "매수전환", "reason": "HBM 구조적 수요, 5/15 급락 후 반등, 모멘텀 가속"},
+    {"sector": "AI전력인프라", "score": 45, "signal": "hold", "momentum_rank": 20, "rank_change": -16, "foreign_flow": "매도", "reason": "급감속 ▼16, 1주 -10.9%, 단기 과열 해소 중"},
+    {"sector": "자동차", "score": 82, "signal": "buy", "momentum_rank": 24, "rank_change": 36, "foreign_flow": "매수", "reason": "▲36 최강 가속, 현대차 미국 현지생산 수혜"},
+    {"sector": "조선", "score": 55, "signal": "hold", "momentum_rank": 60, "rank_change": -5, "foreign_flow": "중립", "reason": "모멘텀 하락 중, 6월 매도 예정"},
+    {"sector": "방산", "score": 35, "signal": "sell", "momentum_rank": 80, "rank_change": -20, "foreign_flow": "매도", "reason": "미중 전략적 안정 → 긴장 완화 기대 → 방산 매력 감소"},
+    {"sector": "바이오", "score": 50, "signal": "hold", "momentum_rank": 55, "rank_change": 0, "foreign_flow": "중립", "reason": "뚜렷한 모멘텀 없음, 관망"},
+    {"sector": "2차전지", "score": 62, "signal": "hold", "momentum_rank": 28, "rank_change": 10, "foreign_flow": "소폭매수", "reason": "태양광&ESS ▲, 조정 시 진입 대기"},
+    {"sector": "금융", "score": 70, "signal": "buy", "momentum_rank": 18, "rank_change": 7, "foreign_flow": "매수", "reason": "대형고배당 가속, 금리 환경 유리"},
+    {"sector": "에너지", "score": 40, "signal": "hold", "momentum_rank": 70, "rank_change": -10, "foreign_flow": "매도", "reason": "유가 $105 상승 but 호르무즈 정상화 기대 → 하락 압력"},
+    {"sector": "소비재", "score": 30, "signal": "sell", "momentum_rank": 90, "rank_change": -15, "foreign_flow": "매도", "reason": "내수 부진, 환율 1500원 → 수입물가 부담"}
+  ]
+}

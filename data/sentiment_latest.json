@@ -1,13 +1,53 @@
 {
-  "date": "2026-05-16",
+  "date": "2026-05-23",
   "topics": [
-    {"topic": "반도체/AI", "score": 72, "change": -20, "signal": "강세"},
-    {"topic": "미국 증시", "score": 78, "change": -7, "signal": "강세"},
-    {"topic": "한국 증시", "score": 35, "change": -45, "signal": "약세"},
-    {"topic": "유가/원자재", "score": 45, "change": -15, "signal": "약세"},
-    {"topic": "금리/채권", "score": 30, "change": -25, "signal": "약세"},
-    {"topic": "지정학", "score": 40, "change": -10, "signal": "약세"},
-    {"topic": "환율", "score": 32, "change": -16, "signal": "약세"},
-    {"topic": "정책", "score": 25, "change": -40, "signal": "약세"}
+    {
+      "topic": "반도체/AI",
+      "score": 75,
+      "change": 3,
+      "signal": "강세"
+    },
+    {
+      "topic": "미국 증시",
+      "score": 80,
+      "change": 2,
+      "signal": "강세"
+    },
+    {
+      "topic": "한국 증시",
+      "score": 55,
+      "change": 20,
+      "signal": "중립"
+    },
+    {
+      "topic": "유가/원자재",
+      "score": 40,
+      "change": -5,
+      "signal": "약세"
+    },
+    {
+      "topic": "금리/채권",
+      "score": 35,
+      "change": 5,
+      "signal": "약세"
+    },
+    {
+      "topic": "지정학",
+      "score": 42,
+      "change": 2,
+      "signal": "약세"
+    },
+    {
+      "topic": "환율",
+      "score": 38,
+      "change": 6,
+      "signal": "약세"
+    },
+    {
+      "topic": "정책",
+      "score": 45,
+      "change": 20,
+      "signal": "약세"
+    }
   ]
 }

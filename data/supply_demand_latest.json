@@ -1,10 +1,35 @@
 {
-  "date": "2026-05-16",
+  "date": "2026-05-23",
   "weekly": [
-    {"date": "05.12", "foreign_net": -28500, "inst_net": -12000, "retail_net": 40500},
-    {"date": "05.13", "foreign_net": 8520, "inst_net": 3210, "retail_net": -11730},
-    {"date": "05.14", "foreign_net": 12300, "inst_net": 7890, "retail_net": -20190},
-    {"date": "05.15", "foreign_net": -42000, "inst_net": -28000, "retail_net": 70000},
-    {"date": "05.16", "foreign_net": -5200, "inst_net": 2100, "retail_net": 3100}
+    {
+      "date": "05.19",
+      "foreign_net": -62622,
+      "inst_net": -8500,
+      "retail_net": 71122
+    },
+    {
+      "date": "05.20",
+      "foreign_net": -29294,
+      "inst_net": 11145,
+      "retail_net": 17019
+    },
+    {
+      "date": "05.21",
+      "foreign_net": -18500,
+      "inst_net": 15200,
+      "retail_net": 3300
+    },
+    {
+      "date": "05.22",
+      "foreign_net": -8200,
+      "inst_net": 3800,
+      "retail_net": 4400
+    },
+    {
+      "date": "05.23",
+      "foreign_net": -5100,
+      "inst_net": 2100,
+      "retail_net": 3000
+    }
   ]
 }

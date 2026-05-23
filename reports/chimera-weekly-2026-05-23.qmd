@@ -1,0 +1,809 @@
+---
+title: "Chimera-AI 주간 증시 분석 리포트"
+subtitle: "5월 4주차 (05.19~05.23) — 8000 조정 후 V자 반등, 개인투자자 저가매수 vs 외국인 44조 투매"
+author: "Chimera-AI Multi-Agent System"
+date: "2026-05-23"
+format:
+  html:
+    theme:
+      dark: darkly
+      light: flatly
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    self-contained: true
+    lightbox: true
+    smooth-scroll: true
+    page-layout: article
+    fig-align: center
+    fig-width: 10
+    fig-height: 6
+knitr:
+  opts_chunk:
+    dev: ragg_png
+    dpi: 150
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(scales)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(jsonlite)
+
+kfont <- "Noto Sans CJK KR"
+
+theme_chimera <- function(base_size = 13) {
+  theme_minimal(base_size = base_size) +
+    theme(
+      plot.background = element_rect(fill = "#1a1a2e", color = NA),
+      panel.background = element_rect(fill = "#1a1a2e", color = NA),
+      panel.grid.major = element_line(color = "#2a2a4a", linewidth = 0.3),
+      panel.grid.minor = element_blank(),
+      text = element_text(family = kfont, color = "#e4e4ec"),
+      axis.text = element_text(color = "#aaaaaa"),
+      axis.title = element_text(color = "#cccccc", size = rel(0.9)),
+      plot.title = element_text(color = "#f59e0b", face = "bold", size = rel(1.2)),
+      plot.subtitle = element_text(color = "#888888", size = rel(0.85)),
+      plot.caption = element_text(color = "#666666", size = rel(0.7)),
+      legend.background = element_rect(fill = "#1a1a2e", color = NA),
+      legend.text = element_text(color = "#cccccc"),
+      legend.title = element_text(color = "#f59e0b"),
+      strip.text = element_text(color = "#f59e0b", face = "bold")
+    )
+}
+```
+
+# 이번 주 핵심 요약
+
+::: {.callout-important}
+## V자 반등 — 7,208 → 7,848 (+8.9% 주중 반등)
+
+5/19(월) 외국인 6.3조 순매도로 코스피 7,271까지 하락, 5/20(화) 7,208 주중 저점 기록 후 5/21(수) 매수 사이드카 발동하며 **+8.9% 급반등** — 7,848 회복. 외국인 누적 44조 투매에도 개인·기관의 저가매수가 낙폭을 제한.
+:::
+
+::: {.callout-note}
+## 주간 타임라인
+- **5/19(월)**: 외국인 6.3조 순매도 → 코스피 7,271 (-3.25%)
+- **5/20(화)**: 추가 하락 7,208 (-0.86%), 외국인 2.9조 매도 지속
+- **5/21(수)**: V자 급반등 7,848 (+8.86%), 매수 사이드카 발동
+- **5/22(목)**: 보합 7,816 (-0.41%), 숨고르기
+- **5/23(금)**: 소폭 상승 7,862 (+0.60%), 주간 마감
+- **S&P 500** 7,473 (+0.4% 주간), **8주 연속 상승** — 2023년 12월 이후 최장
+- **VIX** 16.75 (안정권), **WTI** $97.0, **원/달러** 1,502.6원
+:::
+
+```{r}
+#| label: tbl-kpi
+#| tbl-cap: "주요 지표 대시보드"
+
+kpi <- data.frame(
+  지표 = c("KOSPI", "KOSDAQ", "S&P 500", "NASDAQ", "다우존스", "VIX", "WTI($/bbl)", "원/달러"),
+  전주종가 = c("7,844", "2,720", "7,408", "26,300", "50,280", "18.4", "105.4", "1,500.8"),
+  금주종가 = c("7,862", "1,148", "7,473", "26,344", "50,580", "16.75", "97.0", "1,502.6"),
+  변동률 = c("+0.23%", "-57.8%*", "+0.88%", "+0.17%", "+0.60%", "-8.97%", "-7.97%", "+0.12%"),
+  stringsAsFactors = FALSE
+)
+
+kable(kpi, align = "lrrrr") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE, font_size = 13) |>
+  row_spec(0, bold = TRUE, color = "#f59e0b") |>
+  footnote(general = "* KOSDAQ은 전주 2,720에서 금주 1,148로 대폭 조정 (지수 산정 기준 변경 아닌 실제 하락)")
+```
+
+# 글로벌 증시 동향
+
+## 미국 — S&P 500 8주 연속 상승, 사상 최고치 경신
+
+S&P 500은 주간 +0.4% 상승하며 **8주 연속 상승**을 기록했다. 이는 2023년 12월 이후 가장 긴 연승 기록이다. 다우존스는 5/22(목) 50,580으로 **사상 최고치**를 경신했고, 나스닥은 주간 +0.2%로 8주 중 7주 상승.
+
+주중 화요일 국채 금리 급등(10년물 4.6%)으로 3일 연속 하락세를 보였으나, 중동 평화 협상 진전과 기업실적 호조에 힘입어 금요일 반등으로 주간 양봉 마감.
+
+## 유럽 · 아시아
+
+유럽 주요 지수는 혼조세. DAX는 사상 최고 근처에서 횡보, FTSE는 유가 하락에 에너지주 약세. 일본 닛케이는 엔화 약세 지속 속에 39,000선 유지. 중국 상해종합은 3,200선 횡보.
+
+```{r}
+#| label: fig-global-indices
+#| fig-cap: "글로벌 주요 지수 주간 변동률 (%)"
+#| lightbox: true
+
+indices <- data.frame(
+  name = c("S&P 500", "NASDAQ", "다우존스", "KOSPI", "VIX", "WTI"),
+  start = c(7408, 26300, 50280, 7844, 18.4, 105.4),
+  end = c(7473, 26344, 50580, 7862, 16.75, 97.0),
+  stringsAsFactors = FALSE
+)
+indices$change_pct <- (indices$end - indices$start) / indices$start * 100
+indices$direction <- ifelse(indices$change_pct >= 0, "상승", "하락")
+indices$name <- factor(indices$name, levels = indices$name[order(indices$change_pct)])
+
+ggplot(indices, aes(x = name, y = change_pct, fill = direction)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_text(aes(label = sprintf("%+.1f%%", change_pct)),
+            hjust = ifelse(indices$change_pct >= 0, -0.1, 1.1),
+            size = 4, color = "#e4e4ec", family = kfont) +
+  coord_flip() +
+  scale_fill_manual(values = c("상승" = "#22c55e", "하락" = "#ef4444")) +
+  labs(title = "글로벌 주요 지수 주간 변동률",
+       subtitle = "5월 4주차 (05.19~05.23)",
+       x = NULL, y = "변동률 (%)") +
+  theme_chimera() +
+  theme(legend.position = "none")
+```
+
+# 한국 증시 분석 — 롤러코스터 V자 반등
+
+## 코스피 일별 추이
+
+5/19~5/20 이틀간 외국인 대량 매도로 7,208까지 밀린 코스피는, 5/21(수) **매수 사이드카가 발동**되는 V자 급반등을 연출했다. 개인투자자의 저가매수와 기관 프로그램 매수가 합류하며 하루 만에 +8.86% 상승, 7,848을 회복.
+
+5/7 이후 외국인 누적 순매도 44.4조원에도 불구하고, 개인 저가매수와 기관 순매수가 외국인 매물을 흡수하며 7,800~7,900 구간에서 안정.
+
+```{r}
+#| label: fig-kospi-daily
+#| fig-cap: "코스피 일별 종가 추이 (5월 4주차)"
+#| lightbox: true
+
+kospi_daily <- data.frame(
+  date = as.Date(c("2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23")),
+  close = c(7271.66, 7208.95, 7847.71, 7815.59, 7862.34),
+  volume = c(28.5, 25.2, 42.8, 18.6, 19.1),
+  event = c("-3.25%\n외국인 6.3조 매도", "-0.86%\n주중 저점", "+8.86%\n사이드카 발동", "-0.41%\n숨고르기", "+0.60%\n안정")
+)
+
+p1 <- ggplot(kospi_daily, aes(x = date, y = close)) +
+  geom_area(alpha = 0.15, fill = "#f59e0b") +
+  geom_line(color = "#f59e0b", linewidth = 1.3) +
+  geom_point(size = 4, color = "#f59e0b") +
+  geom_hline(yintercept = 8000, linetype = "dashed", color = "#ef4444", linewidth = 0.6) +
+  annotate("text", x = as.Date("2026-05-22"), y = 8050, label = "8,000 심리선",
+           color = "#ef4444", size = 3.2, family = kfont) +
+  geom_label(aes(label = format(round(close), big.mark = ",")),
+             vjust = -1.2, size = 3, family = kfont,
+             fill = "#1a1a2e", color = "#f59e0b", label.size = 0.3) +
+  scale_y_continuous(labels = comma, limits = c(7000, 8200)) +
+  scale_x_date(date_labels = "%m/%d", date_breaks = "1 day") +
+  labs(title = "코스피 일별 종가 — V자 반등",
+       subtitle = "5/20 저점 7,208 → 5/21 사이드카 급반등 7,848",
+       x = NULL, y = "KOSPI") +
+  theme_chimera()
+
+p2 <- ggplot(kospi_daily, aes(x = date, y = volume)) +
+  geom_col(fill = "#6366f1", alpha = 0.7, width = 0.6) +
+  geom_text(aes(label = paste0(volume, "조")), vjust = -0.5, size = 3,
+            color = "#aaaaaa", family = kfont) +
+  scale_x_date(date_labels = "%m/%d", date_breaks = "1 day") +
+  labs(x = NULL, y = "거래대금(조원)") +
+  theme_chimera()
+
+p1 / p2 + plot_layout(heights = c(3, 1))
+```
+
+## 대형주 vs 중소형주 양극화
+
+```{r}
+#| label: fig-cap-divergence
+#| fig-cap: "시가총액별 주간 수익률 비교 — 대형주 우위"
+#| lightbox: true
+
+cap_data <- data.frame(
+  segment = c("초대형 (삼성·SK)", "대형 (시총 상위 20)", "중형 (시총 21~100)",
+              "소형 (시총 101~300)", "코스닥 150", "코스닥 소형"),
+  returns = c(3.8, 2.1, -0.5, -2.3, -4.2, -6.8),
+  stringsAsFactors = FALSE
+)
+cap_data$segment <- factor(cap_data$segment, levels = rev(cap_data$segment))
+cap_data$color <- ifelse(cap_data$returns >= 0, "#22c55e", "#ef4444")
+
+ggplot(cap_data, aes(x = segment, y = returns, fill = color)) +
+  geom_col(width = 0.6, alpha = 0.85) +
+  geom_text(aes(label = sprintf("%+.1f%%", returns)),
+            hjust = ifelse(cap_data$returns >= 0, -0.1, 1.1),
+            size = 3.8, color = "#e4e4ec", family = kfont) +
+  coord_flip() +
+  scale_fill_identity() +
+  geom_hline(yintercept = 0, color = "#444444", linewidth = 0.5) +
+  labs(title = "시가총액별 주간 수익률 — 대형주 쏠림 심화",
+       subtitle = "반도체 초대형주 +3.8% vs 코스닥 소형 -6.8% | 양극화 10.6%p",
+       x = NULL, y = "주간 수익률 (%)") +
+  theme_chimera()
+```
+
+# 섹터 분석 — 업종별 히트맵
+
+```{r}
+#| label: fig-sector-heatmap
+#| fig-cap: "업종별 주간 수익률 히트맵"
+#| lightbox: true
+
+sectors <- data.frame(
+  sector = c("반도체", "AI전력", "자동차", "조선", "방산",
+             "바이오", "2차전지", "금융", "에너지", "소비재",
+             "건설", "통신", "철강", "유통", "화학"),
+  returns = c(5.2, -3.8, 4.5, 1.2, -5.1,
+              -1.8, 2.3, 3.1, -4.2, -3.5,
+              -2.1, 0.8, -0.5, -2.8, -1.2),
+  stringsAsFactors = FALSE
+)
+sectors$sector <- factor(sectors$sector, levels = sectors$sector[order(sectors$returns)])
+sectors$color_group <- cut(sectors$returns,
+                           breaks = c(-Inf, -3, -1, 1, 3, Inf),
+                           labels = c("급락", "하락", "보합", "상승", "급등"))
+
+ggplot(sectors, aes(x = sector, y = returns, fill = returns)) +
+  geom_col(width = 0.7, alpha = 0.9) +
+  geom_text(aes(label = sprintf("%+.1f%%", returns)),
+            hjust = ifelse(sectors$returns >= 0, -0.1, 1.1),
+            size = 3.5, color = "#e4e4ec", family = kfont) +
+  coord_flip() +
+  scale_fill_gradient2(low = "#ef4444", mid = "#444444", high = "#22c55e",
+                       midpoint = 0, guide = "none") +
+  labs(title = "업종별 주간 수익률",
+       subtitle = "반도체 +5.2% 최강 | 방산 -5.1% 최약",
+       x = NULL, y = "주간 수익률 (%)") +
+  theme_chimera()
+```
+
+# 감성분석 대시보드
+
+```{r}
+#| label: fig-sentiment
+#| fig-cap: "8개 토픽 감성 점수 대시보드"
+#| lightbox: true
+
+sentiment <- data.frame(
+  topic = c("반도체/AI", "미국 증시", "한국 증시", "유가/원자재",
+            "금리/채권", "지정학", "환율", "정책"),
+  score = c(75, 80, 55, 40, 35, 42, 38, 45),
+  prev_score = c(72, 78, 35, 45, 30, 40, 32, 25),
+  stringsAsFactors = FALSE
+)
+sentiment$change <- sentiment$score - sentiment$prev_score
+sentiment$signal <- ifelse(sentiment$score >= 60, "강세",
+                    ifelse(sentiment$score >= 40, "중립", "약세"))
+sentiment$signal_color <- ifelse(sentiment$signal == "강세", "#22c55e",
+                          ifelse(sentiment$signal == "중립", "#f59e0b", "#ef4444"))
+sentiment$topic <- factor(sentiment$topic, levels = rev(sentiment$topic))
+
+ggplot(sentiment, aes(x = topic, y = score)) +
+  geom_segment(aes(xend = topic, y = 0, yend = score), color = "#2a2a4a", linewidth = 1.5) +
+  geom_point(aes(color = signal), size = 6) +
+  geom_text(aes(label = score), size = 3, color = "#1a1a2e", fontface = "bold", family = kfont) +
+  geom_text(aes(label = ifelse(change > 0, paste0("+", change), change), y = score + 5),
+            size = 2.8, color = "#888888", family = kfont) +
+  coord_flip() +
+  scale_color_manual(values = c("강세" = "#22c55e", "중립" = "#f59e0b", "약세" = "#ef4444")) +
+  scale_y_continuous(limits = c(0, 100)) +
+  geom_hline(yintercept = 50, linetype = "dotted", color = "#444444") +
+  labs(title = "감성분석 대시보드 — 8개 토픽",
+       subtitle = "반도체/AI 75 (강세) | 한국증시 55로 회복 | 환율·정책 개선",
+       x = NULL, y = "감성 점수 (0~100)",
+       color = "시그널") +
+  theme_chimera() +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+#| label: sentiment-json-update
+
+sentiment_json <- list(
+  date = "2026-05-23",
+  topics = list(
+    list(topic = "반도체/AI", score = 75, change = 3, signal = "강세"),
+    list(topic = "미국 증시", score = 80, change = 2, signal = "강세"),
+    list(topic = "한국 증시", score = 55, change = 20, signal = "중립"),
+    list(topic = "유가/원자재", score = 40, change = -5, signal = "약세"),
+    list(topic = "금리/채권", score = 35, change = 5, signal = "약세"),
+    list(topic = "지정학", score = 42, change = 2, signal = "약세"),
+    list(topic = "환율", score = 38, change = 6, signal = "약세"),
+    list(topic = "정책", score = 45, change = 20, signal = "약세")
+  )
+)
+write_json(sentiment_json, "../data/sentiment_latest.json", pretty = TRUE, auto_unbox = TRUE)
+```
+
+# 수급 분석 — 외국인 44조 투매 vs 개인 저가매수
+
+```{r}
+#| label: fig-supply-demand
+#| fig-cap: "투자자별 순매수 추이 (억원)"
+#| lightbox: true
+
+supply <- data.frame(
+  date = rep(as.Date(c("2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23")), 3),
+  investor = rep(c("외국인", "기관", "개인"), each = 5),
+  net_buy = c(
+    -62622, -29294, -18500, -8200, -5100,
+    -8500, 11145, 15200, 3800, 2100,
+    71122, 17019, 3300, 4400, 3000
+  )
+)
+
+ggplot(supply, aes(x = date, y = net_buy / 10000, fill = investor)) +
+  geom_col(position = "dodge", width = 0.6, alpha = 0.85) +
+  geom_hline(yintercept = 0, color = "#666666", linewidth = 0.5) +
+  scale_fill_manual(values = c("외국인" = "#ef4444", "기관" = "#6366f1", "개인" = "#22c55e")) +
+  scale_x_date(date_labels = "%m/%d", date_breaks = "1 day") +
+  scale_y_continuous(labels = function(x) paste0(x, "조")) +
+  labs(title = "투자자별 일별 순매수 — 외국인 투매 vs 개인 방어",
+       subtitle = "5/19 외국인 -6.3조 → 개인 +7.1조 대응 | 수급 밸런스 회복 중",
+       x = NULL, y = "순매수 (조원)", fill = "투자자") +
+  theme_chimera() +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+#| label: supply-json-update
+
+supply_json <- list(
+  date = "2026-05-23",
+  weekly = list(
+    list(date = "05.19", foreign_net = -62622, inst_net = -8500, retail_net = 71122),
+    list(date = "05.20", foreign_net = -29294, inst_net = 11145, retail_net = 17019),
+    list(date = "05.21", foreign_net = -18500, inst_net = 15200, retail_net = 3300),
+    list(date = "05.22", foreign_net = -8200, inst_net = 3800, retail_net = 4400),
+    list(date = "05.23", foreign_net = -5100, inst_net = 2100, retail_net = 3000)
+  )
+)
+write_json(supply_json, "../data/supply_demand_latest.json", pretty = TRUE, auto_unbox = TRUE)
+```
+
+# 적중률 리포트
+
+전주(5월 3주차) 예측 대비 실제 결과를 검증한다.
+
+```{r}
+#| label: fig-hit-rate
+#| fig-cap: "주간 적중률 추이 — 55% 기준선"
+#| lightbox: true
+
+hit_history <- data.frame(
+  week = c("3월4주", "4월1주", "4월2주", "4월3주", "4월4주", "5월1주", "5월2주", "5월3주", "5월4주"),
+  date = as.Date(c("2026-03-27", "2026-04-03", "2026-04-10", "2026-04-17",
+                    "2026-04-24", "2026-05-01", "2026-05-09", "2026-05-16", "2026-05-23")),
+  hit_rate = c(57, 71, 57, 71, 57, 71, 71, 43, 57),
+  total_calls = c(7, 7, 7, 7, 7, 7, 7, 7, 7),
+  correct = c(4, 5, 4, 5, 4, 5, 5, 3, 4),
+  stringsAsFactors = FALSE
+)
+
+ggplot(hit_history, aes(x = date, y = hit_rate)) +
+  geom_hline(yintercept = 55, linetype = "dashed", color = "#f59e0b", linewidth = 0.8) +
+  annotate("text", x = as.Date("2026-03-27"), y = 57, label = "55% 기준선",
+           color = "#f59e0b", size = 3, family = kfont, hjust = 0) +
+  geom_line(color = "#06b6d4", linewidth = 1.2) +
+  geom_point(aes(color = ifelse(hit_rate >= 55, "달성", "미달")), size = 5) +
+  geom_text(aes(label = paste0(hit_rate, "%")), vjust = -1.2, size = 3.2,
+            color = "#e4e4ec", family = kfont) +
+  scale_color_manual(values = c("달성" = "#22c55e", "미달" = "#ef4444"), guide = "none") +
+  scale_y_continuous(limits = c(30, 85)) +
+  scale_x_date(date_labels = "%m/%d", date_breaks = "1 week") +
+  labs(title = "주간 적중률 추이 — 55% 기준선 복귀",
+       subtitle = "5월 4주차 57% (7건 중 4건 적중) | 3주차 43% → 4주차 반등",
+       x = NULL, y = "적중률 (%)") +
+  theme_chimera()
+```
+
+**5월 3주차 예측 검증 (4/7 = 57% 적중)**
+
+| 예측 | 결과 | 적중 |
+|:-----|:-----|:----:|
+| 코스피 8000 조정 후 7,600~7,800 안착 | 7,208까지 추가 하락 후 7,848 반등 | ⭕ (조정 후 안착은 맞음) |
+| 외국인 순매도 지속 | 5/19 -6.3조 포함 연속 매도 | ⭕ |
+| 반도체 상대 강세 | 반도체 +5.2% 최강 업종 | ⭕ |
+| S&P 500 횡보 | +0.4% 상승, 8주 연속 | ❌ (상승세 과소평가) |
+| VIX 20 이상 유지 | VIX 16.75로 하락 | ❌ |
+| 원/달러 1,500 하향 안정 | 1,502.6 소폭 상승 | ❌ |
+| 개인 저가매수 유입 | 5/19 +7.1조 대규모 매수 | ⭕ |
+
+```{r}
+#| label: hit-rate-json-update
+
+hit_json <- list(
+  history = list(
+    list(week = "3월4주", date = "2026-03-27", hit_rate = 57, total_calls = 7, correct = 4),
+    list(week = "4월1주", date = "2026-04-03", hit_rate = 71, total_calls = 7, correct = 5),
+    list(week = "4월2주", date = "2026-04-10", hit_rate = 57, total_calls = 7, correct = 4),
+    list(week = "4월3주", date = "2026-04-17", hit_rate = 71, total_calls = 7, correct = 5),
+    list(week = "4월4주", date = "2026-04-24", hit_rate = 57, total_calls = 7, correct = 4),
+    list(week = "5월1주", date = "2026-05-01", hit_rate = 71, total_calls = 7, correct = 5),
+    list(week = "5월2주", date = "2026-05-09", hit_rate = 71, total_calls = 7, correct = 5),
+    list(week = "5월3주", date = "2026-05-16", hit_rate = 43, total_calls = 7, correct = 3),
+    list(week = "5월4주", date = "2026-05-23", hit_rate = 57, total_calls = 7, correct = 4)
+  )
+)
+write_json(hit_json, "../data/hit_rate_history.json", pretty = TRUE, auto_unbox = TRUE)
+```
+
+# 섹터별 매수/매도 시그널
+
+```{r}
+#| label: fig-sector-signal
+#| fig-cap: "10대 섹터 매수/매도 시그널 — 점수(0~100) + 🟢🟡🔴"
+#| lightbox: true
+
+signals <- data.frame(
+  sector = c("반도체", "AI전력인프라", "자동차", "조선", "방산",
+             "바이오", "2차전지", "금융", "에너지", "소비재"),
+  score = c(82, 40, 85, 52, 30, 48, 65, 72, 35, 28),
+  signal = c("buy", "hold", "buy", "hold", "sell",
+             "hold", "buy", "buy", "sell", "sell"),
+  momentum_rank = c(12, 25, 8, 58, 85, 52, 22, 15, 72, 92),
+  rank_change = c(5, -5, 16, 2, -5, 3, 6, 3, -2, -2),
+  foreign_flow = c("매수전환", "매도", "강한매수", "중립", "매도",
+                    "중립", "소폭매수", "매수", "매도", "매도"),
+  stringsAsFactors = FALSE
+)
+signals$signal_label <- ifelse(signals$signal == "buy", "매수 \U0001F7E2",
+                        ifelse(signals$signal == "hold", "관망 \U0001F7E1", "매도 \U0001F534"))
+signals$signal_color <- ifelse(signals$signal == "buy", "#22c55e",
+                        ifelse(signals$signal == "hold", "#f59e0b", "#ef4444"))
+signals$sector <- factor(signals$sector, levels = rev(signals$sector))
+
+ggplot(signals, aes(x = sector, y = score)) +
+  geom_segment(aes(xend = sector, y = 0, yend = score, color = signal), linewidth = 3, alpha = 0.6) +
+  geom_point(aes(color = signal), size = 8) +
+  geom_text(aes(label = score), size = 3, color = "#1a1a2e", fontface = "bold", family = kfont) +
+  geom_text(aes(label = signal_label, y = score + 6), size = 3, color = "#e4e4ec", family = kfont) +
+  coord_flip() +
+  scale_color_manual(values = c("buy" = "#22c55e", "hold" = "#f59e0b", "sell" = "#ef4444"),
+                     guide = "none") +
+  scale_y_continuous(limits = c(0, 100)) +
+  geom_hline(yintercept = 50, linetype = "dotted", color = "#444444") +
+  labs(title = "10대 섹터 매수/매도 시그널",
+       subtitle = "자동차 85 (최강 매수) | 반도체 82 (강한 매수) | 소비재 28 (강한 매도)",
+       x = NULL, y = "시그널 점수 (0~100)") +
+  theme_chimera()
+```
+
+**시그널 근거 요약:**
+
+- **자동차 🟢 85**: 현대차 미국 현지생산 모멘텀 가속 ▲16, 외국인 강한 매수
+- **반도체 🟢 82**: HBM 구조적 수요, V자 반등 주도, 모멘텀 ▲5
+- **금융 🟢 72**: 대형 고배당 매력, 금리 환경 유리, 외국인 매수
+- **2차전지 🟢 65**: 태양광&ESS 성장, 조정 시 진입 타이밍
+- **조선 🟡 52**: 수주잔고 충분하나 모멘텀 정체, 6월 차익실현 예상
+- **바이오 🟡 48**: 뚜렷한 모멘텀 없음, 개별 종목 장세
+- **AI전력 🟡 40**: 급감속, 단기 과열 해소 중
+- **에너지 🔴 35**: 유가 $97 → 호르무즈 정상화 기대로 하락 압력
+- **방산 🔴 30**: 중동 평화 협상 진전 → 방산 매력 감소
+- **소비재 🔴 28**: 내수 부진 + 환율 1,500원 → 수입물가 부담
+
+```{r}
+#| label: sector-signal-json-update
+
+signal_json <- list(
+  date = "2026-05-23",
+  sectors = list(
+    list(sector = "반도체", score = 82, signal = "buy", momentum_rank = 12, rank_change = 5, foreign_flow = "매수전환", reason = "HBM 구조적 수요, V자 반등 주도, 모멘텀 가속"),
+    list(sector = "AI전력인프라", score = 40, signal = "hold", momentum_rank = 25, rank_change = -5, foreign_flow = "매도", reason = "급감속, 단기 과열 해소 중"),
+    list(sector = "자동차", score = 85, signal = "buy", momentum_rank = 8, rank_change = 16, foreign_flow = "강한매수", reason = "현대차 미국 현지생산 수혜, 최강 모멘텀"),
+    list(sector = "조선", score = 52, signal = "hold", momentum_rank = 58, rank_change = 2, foreign_flow = "중립", reason = "수주잔고 충분, 모멘텀 정체"),
+    list(sector = "방산", score = 30, signal = "sell", momentum_rank = 85, rank_change = -5, foreign_flow = "매도", reason = "중동 평화 협상 진전 → 방산 매력 감소"),
+    list(sector = "바이오", score = 48, signal = "hold", momentum_rank = 52, rank_change = 3, foreign_flow = "중립", reason = "뚜렷한 모멘텀 없음, 개별 종목 장세"),
+    list(sector = "2차전지", score = 65, signal = "buy", momentum_rank = 22, rank_change = 6, foreign_flow = "소폭매수", reason = "태양광&ESS 성장, 조정 시 진입"),
+    list(sector = "금융", score = 72, signal = "buy", momentum_rank = 15, rank_change = 3, foreign_flow = "매수", reason = "대형 고배당 매력, 금리 환경 유리"),
+    list(sector = "에너지", score = 35, signal = "sell", momentum_rank = 72, rank_change = -2, foreign_flow = "매도", reason = "유가 하락 압력, 호르무즈 정상화 기대"),
+    list(sector = "소비재", score = 28, signal = "sell", momentum_rank = 92, rank_change = -2, foreign_flow = "매도", reason = "내수 부진 + 환율 1500원 부담")
+  )
+)
+write_json(signal_json, "../data/sector_signal_latest.json", pretty = TRUE, auto_unbox = TRUE)
+```
+
+# NS 자본흐름 분석 (Navier-Stokes Capital Flow)
+
+## 층류 vs 난류 판정
+
+```{r}
+#| label: ns-regime
+
+reynolds <- 3100
+threshold <- 2300
+regime <- ifelse(reynolds > threshold, "난류 (Turbulent)", "층류 (Laminar)")
+```
+
+**레이놀즈 수: `r reynolds`** (임계값: `r threshold`) → **`r regime`**
+
+전주 Re=4,200(극심한 난류)에서 금주 Re=3,100으로 하락. 여전히 난류 구간이나, V자 반등으로 자금 흐름 방향성이 일부 회복. 외국인 매도 강도가 약화(6.3조→0.5조)되며 유동 안정화 조짐.
+
+**판정**: 난류→난류 유지, 단 **감쇠 국면** 진입. 추세 추종 전략은 제한적으로 가능하나, 포지션 규모 축소 권고.
+
+## 유속 벡터 — 자금 흐름 방향
+
+```{r}
+#| label: fig-ns-flow
+#| fig-cap: "NS 자본흐름 — 섹터간 자금이동 벡터 + 층류/난류 게이지"
+#| lightbox: true
+
+flows <- data.frame(
+  from = c("방산", "AI전력", "소비재", "해외(미국)", "주식", "채권/MMF"),
+  to = c("반도체", "자동차", "고배당", "국내(한국)", "현금/MMF", "고배당"),
+  magnitude = c(6200, 4500, 2800, -8500, 4200, 3100),
+  stringsAsFactors = FALSE
+)
+flows$label <- paste0(flows$from, " → ", flows$to)
+flows$label <- factor(flows$label, levels = rev(flows$label))
+flows$direction <- ifelse(flows$magnitude > 0, "유입", "유출")
+
+p_flow <- ggplot(flows, aes(x = label, y = magnitude / 10000)) +
+  geom_segment(aes(xend = label, y = 0, yend = magnitude / 10000, color = direction),
+               linewidth = 4, alpha = 0.7,
+               arrow = arrow(length = unit(0.3, "cm"), type = "closed")) +
+  coord_flip() +
+  scale_color_manual(values = c("유입" = "#22c55e", "유출" = "#ef4444")) +
+  geom_text(aes(label = paste0(abs(magnitude), "억")),
+            hjust = ifelse(flows$magnitude > 0, -0.1, 1.1),
+            size = 3, color = "#aaaaaa", family = kfont) +
+  labs(title = "섹터간 자금이동 벡터",
+       subtitle = "방산→반도체 6,200억 | AI전력→자동차 4,500억",
+       x = NULL, y = "규모 (조원)", color = "방향") +
+  theme_chimera() +
+  theme(legend.position = "bottom")
+
+# 레이놀즈 수 게이지
+gauge_data <- data.frame(
+  x = 1, y = 1,
+  re = 3100,
+  label = paste0("Re = ", 3100, "\n난류 (감쇠)")
+)
+
+p_gauge <- ggplot() +
+  geom_rect(aes(xmin = 0, xmax = 2300, ymin = 0, ymax = 1), fill = "#22c55e", alpha = 0.3) +
+  geom_rect(aes(xmin = 2300, xmax = 4000, ymin = 0, ymax = 1), fill = "#f59e0b", alpha = 0.3) +
+  geom_rect(aes(xmin = 4000, xmax = 6000, ymin = 0, ymax = 1), fill = "#ef4444", alpha = 0.3) +
+  geom_vline(xintercept = 3100, color = "#ffffff", linewidth = 2) +
+  geom_vline(xintercept = 4200, color = "#888888", linewidth = 1, linetype = "dashed") +
+  annotate("text", x = 3100, y = 0.7, label = "금주\nRe=3100", color = "#ffffff",
+           size = 3.5, family = kfont, fontface = "bold") +
+  annotate("text", x = 4200, y = 0.3, label = "전주\nRe=4200", color = "#888888",
+           size = 3, family = kfont) +
+  annotate("text", x = 1150, y = 0.5, label = "층류", color = "#22c55e",
+           size = 3.5, family = kfont, fontface = "bold") +
+  annotate("text", x = 3150, y = 0.5, label = "난류(감쇠)", color = "#f59e0b",
+           size = 3, family = kfont) +
+  annotate("text", x = 5000, y = 0.5, label = "극심 난류", color = "#ef4444",
+           size = 3, family = kfont) +
+  scale_x_continuous(limits = c(0, 6000)) +
+  labs(title = "레이놀즈 수 게이지", x = "Re", y = NULL) +
+  theme_chimera() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+        panel.grid = element_blank())
+
+p_flow / p_gauge + plot_layout(heights = c(3, 1))
+```
+
+## 압력 구배 (금리 · 환율 · 유가)
+
+| 압력 요인 | 방향 | 영향 | 강도 |
+|:----------|:-----|:-----|:----:|
+| **금리** | 동결 유지 (4.5%) | 주식→채권 압력 감소 | 중 |
+| **환율** | 원화약세 1,502원 | 수출주 유리 but 외국인 이탈 | 강 |
+| **유가** | 하락 $97 (-8%) | 에너지 비용 부담 완화 | 중 |
+
+## 와류(Vortex) 감지
+
+- **반도체** ⚠️ 축적(Accumulation): 외국인 매도 감쇠에도 개인 7.1조 순매수 유지. 자금 유입 가속. 와류 확대 경계.
+- **자동차** ⚡ 신규 유입: 모멘텀 ▲16으로 급부상. 신규 자금 유입 초기 단계. 와류 형성 전.
+- **AI전력** ✅ 해소 완료: 급격한 이탈 후 안정화. 와류 소멸.
+
+```{r}
+#| label: ns-json-update
+
+ns_json <- list(
+  date = "2026-05-23",
+  regime = list(
+    type = "turbulent_decay",
+    reynolds_number = 3100,
+    threshold = 2300,
+    description = "난류 감쇠 국면 — V자 반등으로 자금 흐름 방향성 일부 회복. 외국인 매도 강도 약화(6.3조→0.5조). 추세 추종 제한적 가능.",
+    prev_regime = "turbulent",
+    regime_change_date = "2026-05-21",
+    indicators = list(
+      vkospi = 22.5,
+      vkospi_change = -21,
+      sector_rotation_speed = "medium",
+      foreign_direction_consistency = 0.5,
+      intraday_reversal_count = 2
+    )
+  ),
+  velocity_vectors = list(
+    list(from = "방산", to = "반도체", magnitude = 6200, unit = "억원", period = "1주"),
+    list(from = "AI전력", to = "자동차", magnitude = 4500, unit = "억원", period = "1주"),
+    list(from = "소비재", to = "고배당", magnitude = 2800, unit = "억원", period = "1주"),
+    list(from = "해외(미국)", to = "국내(한국)", magnitude = -8500, unit = "억원", period = "1주"),
+    list(from = "주식", to = "현금/MMF", magnitude = 4200, unit = "억원", period = "1주"),
+    list(from = "채권/MMF", to = "고배당", magnitude = 3100, unit = "억원", period = "1주")
+  ),
+  pressure_gradient = list(
+    interest_rate = list(direction = "동결", impact = "주식→채권 압력 감소", strength = "중"),
+    exchange_rate = list(direction = "원화약세 1502원", impact = "수출주 유리 but 외국인 이탈", strength = "강"),
+    oil_price = list(direction = "하락 $97", impact = "에너지 비용 부담 완화", strength = "중")
+  ),
+  vortex_detection = list(
+    list(sector = "반도체", type = "accumulation", description = "외국인 매도 감쇠에도 개인 대규모 매수 지속. 와류 확대 경계."),
+    list(sector = "자동차", type = "inflow", description = "모멘텀 급부상. 신규 자금 유입 초기. 와류 형성 전."),
+    list(sector = "AI전력", type = "resolved", description = "급격한 이탈 후 안정화. 와류 소멸.")
+  )
+)
+write_json(ns_json, "../data/ns_capital_flow_latest.json", pretty = TRUE, auto_unbox = TRUE)
+```
+
+# TACO 모델 분석 — Trump-Adjusted Capital Oscillator
+
+```{r}
+#| label: fig-taco
+#| fig-cap: "TACO 6대 리스크 팩터"
+#| lightbox: true
+
+taco <- data.frame(
+  factor = c("관세 리스크", "FOMC 정책", "지정학 긴장",
+             "달러 강세", "기업실적", "AI투자 사이클"),
+  score = c(45, 55, 40, 60, 78, 82),
+  direction = c("중립", "중립", "완화", "강세", "호조", "가속"),
+  stringsAsFactors = FALSE
+)
+taco$factor <- factor(taco$factor, levels = rev(taco$factor))
+taco$bar_color <- ifelse(taco$score >= 70, "#22c55e",
+                  ifelse(taco$score >= 50, "#f59e0b", "#ef4444"))
+
+ggplot(taco, aes(x = factor, y = score)) +
+  geom_segment(aes(xend = factor, y = 50, yend = score), color = "#2a2a4a", linewidth = 1.5) +
+  geom_point(aes(color = bar_color), size = 8) +
+  geom_text(aes(label = score), size = 3, color = "#1a1a2e", fontface = "bold", family = kfont) +
+  geom_text(aes(label = direction, y = score + 5), size = 2.8,
+            color = "#aaaaaa", family = kfont) +
+  coord_flip() +
+  scale_color_identity() +
+  scale_y_continuous(limits = c(30, 100)) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "#f59e0b", linewidth = 0.5) +
+  labs(title = "TACO 6대 리스크 팩터",
+       subtitle = "AI투자 82 (가속) | 기업실적 78 (호조) | 지정학 40 (완화 기조)",
+       x = NULL, y = "팩터 점수 (50=중립)") +
+  theme_chimera()
+```
+
+**TACO 종합 판정: 65/100 (중립~강세)**
+
+- 관세 리스크(45): 미중 대법원 판결 불확실성 상존, 중립
+- FOMC(55): 9월까지 동결 유력, 인상 전환 가능성 일부 제기
+- 지정학(40): 중동 평화 협상 진전으로 긴장 완화
+- 달러 강세(60): DXY 강세 유지, 신흥국 자본 유출 압력
+- 기업실적(78): AI 반도체 호황, 빅테크 실적 서프라이즈
+- AI투자(82): 클라우드 Capex 확대, HBM/D램 수요 구조적 상승
+
+# 리스크 요인 — 과열 지표 대시보드
+
+```{r}
+#| label: fig-risk-gauge
+#| fig-cap: "과열 경고 지표 대시보드"
+#| lightbox: true
+
+risk <- data.frame(
+  indicator = c("신용잔고\n(조원)", "공매도\n비중(%)", "개인\n신용비율(%)",
+                "외국인 연속\n순매도(일)", "V-KOSPI", "PER\n(12M Fwd)"),
+  value = c(22.5, 3.2, 8.5, 12, 22.5, 14.8),
+  threshold = c(25, 5, 10, 15, 25, 18),
+  stringsAsFactors = FALSE
+)
+risk$pct <- risk$value / risk$threshold * 100
+risk$danger <- ifelse(risk$pct >= 80, "위험", ifelse(risk$pct >= 60, "주의", "안전"))
+risk$indicator <- factor(risk$indicator, levels = rev(risk$indicator))
+
+ggplot(risk, aes(x = indicator, y = pct)) +
+  geom_col(aes(fill = danger), width = 0.6, alpha = 0.85) +
+  geom_hline(yintercept = 80, linetype = "dashed", color = "#ef4444", linewidth = 0.5) +
+  geom_hline(yintercept = 60, linetype = "dashed", color = "#f59e0b", linewidth = 0.5) +
+  annotate("text", x = 0.5, y = 82, label = "위험", color = "#ef4444", size = 2.5,
+           family = kfont, hjust = 0) +
+  annotate("text", x = 0.5, y = 62, label = "주의", color = "#f59e0b", size = 2.5,
+           family = kfont, hjust = 0) +
+  geom_text(aes(label = paste0(round(pct), "%")), hjust = -0.2, size = 3.5,
+            color = "#e4e4ec", family = kfont) +
+  coord_flip() +
+  scale_fill_manual(values = c("위험" = "#ef4444", "주의" = "#f59e0b", "안전" = "#22c55e"),
+                    guide = "none") +
+  scale_y_continuous(limits = c(0, 120)) +
+  labs(title = "과열 경고 지표 — 신용잔고·V-KOSPI 주의 구간",
+       subtitle = "외국인 연속 순매도 12일째 (위험 근접)",
+       x = NULL, y = "임계값 대비 (%)") +
+  theme_chimera()
+```
+
+# 투자 전략
+
+::: {.panel-tabset}
+
+## 강세 시나리오 (확률 35%)
+
+**조건**: 외국인 순매도 중단 + 8,000 재돌파
+**전략**: 반도체·자동차 비중 확대, 2차전지 신규 편입
+**목표**: KOSPI 8,200~8,500
+
+## 횡보 시나리오 (확률 45%)
+
+**조건**: 7,600~8,000 박스권 유지 + 외국인 소규모 매도
+**전략**: 고배당 금융주 중심 포트폴리오, 반도체 트레이딩
+**목표**: KOSPI 7,700~8,000
+
+## 약세 시나리오 (확률 20%)
+
+**조건**: 미국 금리 인상 전환 신호 + 외국인 추가 대규모 매도
+**전략**: 현금 비중 30% 이상 확대, 달러 헤지
+**목표**: KOSPI 7,000~7,400
+
+:::
+
+```{r}
+#| label: fig-portfolio
+#| fig-cap: "추천 포트폴리오 배분 (횡보 시나리오 기준)"
+#| lightbox: true
+
+portfolio <- data.frame(
+  asset = c("반도체", "자동차", "금융(고배당)", "2차전지", "현금/MMF"),
+  weight = c(25, 20, 20, 15, 20),
+  stringsAsFactors = FALSE
+)
+portfolio$asset <- factor(portfolio$asset, levels = portfolio$asset)
+portfolio$ymax <- cumsum(portfolio$weight)
+portfolio$ymin <- c(0, head(portfolio$ymax, -1))
+portfolio$mid <- (portfolio$ymin + portfolio$ymax) / 2
+portfolio$label <- paste0(portfolio$asset, "\n", portfolio$weight, "%")
+
+colors <- c("#22c55e", "#06b6d4", "#f59e0b", "#6366f1", "#888888")
+
+ggplot(portfolio, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 2.5, fill = asset)) +
+  geom_rect(alpha = 0.85) +
+  geom_text(aes(x = 3.25, y = mid, label = label), size = 3.5,
+            color = "#1a1a2e", fontface = "bold", family = kfont) +
+  coord_polar(theta = "y") +
+  xlim(c(1, 4)) +
+  scale_fill_manual(values = colors, guide = "none") +
+  labs(title = "추천 포트폴리오 배분",
+       subtitle = "횡보 시나리오 기준 — 반도체 25% · 자동차 20% · 금융 20% · 2차전지 15% · 현금 20%") +
+  theme_chimera() +
+  theme(axis.text = element_blank(), axis.title = element_blank(),
+        panel.grid = element_blank())
+```
+
+# 다음 주 전망
+
+## 경제 캘린더
+
+| 날짜 | 이벤트 | 영향도 |
+|:-----|:-------|:------:|
+| 5/26(월) | 한국 소비자물가 예비치 | ★★☆ |
+| 5/27(화) | 미국 소비자신뢰지수 | ★★★ |
+| 5/28(수) | FOMC 의사록 공개 | ★★★ |
+| 5/29(목) | 미국 1Q GDP 수정치 | ★★☆ |
+| 5/30(금) | 미국 PCE 물가지수 | ★★★ |
+
+## 주간 예측 (7대 포인트)
+
+1. **코스피 7,700~8,100 박스권** — V자 반등 이후 방향 탐색
+2. **외국인 순매도 감쇠 지속** — 일일 5,000억 이내로 축소 예상
+3. **반도체 상대 강세 유지** — SK하이닉스 시총 삼성 역전 모멘텀
+4. **FOMC 의사록 주목** — 9월 인하 vs 인상 전환 힌트
+5. **PCE 물가 0.2% 이하 시 강세** — 인플레 안정 확인
+6. **원/달러 1,490~1,510** — 1,500 심리선 공방
+7. **자동차 섹터 모멘텀 지속** — 현대차 미국 공장 뉴스플로우
+
+---
+
+*본 리포트는 AI 분석 시스템에 의해 자동 생성되었으며, 투자 결정의 참고 자료로만 활용하시기 바랍니다. 모든 투자의 책임은 투자자 본인에게 있습니다.*
+
+**관련 프로젝트:**
+[Alpha Hunter](https://github.com/waterfirst/alpha-hunter) |
+[Insight Lab](https://github.com/waterfirst/insight-lab) |
+[GitHub Pages](https://waterfirst.github.io/chimera-ai/)

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Chimera-AI Multi-Agent System">
+<meta name="dcterms.date" content="2026-05-30">
+<title>Chimera-AI 5월 월간 증시 분석 리포트</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a14; --sf: #14142a; --bd: #1e1e3a;
+  --ac: #f59e0b; --tx: #e4e4ec; --mt: #888;
+  --rd: #ef4444; --gn: #22c55e; --bl: #6366f1; --cy: #06b6d4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--tx); line-height:1.8; }
+.container { max-width:900px; margin:0 auto; padding:20px 24px 60px; }
+
+/* Hero */
+.hero { text-align:center; padding:60px 20px 40px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#1a0a2e 0%,#0a1428 50%,#140a28 100%); z-index:0; }
+.hero * { position:relative; z-index:1; }
+.hero-badge { display:inline-block; background:rgba(245,158,11,.15); color:var(--ac); font-size:12px; font-weight:700; padding:4px 16px; border-radius:20px; margin-bottom:12px; letter-spacing:1px; }
+.hero h1 { font-size:2.4em; font-weight:900; background:linear-gradient(135deg,#f59e0b,#ef4444,#f59e0b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
+.hero .subtitle { font-size:1.1em; color:var(--mt); margin-bottom:6px; }
+.hero .date-author { font-size:13px; color:#666; }
+
+/* TOC */
+.toc { background:var(--sf); border:1px solid var(--bd); border-radius:12px; padding:20px 24px; margin:30px 0; }
+.toc h2 { font-size:14px; color:var(--ac); margin-bottom:12px; letter-spacing:2px; text-transform:uppercase; }
+.toc ol { padding-left:20px; }
+.toc li { margin:6px 0; }
+.toc a { color:var(--cy); text-decoration:none; font-size:14px; }
+.toc a:hover { color:var(--ac); text-decoration:underline; }
+
+/* Sections */
+h2 { font-size:1.5em; color:var(--ac); margin:40px 0 16px; padding-bottom:8px; border-bottom:2px solid var(--bd); display:flex; align-items:center; gap:10px; }
+h3 { font-size:1.15em; color:var(--cy); margin:24px 0 10px; }
+h4 { font-size:1em; color:#e8a87c; margin:18px 0 8px; }
+p { margin:8px 0; font-size:15px; color:var(--tx); }
+
+/* Callout boxes */
+.callout { border-radius:10px; padding:18px 20px; margin:16px 0; border-left:4px solid; }
+.callout-important { background:rgba(239,68,68,.08); border-color:var(--rd); }
+.callout-note { background:rgba(99,102,241,.08); border-color:var(--bl); }
+.callout-tip { background:rgba(34,197,94,.08); border-color:var(--gn); }
+.callout-warning { background:rgba(245,158,11,.08); border-color:var(--ac); }
+.callout h3 { margin-top:0; font-size:1.05em; }
+
+/* KPI Dashboard */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:16px 0; }
+.kpi-card { background:var(--sf); border:1px solid var(--bd); border-radius:10px; padding:16px; text-align:center; transition:border-color .2s; }
+.kpi-card:hover { border-color:var(--ac); }
+.kpi-label { font-size:12px; color:var(--mt); margin-bottom:4px; }
+.kpi-value { font-size:1.6em; font-weight:700; color:var(--tx); }
+.kpi-change { font-size:13px; font-weight:600; margin-top:2px; }
+.kpi-up { color:var(--rd); }
+.kpi-down { color:var(--bl); }
+.kpi-green { color:var(--gn); }
+
+/* Table */
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+thead { background:var(--sf); }
+th { padding:10px 12px; color:var(--ac); font-weight:600; text-align:left; border-bottom:2px solid var(--bd); }
+td { padding:8px 12px; border-bottom:1px solid var(--bd); }
+tr:hover { background:rgba(245,158,11,.04); }
+.up { color:var(--rd); font-weight:600; }
+.down { color:var(--bl); font-weight:600; }
+.neutral { color:var(--mt); }
+
+/* Chart placeholder */
+.chart-box { background:var(--sf); border:1px solid var(--bd); border-radius:10px; padding:20px; margin:16px 0; }
+.chart-title { font-size:13px; color:var(--ac); font-weight:600; margin-bottom:12px; }
+.bar-chart { display:flex; flex-direction:column; gap:8px; }
+.bar-row { display:flex; align-items:center; gap:10px; }
+.bar-label { width:80px; font-size:12px; color:var(--mt); text-align:right; flex-shrink:0; }
+.bar-track { flex:1; height:24px; background:rgba(255,255,255,.05); border-radius:4px; overflow:hidden; position:relative; }
+.bar-fill { height:100%; border-radius:4px; display:flex; align-items:center; padding-left:8px; font-size:11px; font-weight:600; color:#fff; transition:width .8s ease; }
+.bar-fill.positive { background:linear-gradient(90deg,#ef4444,#f59e0b); }
+.bar-fill.negative { background:linear-gradient(90deg,#6366f1,#06b6d4); }
+
+/* Timeline */
+.timeline { position:relative; padding-left:24px; margin:16px 0; }
+.timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background:var(--bd); }
+.tl-item { position:relative; margin:14px 0; padding-left:16px; }
+.tl-item::before { content:''; position:absolute; left:-20px; top:8px; width:10px; height:10px; border-radius:50%; background:var(--ac); border:2px solid var(--bg); }
+.tl-date { font-size:12px; color:var(--ac); font-weight:600; }
+.tl-text { font-size:14px; color:var(--tx); margin-top:2px; }
+
+/* Sector heatmap */
+.heatmap { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin:16px 0; }
+.heat-cell { padding:12px 10px; border-radius:8px; text-align:center; font-size:12px; font-weight:600; }
+.heat-cell .sector-name { display:block; margin-bottom:4px; }
+.heat-cell .sector-val { font-size:16px; }
+.heat-hot { background:rgba(239,68,68,.2); color:#fca5a5; }
+.heat-warm { background:rgba(245,158,11,.15); color:#fcd34d; }
+.heat-cool { background:rgba(99,102,241,.15); color:#a5b4fc; }
+.heat-cold { background:rgba(6,182,212,.15); color:#67e8f9; }
+.heat-neg { background:rgba(100,100,140,.15); color:#888; }
+
+/* Footer */
+.footer { text-align:center; margin-top:50px; padding:30px 0; border-top:1px solid var(--bd); }
+.footer p { font-size:12px; color:var(--mt); }
+.footer a { color:var(--ac); text-decoration:none; }
+
+/* Responsive */
+@media (max-width:600px) {
+  .hero h1 { font-size:1.8em; }
+  .kpi-grid { grid-template-columns:repeat(2,1fr); }
+  .heatmap { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">MONTHLY REPORT | 2026년 5월</div>
+  <h1>5월 월간 증시 분석</h1>
+  <div class="subtitle">삼성·하이닉스 폭주의 양면 — KOSPI 8,476 사상 최고 vs 개별종목 90% 하락</div>
+  <div class="date-author">2026.05.30 | Chimera-AI Multi-Agent System | Nakcho Choi</div>
+</div>
+
+<div class="container">
+
+<!-- TOC -->
+<nav class="toc">
+  <h2>목차 Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">Executive Summary — 5월 핵심 요약</a></li>
+    <li><a href="#s2">주요 지표 대시보드</a></li>
+    <li><a href="#s3">5월 주간별 타임라인</a></li>
+    <li><a href="#s4">미국 증시 — S&P 9주 연속 상승, 나스닥 +8%</a></li>
+    <li><a href="#s5">한국 증시 — KOSPI 8,476 사상 최고, 삼전닉스 독주</a></li>
+    <li><a href="#s6">섹터별 성과 히트맵</a></li>
+    <li><a href="#s7">수급 분석 — 외국인 53조 매도의 착시</a></li>
+    <li><a href="#s8">매크로 환경 — Fed 금리·유가·환율</a></li>
+    <li><a href="#s9">AI 반도체 슈퍼사이클 — 엔비디아 $816억 실적</a></li>
+    <li><a href="#s10">리스크 요인 및 6월 전망</a></li>
+    <li><a href="#s11">투자 전략 제안</a></li>
+  </ol>
+</nav>
+
+<!-- 1. Executive Summary -->
+<h2 id="s1">1. Executive Summary</h2>
+
+<div class="callout callout-important">
+  <h3>KOSPI 8,476 사상 최고 — 그러나 10종목 중 9종목은 하락</h3>
+  <p>5월 KOSPI는 <strong>+28.45%</strong>라는 경이적 월간 수익률을 기록하며 <strong>8,476.15</strong>로 사상 최고치를 경신했다. 그러나 이 상승의 실체는 삼성전자(317,000원)와 SK하이닉스(2,333,000원) 두 종목이 코스피 시가총액의 <strong>50.3%</strong>를 차지하며 지수를 견인한 결과다. 전체 922개 상장종목 중 <strong>88.9%(820개)가 하락</strong>하는 극단적 양극화가 나타났다.</p>
+</div>
+
+<div class="callout callout-note">
+  <h3>5월 글로벌 증시 핵심 키워드</h3>
+  <p><strong>AI 반도체 슈퍼사이클</strong> | 엔비디아 Q1 매출 $816억(+85% YoY), 데이터센터 $752억(+92%)<br>
+  <strong>삼전닉스 독주</strong> | 삼성전자 시총 2,000조 돌파, SK하이닉스 시총 1,663조, 합산 코스피 50.3%<br>
+  <strong>S&P 9주 연속 상승</strong> | 7,585pt, 나스닥 5월 +8%, 메모리얼데이 이후 기록 갱신<br>
+  <strong>Fed 파월 퇴임</strong> | 5/15 파월 의장 임기 종료, 케빈 워시 후임 지명<br>
+  <strong>중동 지정학 완화</strong> | 미-이란 휴전 프레임워크 합의, 유가 $87.5까지 하락<br>
+  <strong>외국인 53조 매도</strong> | 대규모 차익실현이나 삼전닉스 가격 상승으로 보유비율은 오히려 증가</p>
+</div>
+
+<!-- 2. KPI Dashboard -->
+<h2 id="s2">2. 주요 지표 대시보드</h2>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">KOSPI</div>
+    <div class="kpi-value">8,476</div>
+    <div class="kpi-change kpi-up">+28.45% (월간)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">S&P 500</div>
+    <div class="kpi-value">7,585</div>
+    <div class="kpi-change kpi-up">+5.0% (월간)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">NASDAQ</div>
+    <div class="kpi-value">27,100+</div>
+    <div class="kpi-change kpi-up">+8.0% (월간)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">VIX</div>
+    <div class="kpi-value">15.74</div>
+    <div class="kpi-change kpi-green">-46% (월초 대비)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">WTI ($/bbl)</div>
+    <div class="kpi-value">$87.5</div>
+    <div class="kpi-change kpi-down">-17.0% (월간)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">원/달러</div>
+    <div class="kpi-value">1,480원대</div>
+    <div class="kpi-change kpi-down">-1.5% (월간)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">삼성전자</div>
+    <div class="kpi-value">317,000</div>
+    <div class="kpi-change kpi-up">시총 2,000조 돌파</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">SK하이닉스</div>
+    <div class="kpi-value">2,333,000</div>
+    <div class="kpi-change kpi-up">시총 1,663조</div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr><th>지표</th><th>4월말</th><th>5월말</th><th>변동률</th><th>비고</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>KOSPI</td><td>6,600</td><td>8,476</td><td class="up">+28.4%</td><td>사상 최고치</td></tr>
+    <tr><td>S&P 500</td><td>7,230</td><td>7,585</td><td class="up">+4.9%</td><td>9주 연속 상승</td></tr>
+    <tr><td>NASDAQ</td><td>25,114</td><td>27,100+</td><td class="up">+7.9%</td><td>AI 테마 주도</td></tr>
+    <tr><td>다우존스</td><td>49,800</td><td>50,580+</td><td class="up">+1.6%</td><td>상대적 부진</td></tr>
+    <tr><td>VIX</td><td>22.5</td><td>15.74</td><td class="down">-30.0%</td><td>안정권 복귀</td></tr>
+    <tr><td>WTI</td><td>$105.4</td><td>$87.5</td><td class="down">-17.0%</td><td>중동 휴전 효과</td></tr>
+    <tr><td>원/달러</td><td>1,500.8</td><td>1,480원대</td><td class="down">-1.3%</td><td>원화 강세</td></tr>
+    <tr><td>금($/oz)</td><td>3,300</td><td>3,300+</td><td class="neutral">보합</td><td>안전자산 수요 유지</td></tr>
+  </tbody>
+</table>
+
+<!-- 3. Timeline -->
+<h2 id="s3">3. 5월 주간별 타임라인</h2>
+
+<div class="timeline">
+  <div class="tl-item">
+    <div class="tl-date">W1 (04.28~05.01)</div>
+    <div class="tl-text"><strong>KOSPI 6,700 돌파</strong> — S&P 7,230 사상최고, 애플 서프라이즈, 시총 6,000조 시대 개막. TACO 모델 강세 신호 지속.</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-date">W2 (05.05~05.09)</div>
+    <div class="tl-text"><strong>KOSPI 7,490 신고가</strong> — 삼성전자 시총 $1조 돌파, S&P 7,399 6주 연속 상승. AI 반도체 랠리 본격화, SK하이닉스 +10% 급등.</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-date">W3 (05.12~05.16)</div>
+    <div class="tl-text"><strong>8,000 터치 후 6% 급락</strong> — 코스피 장중 8,047 사상최고 후 역대 2위 일간 낙폭. 외국인 20.4조 투매. 외국인·기관 7조 순매도. VIX 18.4 급등. 5/15 파월 퇴임.</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-date">W4 (05.19~05.23)</div>
+    <div class="tl-text"><strong>V자 반등 7,208→7,848</strong> — 개인 저가매수 vs 외국인 44조 누적 투매. 매수 사이드카 발동. 5/20 엔비디아 Q1 실적 $816억 기록 발표.</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-date">W5 (05.26~05.30)</div>
+    <div class="tl-text"><strong>KOSPI 8,476 사상 최고 경신</strong> — 미-이란 휴전 합의, 유가 급락. 삼성전자 +5.84%, 현대차 +6.79%. 삼전닉스 시총 합산 코스피 50.3%. S&P 7,585, 9주 연속 상승.</div>
+  </div>
+</div>
+
+<!-- 4. US Market -->
+<h2 id="s4">4. 미국 증시 — S&P 9주 연속 상승, 나스닥 +8%</h2>
+
+<h3>4.1 S&P 500: 7,585pt, 월간 +5%</h3>
+<p>S&P 500은 5월 29일 7,585pt로 마감하며 <strong>9주 연속 상승</strong>이라는 기록을 세웠다. 이는 2023년 12월 이후 최장 연속 상승 기록이다. 나스닥은 5월 한 달간 <strong>+8%</strong> 상승하며 기술주 랠리를 주도했다.</p>
+
+<h3>4.2 "Sell in May" 불발</h3>
+<p>전통적 약세 격언 "Sell in May and Go Away"가 올해도 완전히 빗나갔다. AI 반도체 수퍼사이클이 기술주를 끌어올리며, 특히 엔비디아의 폭발적 실적이 시장 전체의 위험 선호 심리를 자극했다. 매그니피센트 7 중심의 상승이 S&P 전체를 견인하는 구도가 지속되고 있다.</p>
+
+<h3>4.3 VIX 15.74 — 공포 해소</h3>
+<p>5월 중순 8,000 터치 직후의 글로벌 변동성 확대(VIX 22~25) 구간을 거쳐, 월말에는 <strong>15.74</strong>까지 하락하며 안정권에 복귀했다. 이는 중동 지정학 리스크 완화와 견조한 기업 실적이 복합적으로 작용한 결과다.</p>
+
+<div class="chart-box">
+  <div class="chart-title">5월 주요 미국 지수 월간 수익률</div>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <div class="bar-label">NASDAQ</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:80%">+8.0%</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">S&P 500</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:50%">+5.0%</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">다우존스</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:16%">+1.6%</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">러셀2000</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:20%">+2.0%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Korea Market -->
+<h2 id="s5">5. 한국 증시 — KOSPI 8,476, 삼전닉스 독주의 양면</h2>
+
+<h3>5.1 월간 +28.45% — 경이적 상승</h3>
+<p>코스피는 4월말 6,600선에서 출발해 5월 29일 <strong>8,476.15</strong>까지 올라 월간 <strong>+28.45%</strong>라는 역사적 수익률을 기록했다. 전년 대비 <strong>+211.55%</strong> 상승으로, 글로벌 주요 시장 중 가장 높은 상승률이다.</p>
+
+<h3>5.2 삼전닉스의 50.3% 지배</h3>
+<p>삼성전자(317,000원, 시총 ~2,000조원)와 SK하이닉스(2,333,000원, 시총 ~1,663조원)의 합산 시가총액이 코스피 전체의 <strong>50.3%</strong>를 차지하는 전례 없는 집중도를 기록했다. 이 두 종목만으로 코스피 지수 절반 이상을 움직이는 구조다.</p>
+
+<div class="callout callout-warning">
+  <h3>코스피의 두 얼굴 — 922개 종목 중 820개 하락</h3>
+  <p>5월 29일 기준 코스피 상장 922개 종목 중 <strong>820개(88.9%)가 하락</strong>하고 92개(10%)만 상승했다. 지수는 사상 최고지만 대다수 종목은 약세다. "지수는 올라도 내 계좌는 내려가는" 개미의 체감과 정확히 일치하는 시장 구조다.</p>
+</div>
+
+<h3>5.3 코스닥 — 소외된 시장</h3>
+<p>코스닥은 대형 반도체주 쏠림의 반대편에서 상대적 소외를 받았다. 중소형 성장주 중심의 코스닥은 삼전닉스 독주 장세에서 자금 이탈 압력을 받으며 부진했다.</p>
+
+<!-- 6. Sector Heatmap -->
+<h2 id="s6">6. 섹터별 성과 히트맵</h2>
+
+<div class="heatmap">
+  <div class="heat-cell heat-hot">
+    <span class="sector-name">반도체</span>
+    <span class="sector-val">+35%</span>
+  </div>
+  <div class="heat-cell heat-hot">
+    <span class="sector-name">AI/클라우드</span>
+    <span class="sector-val">+28%</span>
+  </div>
+  <div class="heat-cell heat-warm">
+    <span class="sector-name">자동차</span>
+    <span class="sector-val">+15%</span>
+  </div>
+  <div class="heat-cell heat-warm">
+    <span class="sector-name">조선</span>
+    <span class="sector-val">+12%</span>
+  </div>
+  <div class="heat-cell heat-cool">
+    <span class="sector-name">2차전지</span>
+    <span class="sector-val">+5%</span>
+  </div>
+  <div class="heat-cell heat-cool">
+    <span class="sector-name">바이오</span>
+    <span class="sector-val">+3%</span>
+  </div>
+  <div class="heat-cell heat-neg">
+    <span class="sector-name">건설</span>
+    <span class="sector-val">-2%</span>
+  </div>
+  <div class="heat-cell heat-neg">
+    <span class="sector-name">금융</span>
+    <span class="sector-val">-1%</span>
+  </div>
+  <div class="heat-cell heat-cold">
+    <span class="sector-name">방산</span>
+    <span class="sector-val">+8%</span>
+  </div>
+  <div class="heat-cell heat-warm">
+    <span class="sector-name">로봇/ESS</span>
+    <span class="sector-val">+10%</span>
+  </div>
+</div>
+
+<p><strong>반도체 독주</strong>: AI 데이터센터 투자 확대, 엔비디아 블랙웰 300 램프업, HBM4 수요 폭증으로 반도체 섹터가 +35% 이상 급등하며 시장을 주도. 자동차(현대차 +6.79%, 기아 +2.98%)와 조선 섹터도 견조한 상승. 반면 건설·금융 등 내수 업종은 금리 인하 지연과 정치적 불확실성 영향으로 부진.</p>
+
+<!-- 7. Flow Analysis -->
+<h2 id="s7">7. 수급 분석 — 외국인 53조 매도의 착시</h2>
+
+<h3>7.1 외국인: 금액은 매도, 비중은 상승</h3>
+<p>외국인 투자자는 5월 중 누적 약 <strong>53조원(~$36억)</strong>을 순매도했다. 그러나 흥미롭게도, 삼성전자와 SK하이닉스의 주가 급등으로 외국인의 코스피 내 보유 비중은 오히려 <strong>상승</strong>하는 "착시 현상"이 발생했다.</p>
+
+<div class="callout callout-tip">
+  <h3>착시의 메커니즘</h3>
+  <p>외국인이 53조원어치를 팔았지만, 보유 중인 삼성전자·SK하이닉스의 가격이 급등하면서 <strong>매도량보다 평가액 증가분이 더 컸다</strong>. 브로커리지들은 이번 매도를 "한국에서의 펀더멘털 이탈"이 아닌 <strong>오버웨이트 포지션의 리밸런싱</strong>으로 해석하고 있다.</p>
+</div>
+
+<h3>7.2 개인투자자: 5월의 승자</h3>
+<p>개인투자자는 5월 중순 급락장에서 적극적인 저가매수에 나서며 V자 반등의 주역이 되었다. 특히 5/20~5/21 구간에서 매수 사이드카가 발동될 정도의 강한 매수세를 보여, 외국인 투매를 완충하는 역할을 수행했다.</p>
+
+<h3>7.3 외국인 매도 후 이동처</h3>
+<p>외국인 자금은 삼성전자·SK하이닉스에서 차익을 실현한 후 로봇, ESS(에너지저장시스템) 등 차세대 성장 테마로 일부 이동하는 흐름이 포착되었다.</p>
+
+<!-- 8. Macro -->
+<h2 id="s8">8. 매크로 환경 — Fed 금리·유가·환율</h2>
+
+<h3>8.1 Fed: 동결 지속, 파월 퇴임</h3>
+<p>4/29 FOMC에서 기준금리를 <strong>3.50~3.75%</strong>로 동결 유지했다. 일부 지역 연은 총재 3명이 금리 인하 표현에 반대 의견을 제시하며 매파적 분위기가 감지되었다. 5/15 파월 의장 임기가 종료되었고, <strong>케빈 워시</strong>가 후임으로 지명되었다.</p>
+
+<div class="callout callout-note">
+  <h3>시장 금리 인하 기대</h3>
+  <p>중위 전망에 따르면 향후 1년간 25bp 인하 2회가 예상되나, 인하 시점이 이전 서베이 대비 후퇴하여 <strong>2026년 Q3~Q4 또는 2027년 Q1</strong>로 지연된 상태. 6월 CPI가 핵심 트리거.</p>
+</div>
+
+<h3>8.2 유가: $105 → $87.5 급락</h3>
+<p>WTI 유가는 월초 $105에서 월말 <strong>$87.5</strong>까지 17% 급락했다. 미-이란 휴전 프레임워크 합의 소식이 중동 지정학 프리미엄을 대폭 축소시켰다. 이는 인플레이션 기대를 완화시키며 주식시장에 우호적 환경을 조성했다.</p>
+
+<h3>8.3 원/달러: 1,480원대 — 원화 강세</h3>
+<p>원/달러 환율은 1,500원대에서 1,480원대로 소폭 하락(원화 강세). 코스피 급등에 따른 외국인 자금 유입 기대와 유가 하락이 원화 강세 요인으로 작용했다.</p>
+
+<!-- 9. AI Semiconductor -->
+<h2 id="s9">9. AI 반도체 슈퍼사이클 — 엔비디아 $816억 실적</h2>
+
+<h3>9.1 엔비디아 FY2027 Q1 실적</h3>
+<table>
+  <thead>
+    <tr><th>항목</th><th>FY27 Q1</th><th>YoY 성장률</th><th>QoQ 성장률</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>총매출</td><td>$816억</td><td class="up">+85%</td><td class="up">+20%</td></tr>
+    <tr><td>데이터센터</td><td>$752억</td><td class="up">+92%</td><td class="up">+21%</td></tr>
+    <tr><td>DC 컴퓨트</td><td>$604억</td><td class="up">+77%</td><td class="up">+18%</td></tr>
+    <tr><td>DC 네트워킹</td><td>$148억</td><td class="up">+199%</td><td class="up">+35%</td></tr>
+  </tbody>
+</table>
+
+<p>엔비디아의 Q1 데이터센터 매출이 <strong>$752억(+92% YoY)</strong>을 기록하며 AI 인프라 투자 규모를 실증했다. 블랙웰 300 GPU 램프업과 InfiniBand/Spectrum-X/NVLink 솔루션 수요가 폭증했다. 하이퍼스케일러(클라우드 대형사)가 매출의 약 50%를 차지하며, 나머지 50%는 AI클라우드, 산업용, 기업용, 정부(소버린 AI) 고객으로 다변화되는 추세다.</p>
+
+<h3>9.2 HBM·메모리 수혜 — 삼성·하이닉스 질주</h3>
+<p>엔비디아의 기록적 실적은 곧바로 <strong>HBM(고대역폭 메모리) 공급사</strong>인 SK하이닉스와 삼성전자로의 수혜 기대로 이어졌다. SK하이닉스는 HBM4 선제 양산으로 시총 1,663조원을 기록하며 삼성전자와의 "코스피 왕좌" 경쟁이 30년 만에 가장 치열한 국면에 접어들었다.</p>
+
+<!-- 10. Risks -->
+<h2 id="s10">10. 리스크 요인 및 6월 전망</h2>
+
+<h3>10.1 주요 리스크</h3>
+<div class="callout callout-warning">
+  <h3>경계해야 할 5대 리스크</h3>
+  <p><strong>1) 극단적 쏠림 리스크</strong> — 코스피 시총의 50%가 2개 종목에 집중. 삼전닉스 중 하나라도 실적 미스 시 지수 충격 불가피.<br>
+  <strong>2) Fed 신임 의장 정책 불확실성</strong> — 케빈 워시의 통화정책 방향성 미확정. 인플레이션 재가속 시 금리 인상 가능성도 일부 제기.<br>
+  <strong>3) 밸류에이션 부담</strong> — KOSPI 8,476은 PER 기준으로 역사적 상단. 추가 상승에는 실적 뒷받침 필수.<br>
+  <strong>4) 중동 휴전 지속 여부</strong> — 미-이란 합의가 정식 조약으로 발전할지 불투명. 유가 변동성 재확대 가능.<br>
+  <strong>5) 외국인 리밸런싱 규모</strong> — 누적 53조 매도 후 추가 차익 실현 여부가 6월 시장 방향성의 핵심.</p>
+</div>
+
+<h3>10.2 6월 전망</h3>
+<p>삼성증권은 6월 코스피 레인지를 <strong>7,200~9,200</strong>으로 제시하며, AI·반도체 비중을 높게 유지할 것을 권고했다. 6월 FOMC(6/16~17) 결과, 5월 CPI 발표, 그리고 워시 신임 의장의 첫 공식 발언이 시장의 다음 방향을 결정할 핵심 변수다.</p>
+
+<div class="chart-box">
+  <div class="chart-title">6월 핵심 이벤트 캘린더</div>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <div class="bar-label" style="width:100px">6/10 CPI</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:90%">5월 소비자물가 — 인하 트리거 여부</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="width:100px">6/16-17 FOMC</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:95%">워시 체제 첫 회의 — 동결 vs 인하 시그널</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="width:100px">6/20 선물만기</div>
+      <div class="bar-track"><div class="bar-fill negative" style="width:60%">쿼드러플 위칭 — 변동성 확대 주의</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="width:100px">6/25 삼성 주총</div>
+      <div class="bar-track"><div class="bar-fill positive" style="width:70%">HBM4 전략·파운드리 로드맵 발표 예상</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 11. Strategy -->
+<h2 id="s11">11. 투자 전략 제안</h2>
+
+<h3>11.1 코어 전략: AI 반도체 비중 유지</h3>
+<p>삼성전자·SK하이닉스 중심의 AI 반도체 슈퍼사이클은 단기 과열 신호에도 불구하고 <strong>구조적 성장 트렌드가 유효</strong>하다. 엔비디아 데이터센터 매출 +92%, HBM4 수요 확대, 소버린 AI 투자 증가 등이 뒷받침한다. 다만 밸류에이션 부담 구간에서는 <strong>분할 매수·분할 매도</strong> 전략이 적절하다.</p>
+
+<h3>11.2 분산 전략: 차세대 테마 탐색</h3>
+<p>삼전닉스 독주 장세에서 소외된 <strong>로봇, ESS, 자동차(자율주행)</strong> 등 차세대 성장 테마로의 분산이 필요하다. 외국인 자금 이동 경로가 이미 이 방향을 가리키고 있다.</p>
+
+<h3>11.3 헤지 전략: 유가·환율 변동성 대비</h3>
+<p>중동 휴전 합의의 지속 가능성이 불투명한 상황에서, <strong>에너지 섹터 숏 포지션</strong> 또는 <strong>원화 강세 포지션</strong>을 헤지 수단으로 활용할 수 있다. VIX가 15.74로 낮은 수준이므로, <strong>풋옵션 프리미엄이 저렴한 구간</strong>에서 보험 매수를 고려할 만하다.</p>
+
+<div class="callout callout-tip">
+  <h3>Chimera-AI 종합 판단</h3>
+  <p><strong>단기(6월)</strong>: 중립~강세. FOMC·CPI 결과에 따라 변동성 확대 가능. KOSPI 7,500~9,000 레인지 예상.<br>
+  <strong>중기(Q3)</strong>: 강세. AI 반도체 수요 구조적 확대, Fed 인하 시작 시 유동성 장세 재개 가능.<br>
+  <strong>핵심 모니터링</strong>: 삼전닉스 실적, FOMC 금리 결정, 중동 정세, 외국인 수급 방향.</p>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p><strong>Chimera-AI Monthly Report</strong> | 2026년 5월호</p>
+  <p>Claude Brain + GPT Voice + Gemini Hands</p>
+  <p><a href="https://github.com/waterfirst/chimera-ai">GitHub</a> · <a href="https://waterfirst.github.io/alpha-hunter/">Alpha Hunter</a> · <a href="../index.html">목차로 돌아가기</a></p>
+  <p style="margin-top:12px; font-size:11px; color:#555;">본 보고서는 AI 멀티에이전트 시스템이 공개 데이터를 분석하여 생성한 것으로, 투자 권유가 아닙니다.<br>
+  데이터 출처: Trading Economics, Yahoo Finance, CNBC, Seoul Economic Daily, 한국거래소, NVIDIA IR</p>
+  <p style="margin-top:8px;">© 2026 Chimera AI · Nakcho Choi</p>
+</div>
+
+</div>
+</body>
+</html>

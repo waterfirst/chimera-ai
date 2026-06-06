@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>외국인 매도-개인 이탈-재매수 가설 이벤트 스터디 보고서</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5b6673;
+      --line: #d9e1e8;
+      --panel: #f6f8fb;
+      --accent: #1457a8;
+      --danger: #b42318;
+      --good: #146c43;
+      --warn: #9a5b00;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.65;
+    }
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 36px 24px 64px;
+    }
+    header {
+      border-bottom: 3px solid var(--ink);
+      padding-bottom: 22px;
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 36px 0 14px;
+      font-size: 21px;
+      border-left: 6px solid var(--accent);
+      padding-left: 10px;
+    }
+    h3 {
+      margin: 24px 0 10px;
+      font-size: 17px;
+    }
+    p { margin: 10px 0; }
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 22px 0 0;
+    }
+    .meta {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 12px;
+      min-height: 76px;
+    }
+    .meta b {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .meta span {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .callout {
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--accent);
+      background: #f8fbff;
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+    .callout strong { color: var(--accent); }
+    .danger { border-left-color: var(--danger); background: #fff8f7; }
+    .danger strong { color: var(--danger); }
+    .warn { border-left-color: var(--warn); background: #fffaf0; }
+    .warn strong { color: var(--warn); }
+    .good { border-left-color: var(--good); background: #f4fbf7; }
+    .good strong { color: var(--good); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 22px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      text-align: right;
+      vertical-align: top;
+    }
+    th {
+      background: #edf2f7;
+      color: #243244;
+      font-weight: 700;
+    }
+    th:first-child, td:first-child,
+    .left { text-align: left; }
+    .num-pos { color: var(--good); font-weight: 700; }
+    .num-neg { color: var(--danger); font-weight: 700; }
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .figure {
+      margin: 18px 0 28px;
+      border: 1px solid var(--line);
+      padding: 12px;
+      background: #fff;
+    }
+    .figure img {
+      width: 100%;
+      display: block;
+      height: auto;
+    }
+    .caption {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    code {
+      background: #eef3f7;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+    }
+    ul { padding-left: 22px; }
+    li { margin: 6px 0; }
+    footer {
+      margin-top: 42px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 820px) {
+      .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .page { padding: 24px 14px 48px; }
+      h1 { font-size: 24px; }
+      table { font-size: 12px; }
+      th, td { padding: 7px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>외국인 “매도-하락-개인 이탈-재매수” 가설 이벤트 스터디</h1>
+      <p class="subtitle">KOSPI 투자주체별 순매수 데이터 기반 전후 비교 보고서</p>
+      <div class="meta-grid">
+        <div class="meta"><b>분석 기간</b><span>2023-01-02 ~ 2026-06-05</span></div>
+        <div class="meta"><b>관측치</b><span>834 거래일</span></div>
+        <div class="meta"><b>분할 기준일</b><span>2025-06-04</span></div>
+        <div class="meta"><b>이벤트</b><span>30건</span></div>
+      </div>
+    </header>
+
+    <section>
+      <h2>1. 핵심 결론</h2>
+      <div class="callout danger">
+        <p><strong>강한 형태의 가설은 지지되지 않는다.</strong></p>
+        <p>외국인 대량 순매도 이후 <code>가격 하락 -> 개인 이탈 -> 외국인 재매수</code>가 이어지는 완전한 순환 패턴은 취임 전과 취임 후 모두에서 통계적으로 확인되지 않았다.</p>
+      </div>
+      <div class="callout good">
+        <p><strong>그러나 취임 후 구조 변화는 뚜렷하다.</strong></p>
+        <p>취임 후에는 외국인 대량 순매도 이후 외국인이 재매수하지 않고, 오히려 사후 5/10/21거래일 동안 더 강하게 순매도하는 방향으로 바뀌었다. 이 차이는 세 호라이즌 모두에서 통계적으로 유의하다.</p>
+      </div>
+      <p>따라서 학술적으로 방어 가능한 결론은 “외국인이 팔아서 떨어뜨린 뒤 다시 산다”가 아니라, <strong>취임 후 외국인 순매도가 향후 수익률 악화와 더 강하게 연결되고, 외국인 재매수 사이클은 관찰되지 않는다</strong>이다.</p>
+    </section>
+
+    <section>
+      <h2>2. 분석 설계</h2>
+      <ul>
+        <li>이벤트 정의: 외국인 순매도 상위 10% 거래일, 인접 이벤트는 최소 5거래일 간격으로 필터링</li>
+        <li>이벤트 윈도우: 이벤트일 기준 -21거래일 ~ +21거래일</li>
+        <li>검정 호라이즌: T+5, T+10, T+21</li>
+        <li>전후 구분: <code>pre_lee</code>는 2025-06-04 이전, <code>post_lee</code>는 2025-06-04 이후</li>
+        <li>단위: 외국인/개인 순매수는 조 원, 양수는 순매수, 음수는 순매도</li>
+      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>값</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>전체 이벤트</td><td>30건</td></tr>
+          <tr><td>취임 전 이벤트</td><td>15건</td></tr>
+          <tr><td>취임 후 이벤트</td><td>15건</td></tr>
+          <tr><td>완전한 21일 윈도우 이벤트</td><td>27건</td></tr>
+          <tr><td>절단된 이벤트</td><td>3건</td></tr>
+          <tr><td>중첩 윈도우 포함 이벤트</td><td>26건</td></tr>
+        </tbody>
+      </table>
+      <p class="small">주의: 21거래일 윈도우는 일부 이벤트가 서로 중첩된다. 따라서 장기 호라이즌 결과는 방향성 증거로 해석하되, 독립 표본처럼 과도하게 해석하지 않는다.</p>
+    </section>
+
+    <section>
+      <h2>3. 기본 이벤트 스터디 결과</h2>
+      <p>전체 이벤트를 합산하면, 외국인 대량 순매도 이후 KOSPI는 평균적으로 하락하지 않았다. 오히려 T+5, T+10, T+21 모두 양의 누적수익률이다. 동시에 외국인은 사후 구간에서 계속 순매도했다.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>호라이즌</th>
+            <th>KOSPI 평균 누적수익률</th>
+            <th>수익률 p값</th>
+            <th>외국인 사후 순매수</th>
+            <th>외국인 p값</th>
+            <th>판정</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left">T+5</td>
+            <td class="num-pos">+2.50%</td>
+            <td>0.0149</td>
+            <td class="num-neg">-2.33조</td>
+            <td>0.0111</td>
+            <td class="left">하락도 재매수도 아님</td>
+          </tr>
+          <tr>
+            <td class="left">T+10</td>
+            <td class="num-pos">+3.79%</td>
+            <td>0.0053</td>
+            <td class="num-neg">-4.60조</td>
+            <td>0.0171</td>
+            <td class="left">하락도 재매수도 아님</td>
+          </tr>
+          <tr>
+            <td class="left">T+21</td>
+            <td class="num-pos">+4.58%</td>
+            <td>0.0311</td>
+            <td class="num-neg">-7.32조</td>
+            <td>0.0069</td>
+            <td class="left">하락도 재매수도 아님</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 취임 전/후 비교</h2>
+      <h3>4.1 외국인 사후 순매수 변화</h3>
+      <p>가설이 맞으려면 외국인 대량 순매도 이후 어느 시점엔 외국인 순매수가 양수로 돌아서야 한다. 그러나 실제로는 취임 후 순매도가 훨씬 커졌다.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>호라이즌</th>
+            <th>취임 전 외국인 사후 순매수</th>
+            <th>취임 후 외국인 사후 순매수</th>
+            <th>취임 후 - 취임 전</th>
+            <th>전후 차이 p값</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="left">T+5</td><td class="num-neg">-0.37조</td><td class="num-neg">-4.44조</td><td class="num-neg">-4.06조</td><td>0.0243</td></tr>
+          <tr><td class="left">T+10</td><td class="num-neg">-0.53조</td><td class="num-neg">-8.97조</td><td class="num-neg">-8.44조</td><td>0.0274</td></tr>
+          <tr><td class="left">T+21</td><td class="num-neg">-1.50조</td><td class="num-neg">-14.60조</td><td class="num-neg">-13.10조</td><td>0.0184</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.2 개인 이탈 여부</h3>
+      <p>“개인을 떨구고”라는 가설이 맞으려면 저점까지 개인 순매수가 음수여야 한다. 그러나 평균적으로 개인은 저점까지 순매도하지 않고 순매수했다.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>호라이즌</th>
+            <th>취임 전: 저점까지 개인 순매수</th>
+            <th>취임 후: 저점까지 개인 순매수</th>
+            <th>해석</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="left">T+5</td><td class="num-pos">+0.65조</td><td class="num-pos">+1.45조</td><td class="left">개인 이탈 아님</td></tr>
+          <tr><td class="left">T+10</td><td class="num-pos">+0.98조</td><td class="num-pos">+5.32조</td><td class="left">개인 이탈 아님</td></tr>
+          <tr><td class="left">T+21</td><td class="num-pos">+0.98조</td><td class="num-pos">+6.27조</td><td class="left">개인 이탈 아님</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 4단계 가설 판정</h2>
+      <p>4단계 가설은 다음 세 조건이 동시에 성립해야 지지된다.</p>
+      <ol>
+        <li>외국인 대량 순매도 이후 의미 있는 가격 저점이 형성된다.</li>
+        <li>그 저점까지 개인이 순매도한다.</li>
+        <li>저점 이후 외국인이 순매수한다.</li>
+      </ol>
+      <table>
+        <thead>
+          <tr>
+            <th>구간</th>
+            <th>호라이즌</th>
+            <th>가격 하락</th>
+            <th>개인 이탈</th>
+            <th>외국인 재매수</th>
+            <th>최종 판정</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="left">취임 전</td><td class="left">T+5</td><td>미확인</td><td>미확인</td><td>미확인</td><td class="left">불지지</td></tr>
+          <tr><td class="left">취임 전</td><td class="left">T+10</td><td>미확인</td><td>미확인</td><td>미확인</td><td class="left">불지지</td></tr>
+          <tr><td class="left">취임 전</td><td class="left">T+21</td><td class="num-pos">확인</td><td>미확인</td><td>미확인</td><td class="left">부분 증거만 있음</td></tr>
+          <tr><td class="left">취임 후</td><td class="left">T+5</td><td>미확인</td><td>미확인</td><td>미확인</td><td class="left">불지지</td></tr>
+          <tr><td class="left">취임 후</td><td class="left">T+10</td><td>경계선</td><td>미확인</td><td>미확인</td><td class="left">불지지</td></tr>
+          <tr><td class="left">취임 후</td><td class="left">T+21</td><td>경계선</td><td>미확인</td><td>미확인</td><td class="left">불지지</td></tr>
+        </tbody>
+      </table>
+      <p class="small">취임 전 T+21에서는 평균 저점 수익률 -2.23%, p=0.011로 가격 하락만 확인된다. 그러나 개인 이탈과 외국인 재매수가 확인되지 않으므로 완전한 사이클은 성립하지 않는다.</p>
+    </section>
+
+    <section>
+      <h2>6. 상관성 변화</h2>
+      <p>이벤트 스터디와 별도로, 외국인 순매도와 향후 수익률의 일별 상관관계를 전후로 비교했다. 여기서는 취임 후 변화가 뚜렷하다.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>호라이즌</th>
+            <th>취임 전 상관</th>
+            <th>취임 후 상관</th>
+            <th>변화</th>
+            <th>차이 p값</th>
+            <th>해석</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="left">T+5</td><td class="num-pos">+0.075</td><td class="num-neg">-0.148</td><td class="num-neg">-0.222</td><td>0.0037</td><td class="left">취임 후 외국인 매도가 하락 신호로 전환</td></tr>
+          <tr><td class="left">T+10</td><td class="num-pos">+0.099</td><td class="num-pos">+0.047</td><td class="num-neg">-0.052</td><td>0.5033</td><td class="left">유의한 변화 없음</td></tr>
+          <tr><td class="left">T+21</td><td class="num-pos">+0.080</td><td class="num-neg">-0.156</td><td class="num-neg">-0.236</td><td>0.0026</td><td class="left">취임 후 외국인 매도가 하락 신호로 전환</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        <p><strong>중요한 해석:</strong> 이 결과는 외국인 순매도가 취임 후 향후 수익률 악화와 연결된다는 증거다. 그러나 이것만으로 외국인이 의도적으로 가격을 떨어뜨린 뒤 되산다는 조작적 순환을 입증할 수는 없다.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>7. 그림</h2>
+      <div class="figure">
+        <img src="figure_event_cum_return.png" alt="외국인 대량 순매도 이벤트 이후 KOSPI 누적수익률">
+        <div class="caption">그림 1. 외국인 대량 순매도 이벤트 이후 평균 KOSPI 누적수익률.</div>
+      </div>
+      <div class="figure">
+        <img src="figure_event_foreign_cum_flow.png" alt="외국인 대량 순매도 이후 외국인 누적 순매수">
+        <div class="caption">그림 2. 이벤트 이후 외국인 누적 순매수. 평균적으로 재매수가 아니라 순매도 지속이 관찰된다.</div>
+      </div>
+      <div class="figure">
+        <img src="figure_event_price_and_flow.png" alt="가격 경로와 외국인 누적 순매수 동시 비교">
+        <div class="caption">그림 3. 가격 경로와 외국인 누적 순매수의 결합 그래프.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>8. 최종 문장</h2>
+      <p>본 데이터에서 외국인 대량 순매도 이후의 평균 패턴은 “매도 후 하락시켜 개인을 떨구고 재매수”가 아니다. 취임 전에도 완전한 순환은 확인되지 않았고, 취임 후에는 오히려 외국인의 사후 순매도가 유의하게 확대되었다. 다만 취임 후 외국인 순매도와 향후 5일/21일 수익률 사이의 음의 상관은 강해졌으므로, 조작적 재매수 가설보다는 <strong>외국인 순매도의 가격 리더십 또는 방향성 신호 강화</strong>로 해석하는 편이 더 안전하다.</p>
+    </section>
+
+    <footer>
+      <p>생성 파일: <code>event_study_outputs_834/report_ko.html</code></p>
+      <p>원천 결과: <code>event_summary.json</code>, <code>table_four_step_cycle_by_regime.csv</code>, <code>table_pre_post_comparison.csv</code>, <code>table_pre_post_correlation_comparison.csv</code></p>
+    </footer>
+  </main>
+</body>
+</html>

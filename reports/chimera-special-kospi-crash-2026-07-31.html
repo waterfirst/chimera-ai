@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KOSPI 폭락 정량 분석 — 40일 -40%의 구조</title>
+<style>
+:root{--bg:#f8fafc;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--red:#dc2626;--blue:#2563eb;--amber:#d97706}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Malgun Gothic",sans-serif;line-height:1.68}
+.wrap{max-width:1060px;margin:0 auto;padding:34px 18px 70px}.hero{background:linear-gradient(135deg,#111827,#7f1d1d);color:#fff;border-radius:26px;padding:34px 30px;box-shadow:0 24px 60px rgba(15,23,42,.18)}
+.kicker{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:#fecaca;font-weight:800}h1{font-size:clamp(30px,5vw,52px);line-height:1.08;margin:10px 0 12px}h2{font-size:26px;margin:34px 0 12px}h3{margin:22px 0 8px}.lead{font-size:18px;color:#fee2e2;max-width:880px}.meta{color:#fecaca;font-size:13px;margin-top:18px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 28px rgba(15,23,42,.06)}
+.metric{font-size:30px;font-weight:900}.label{color:var(--muted);font-size:13px}.red{color:var(--red)}.blue{color:var(--blue)}.amber{color:var(--amber)}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right;font-size:14px}th:first-child,td:first-child{text-align:left}th{background:#f1f5f9;color:#334155}tr:last-child td{border-bottom:0}
+.callout{border-left:5px solid var(--red);background:#fff1f2;border-radius:14px;padding:16px 18px;margin:18px 0}.note{border-left-color:var(--blue);background:#eff6ff}.bars{display:grid;gap:10px}.bar{display:grid;grid-template-columns:90px 1fr 80px;gap:10px;align-items:center}.track{height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#f97316,#dc2626)}
+.svgbox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;overflow:auto}.src{font-size:12px;color:var(--muted)}a{color:#2563eb}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:#fff;margin:4px 4px 0 0;font-size:12px;color:#334155}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.bar{grid-template-columns:70px 1fr 64px}th,td{font-size:12px;padding:8px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+  <div class="kicker">Chimera Special · Quant Crash Review</div>
+  <h1>KOSPI 폭락 정량 분석<br>40일 -40%의 구조</h1>
+  <p class="lead">7월 말 코스피 급락은 단순 조정이 아니라 AI·반도체 집중 포지션, 레버리지 ETF, 장기금리, 강제청산이 동시에 맞물린 <b>비선형 디레버리징</b>으로 해석한다.</p>
+  <div class="meta">작성: 2026-07-31 · 데이터 기준: 2026-07-30 종가 · 기존 2026-07-19 KOSPI 붕괴장 수리 분석 후속</div>
+</section>
+
+<section class="grid">
+  <div class="card"><div class="label">52주 고점 대비 종가 낙폭</div><div class="metric red">-40.4%</div><div class="label">9,385.59 → 5,593.56</div></div>
+  <div class="card"><div class="label">52주 고점 대비 장중 저점</div><div class="metric red">-43.9%</div><div class="label">저점 5,262.77</div></div>
+  <div class="card"><div class="label">고점 회복 필요 수익률</div><div class="metric amber">+67.8%</div><div class="label">손실률과 회복률은 비대칭</div></div>
+  <div class="card"><div class="label">7월 일간 실현 변동성</div><div class="metric blue">75.4%</div><div class="label">연율화, 6/30~7/30</div></div>
+</section>
+
+<section class="callout">
+  <b>핵심 결론.</b> “40일 만에 40% 감소가 말이 되나?”라는 질문의 답은 <b>가능하다</b>다. 다만 기업가치가 40일 만에 40% 사라졌다기보다, 레버리지·ETF·마진콜·외국인 포지션 청산이 겹치며 <b>가격발견보다 유동성 청산이 앞선 장</b>으로 봐야 한다.
+</section>
+
+<h2>1. 가격 경로: 라운드 넘버가 순차적으로 깨졌다</h2>
+<div class="svgbox">
+<svg viewBox="0 0 920 360" width="100%" height="360" role="img" aria-label="KOSPI 2026년 7월 폭락 경로">
+  <rect width="920" height="360" fill="#fff"/>
+  <g stroke="#e5e7eb"><line x1="64" y1="36" x2="890" y2="36"/><line x1="64" y1="92" x2="890" y2="92"/><line x1="64" y1="148" x2="890" y2="148"/><line x1="64" y1="204" x2="890" y2="204"/><line x1="64" y1="260" x2="890" y2="260"/><line x1="64" y1="316" x2="890" y2="316"/></g>
+  <g fill="#64748b" font-size="12" text-anchor="end"><text x="56" y="40">9,000</text><text x="56" y="96">8,300</text><text x="56" y="152">7,600</text><text x="56" y="208">6,900</text><text x="56" y="264">6,200</text><text x="56" y="320">5,500</text></g>
+  <polyline points="70,78 109,92 148,145 187,110 226,113 265,145 304,178 343,174 382,159 421,213 460,209 499,174 538,212 577,237 616,219 655,215 694,191 733,224 772,219 811,278 850,307 889,313" fill="none" stroke="#dc2626" stroke-width="4" stroke-linejoin="round"/>
+  <g fill="#dc2626"><circle cx="70" cy="78" r="4"/><circle cx="421" cy="213" r="4"/><circle cx="811" cy="278" r="4"/><circle cx="850" cy="307" r="4"/><circle cx="889" cy="313" r="4"/></g>
+  <g font-size="12" fill="#0f172a"><text x="70" y="62">6/30 8,476</text><text x="421" y="232">7/13 -8.95%</text><text x="811" y="260">7/28 -10.84%</text><text x="850" y="326">7/29 5,663</text><text x="760" y="34" fill="#b45309">52주 고점 9,385.59</text></g>
+  <g fill="#64748b" font-size="11" text-anchor="middle"><text x="70" y="348">6/30</text><text x="187" y="348">7/03</text><text x="382" y="348">7/10</text><text x="538" y="348">7/16</text><text x="733" y="348">7/24</text><text x="889" y="348">7/30</text></g>
+</svg>
+</div>
+
+<h2>2. 폭락 지표 테이블</h2>
+<table>
+<thead><tr><th>지표</th><th>값</th><th>해석</th></tr></thead>
+<tbody>
+<tr><td>52주 고점</td><td>9,385.59</td><td>기준점</td></tr>
+<tr><td>7/30 종가</td><td>5,593.56</td><td>고점 대비 -40.4%</td></tr>
+<tr><td>7/29 장중 저점</td><td>5,262.77</td><td>고점 대비 -43.9%</td></tr>
+<tr><td>6/30 종가 → 7/30 종가</td><td>-34.0%</td><td>한 달 단위 급락</td></tr>
+<tr><td>7/24 → 7/30</td><td>-16.4%</td><td>후반부 재가속</td></tr>
+<tr><td>7월 최악 일간 수익률</td><td>-10.84%</td><td>7/28, 강제청산형 변동</td></tr>
+<tr><td>평균 일간 등락률</td><td>-1.71%</td><td>하락 드리프트</td></tr>
+<tr><td>일간 표준편차</td><td>4.75%</td><td>정상장이 아닌 위기장</td></tr>
+<tr><td>평균 장중 고저폭</td><td>6.91%</td><td>시가·종가 예측 난이도 급등</td></tr>
+</tbody>
+</table>
+
+<h2>3. 주간 낙폭: 기존 7/19 보고서의 “가속 붕괴” 경고가 맞았다</h2>
+<div class="bars">
+  <div class="bar"><b>6/30→7/03</b><div class="track"><div class="fill" style="width:28%"></div></div><span>-4.58%</span></div>
+  <div class="bar"><b>7/03→7/10</b><div class="track"><div class="fill" style="width:46%"></div></div><span>-7.57%</span></div>
+  <div class="bar"><b>7/10→7/16</b><div class="track"><div class="fill" style="width:53%"></div></div><span>-8.77%</span></div>
+  <div class="bar"><b>7/16→7/24</b><div class="track"><div class="fill" style="width:12%"></div></div><span>-1.91%</span></div>
+  <div class="bar"><b>7/24→7/30</b><div class="track"><div class="fill" style="width:100%"></div></div><span>-16.40%</span></div>
+</div>
+<p>중간에 7/21~7/23 반등이 있었지만, 7/24 이후 다시 -16.4%가 나오면서 <b>데드캣 바운스 후 재하락</b>에 가까운 경로가 확인됐다. 따라서 아직 “바닥 확인”이 아니라 “강제청산 피크 통과 여부 관찰” 단계다.</p>
+
+<h2>4. 왜 이렇게 많이 빠졌나: 4중 레버리지 해소</h2>
+<section class="grid">
+  <div class="card"><h3>① 반도체 집중</h3><p>AI·HBM·메모리 기대가 삼성전자·SK하이닉스 중심으로 과도하게 압축되며 지수 전체가 반도체 베타가 됐다.</p></div>
+  <div class="card"><h3>② 레버리지 ETF</h3><p>단일종목·섹터 레버리지 상품이 상승장에서는 추세를 키우고, 하락장에서는 강제 매도 압력으로 변한다.</p></div>
+  <div class="card"><h3>③ 마진콜</h3><p>개인 신용·레버리지 계좌의 반대매매는 가격이 내려서 파는 것이 아니라, 팔아야 해서 가격을 더 내린다.</p></div>
+  <div class="card"><h3>④ 글로벌 금리/AI 재평가</h3><p>미국 장기금리 상승과 AI CAPEX 현금흐름 우려가 고PER 기술주 할인율을 동시에 올렸다.</p></div>
+</section>
+
+<h2>5. 라운드 넘버 붕괴 순서</h2>
+<table>
+<thead><tr><th>종가 기준 하향 이탈선</th><th>첫 이탈일</th><th>의미</th></tr></thead>
+<tbody>
+<tr><td>8,000</td><td>2026-07-02</td><td>초기 추세 훼손</td></tr>
+<tr><td>7,500</td><td>2026-07-08</td><td>반도체 모멘텀 약화</td></tr>
+<tr><td>7,000</td><td>2026-07-13</td><td>패닉 매도 시작</td></tr>
+<tr><td>6,500</td><td>2026-07-28</td><td>강제청산성 급락</td></tr>
+<tr><td>6,000</td><td>2026-07-29</td><td>심리적 지지선 붕괴</td></tr>
+<tr><td>5,500</td><td>미이탈</td><td>다음 방어선</td></tr>
+</tbody>
+</table>
+
+<h2>6. 투자·모의투자 적용 규칙</h2>
+<div class="callout note">
+  <b>연금:</b> 실제 연금은 올해 큰 움직임을 피하고, 손실 구간에서 급매도하지 않는다. 반도체 실물 수주·이익이 살아 있다면 “저점 손절”보다 “신규 매수·리밸런싱 대기”가 우선이다.<br>
+  <b>모의투자:</b> 훈련장은 적극적으로 사용한다. 다만 2X 곱버스 기본값 금지, 1X 인버스·현금·반등롱·당일 청산 전술을 분리 태깅해 어느 전술이 돈을 벌었는지 기록한다.
+</div>
+<p>
+  <span class="pill">바닥 확인 1: 2거래일 연속 저점 상승</span>
+  <span class="pill">확인 2: 장중 고저폭 4% 이하</span>
+  <span class="pill">확인 3: 외국인·기관 순매도 둔화</span>
+  <span class="pill">확인 4: 6,000 회복 후 재이탈 실패</span>
+</p>
+
+<h2>7. 결론</h2>
+<p>이번 급락은 “기업가치 40% 훼손”이라기보다 <b>과밀 포지션이 유동성 부족 구간에서 한꺼번에 풀린 가격 충격</b>이다. 따라서 반등은 가능하지만, 고점 회복에는 +67.8%가 필요하다. 회복은 V자보다 <b>U자·재시험형</b> 확률을 높게 본다.</p>
+
+<h2>자료 출처</h2>
+<p class="src">
+KOSPI 일별 OHLC 및 52주 범위: Investing.com KOSPI Historical Data / KOSPI Overview, 2026-07-30 종가 기준.<br>
+보도 참고: Financial Times, Business Insider, Barron's 등 2026-07-30~31 한국 증시 급락 관련 기사.<br>
+본 문서는 투자자문이 아니라 정보·연구·모의투자 모델 검증 목적의 정량 메모다.
+</p>
+</main>
+</body>
+</html>

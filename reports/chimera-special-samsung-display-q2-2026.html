@@ -2393,6 +2393,108 @@ vertical-align: -.125em;
 </header>
 
 
+<style>
+.figure svg{
+cursor: zoom-in;
+transition: transform .18s ease, box-shadow .18s ease;
+border-radius: 14px;
+}
+.figure svg:hover{
+transform: translateY(-2px);
+box-shadow: 0 18px 48px rgba(15,23,42,.22);
+}
+#svgZoomOverlay{
+position: fixed;
+inset: 0;
+z-index: 99999;
+display: none;
+align-items: center;
+justify-content: center;
+background: rgba(2,6,23,.86);
+backdrop-filter: blur(6px);
+padding: 22px;
+}
+#svgZoomOverlay.active{display:flex}
+#svgZoomBox{
+position: relative;
+width: min(96vw, 1320px);
+max-height: 92vh;
+overflow: auto;
+background: #fff;
+border-radius: 18px;
+box-shadow: 0 30px 90px rgba(0,0,0,.55);
+padding: 16px;
+}
+#svgZoomContent svg{
+width: 1280px;
+max-width: none;
+height: auto;
+display: block;
+cursor: zoom-out;
+}
+#svgZoomClose{
+position: fixed;
+top: 18px;
+right: 20px;
+z-index: 100000;
+width: 44px;
+height: 44px;
+border: 0;
+border-radius: 999px;
+background: #fff;
+color: #111827;
+font-size: 26px;
+font-weight: 900;
+cursor: pointer;
+box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.zoom-hint{
+display:inline-block;
+margin: 4px 0 12px;
+font-size: 12px;
+color: #64748b;
+}
+</style>
+<div id="svgZoomOverlay" aria-hidden="true">
+  <button id="svgZoomClose" type="button" aria-label="닫기">×</button>
+  <div id="svgZoomBox"><div id="svgZoomContent"></div></div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const overlay = document.getElementById("svgZoomOverlay");
+  const content = document.getElementById("svgZoomContent");
+  const close = document.getElementById("svgZoomClose");
+  const closeZoom = () => {
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden", "true");
+    content.innerHTML = "";
+    document.body.style.overflow = "";
+  };
+  document.querySelectorAll("figure.figure svg").forEach((svg) => {
+    const hint = document.createElement("div");
+    hint.className = "zoom-hint";
+    hint.textContent = "🔍 그래프를 클릭하면 확대해서 볼 수 있음";
+    svg.parentElement.insertBefore(hint, svg.nextSibling);
+    svg.addEventListener("click", () => {
+      content.innerHTML = "";
+      const clone = svg.cloneNode(true);
+      clone.removeAttribute("width");
+      clone.removeAttribute("height");
+      content.appendChild(clone);
+      overlay.classList.add("active");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  close.addEventListener("click", closeZoom);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeZoom();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && overlay.classList.contains("active")) closeZoom();
+  });
+});
+</script>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

@@ -2350,7 +2350,7 @@ vertical-align: -.125em;
   </ul></li>
   <li><a href="#v.-디스플레이-시장-분석" id="toc-v.-디스플레이-시장-분석" class="nav-link" data-scroll-target="#v.-디스플레이-시장-분석"><span class="header-section-number">6</span> V. 디스플레이 시장 분석</a></li>
   <li><a href="#vi.-시나리오-업데이트" id="toc-vi.-시나리오-업데이트" class="nav-link" data-scroll-target="#vi.-시나리오-업데이트"><span class="header-section-number">7</span> VI. 시나리오 업데이트</a></li>
-  <li><a href="#vii.-품질팀-관점" id="toc-vii.-품질팀-관점" class="nav-link" data-scroll-target="#vii.-품질팀-관점"><span class="header-section-number">8</span> VII. 품질팀 관점</a></li>
+  <li><a href="#vii.-제품-신뢰성-관점" id="toc-vii.-제품-신뢰성-관점" class="nav-link" data-scroll-target="#vii.-제품-신뢰성-관점"><span class="header-section-number">8</span> VII. 제품 신뢰성 관점</a></li>
   <li><a href="#viii.-결론" id="toc-viii.-결론" class="nav-link" data-scroll-target="#viii.-결론"><span class="header-section-number">9</span> VIII. 결론</a></li>
   <li><a href="#참고자료" id="toc-참고자료" class="nav-link" data-scroll-target="#참고자료"><span class="header-section-number">10</span> 참고자료</a></li>
   </ul>
@@ -2364,7 +2364,7 @@ vertical-align: -.125em;
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">삼성디스플레이 2026. 2Q 보고서</h1>
-<p class="subtitle lead">분기 실적 · 경쟁사 비교 · OLED 시장구조 · 품질/신뢰성 시사점</p>
+<p class="subtitle lead">분기 실적 · 경쟁사 비교 · OLED 시장구조 · 제품 신뢰성 시사점</p>
 </div>
 
 
@@ -2394,14 +2394,38 @@ vertical-align: -.125em;
 
 
 <style>
+figure.figure{
+margin: 28px 0 34px;
+padding: 18px;
+border: 1px solid rgba(148,163,184,.36);
+border-radius: 22px;
+background:
+linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.98));
+box-shadow:
+0 18px 48px rgba(15,23,42,.10),
+inset 0 1px 0 rgba(255,255,255,.88);
+}
 .figure svg{
+display: block;
+width: 100%;
+height: auto;
 cursor: zoom-in;
 transition: transform .18s ease, box-shadow .18s ease;
-border-radius: 14px;
+border-radius: 18px;
+border: 1px solid rgba(226,232,240,.9);
+background: #fff;
 }
 .figure svg:hover{
 transform: translateY(-2px);
-box-shadow: 0 18px 48px rgba(15,23,42,.22);
+box-shadow: 0 20px 55px rgba(15,23,42,.18);
+}
+figure.figure figcaption{
+margin-top: 10px;
+padding: 10px 12px 0;
+border-top: 1px solid rgba(226,232,240,.85);
+color: #475569;
+font-size: 13px;
+line-height: 1.55;
 }
 #svgZoomOverlay{
 position: fixed;
@@ -2450,9 +2474,13 @@ box-shadow: 0 10px 30px rgba(0,0,0,.35);
 }
 .zoom-hint{
 display:inline-block;
-margin: 4px 0 12px;
+margin: 8px 0 0;
+padding: 4px 9px;
+border-radius: 999px;
+background: #eef2ff;
 font-size: 12px;
-color: #64748b;
+color: #4338ca;
+font-weight: 700;
 }
 </style>
 <div id="svgZoomOverlay" aria-hidden="true">
@@ -2473,7 +2501,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("figure.figure svg").forEach((svg) => {
     const hint = document.createElement("div");
     hint.className = "zoom-hint";
-    hint.textContent = "🔍 그래프를 클릭하면 확대해서 볼 수 있음";
+    hint.textContent = "🔍 클릭 확대";
     svg.parentElement.insertBefore(hint, svg.nextSibling);
     svg.addEventListener("click", () => {
       content.innerHTML = "";
@@ -3012,7 +3040,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <th>시장</th>
 <th>현재 성격</th>
 <th>성장/변화 포인트</th>
-<th>품질팀 관점</th>
+<th>제품경쟁력 관점</th>
 </tr>
 </thead>
 <tbody>
@@ -3129,27 +3157,27 @@ document.addEventListener("DOMContentLoaded", () => {
 <figcaption>중앙값은 OLED 방어와 IT/Glass 전환 사이에 있다.</figcaption>
 </figure>
 </section>
-<section id="vii.-품질팀-관점" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="vii.-품질팀-관점"><span class="header-section-number">8</span> VII. 품질팀 관점</h2>
+<section id="vii.-제품-신뢰성-관점" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="vii.-제품-신뢰성-관점"><span class="header-section-number">8</span> VII. 제품 신뢰성 관점</h2>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">중요</span>왜 품질/신뢰성 분석이 중요한가
+<span class="screen-reader-only">중요</span>왜 제품 신뢰성 분석이 중요한가
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>시장 경쟁은 “누가 더 많이 만드나”에서 “누가 더 안정적으로 오래 버티는 고부가 구조를 만드나”로 이동한다. 저전력 구조, Tandem/IT OLED, 고휘도 Gaming, 자동차용 장수명 조건이 늘어날수록 L93/P10, color drift, shrinkage, double SED, burn-in 분리 평가가 중요해진다.</p>
 </div>
 </div>
-<p>품질팀의 OLED 수명 자동분석은 단순 업무 자동화가 아니다. 중국 가격 추격과 고객 인증 경쟁에서 SDC의 프리미엄을 설명하는 <strong>정량 품질 언어</strong>가 될 수 있다.</p>
+<p>OLED 수명 자동분석은 단순 업무 자동화가 아니다. 중국 가격 추격과 고객 인증 경쟁에서 SDC의 프리미엄을 설명하는 <strong>정량 신뢰성 언어</strong>가 될 수 있다.</p>
 </section>
 <section id="viii.-결론" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="viii.-결론"><span class="header-section-number">9</span> VIII. 결론</h2>
 <p>SDC의 2026년 2분기는 <strong>수익성 회복</strong>을 보여줬다. 그러나 이것은 구조적 승리라기보다 프리미엄 OLED와 게이밍 모니터가 만든 방어다. 다음 경쟁은 스마트폰 OLED만으로 결정되지 않는다. <strong>8.6G IT OLED, 대형 게이밍, 자동차용 장수명 OLED, 저전력 구조 신뢰성</strong>이 향후 경쟁력의 중심이다.</p>
-<p>앞으로의 보고서는 분기 실적 숫자만 보지 않고, DART/공시, 증권사 리포트, 시장조사기관 자료를 연결해 <strong>수익성·시장점유·기술전환·품질신뢰성</strong>을 동시에 추적한다.</p>
+<p>앞으로의 보고서는 분기 실적 숫자만 보지 않고, DART/공시, 증권사 리포트, 시장조사기관 자료를 연결해 <strong>수익성·시장점유·기술전환·제품신뢰성</strong>을 동시에 추적한다.</p>
 </section>
 <section id="참고자료" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="참고자료"><span class="header-section-number">10</span> 참고자료</h2>

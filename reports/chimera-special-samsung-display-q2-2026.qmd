@@ -1,6 +1,6 @@
 ---
 title: "삼성디스플레이 2026. 2Q 보고서"
-subtitle: "분기 실적 · 경쟁사 비교 · OLED 시장구조 · 품질/신뢰성 시사점"
+subtitle: "분기 실적 · 경쟁사 비교 · OLED 시장구조 · 제품 신뢰성 시사점"
 author: "Chimera AI × Alpha Hunter"
 date: "2026-07-31"
 format:
@@ -26,14 +26,38 @@ execute:
 
 ```{=html}
 <style>
+figure.figure{
+  margin: 28px 0 34px;
+  padding: 18px;
+  border: 1px solid rgba(148,163,184,.36);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.98));
+  box-shadow:
+    0 18px 48px rgba(15,23,42,.10),
+    inset 0 1px 0 rgba(255,255,255,.88);
+}
 .figure svg{
+  display: block;
+  width: 100%;
+  height: auto;
   cursor: zoom-in;
   transition: transform .18s ease, box-shadow .18s ease;
-  border-radius: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(226,232,240,.9);
+  background: #fff;
 }
 .figure svg:hover{
   transform: translateY(-2px);
-  box-shadow: 0 18px 48px rgba(15,23,42,.22);
+  box-shadow: 0 20px 55px rgba(15,23,42,.18);
+}
+figure.figure figcaption{
+  margin-top: 10px;
+  padding: 10px 12px 0;
+  border-top: 1px solid rgba(226,232,240,.85);
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.55;
 }
 #svgZoomOverlay{
   position: fixed;
@@ -82,9 +106,13 @@ execute:
 }
 .zoom-hint{
   display:inline-block;
-  margin: 4px 0 12px;
+  margin: 8px 0 0;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eef2ff;
   font-size: 12px;
-  color: #64748b;
+  color: #4338ca;
+  font-weight: 700;
 }
 </style>
 <div id="svgZoomOverlay" aria-hidden="true">
@@ -105,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("figure.figure svg").forEach((svg) => {
     const hint = document.createElement("div");
     hint.className = "zoom-hint";
-    hint.textContent = "🔍 그래프를 클릭하면 확대해서 볼 수 있음";
+    hint.textContent = "🔍 클릭 확대";
     svg.parentElement.insertBefore(hint, svg.nextSibling);
     svg.addEventListener("click", () => {
       content.innerHTML = "";
@@ -395,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## V. 디스플레이 시장 분석
 
-| 시장 | 현재 성격 | 성장/변화 포인트 | 품질팀 관점 |
+| 시장 | 현재 성격 | 성장/변화 포인트 | 제품경쟁력 관점 |
 |---|---|---|---|
 | 스마트폰 OLED | 성숙시장 | 프리미엄, 저전력, 폴더블/AI 폼팩터 | 색 안정성, 저전력 구조 신뢰성 |
 | IT OLED | 성장시장 | 8.6G 양산, 노트북/태블릿 OLED 확대 | 대면적 균일성, 장시간 사용 수명 |
@@ -463,20 +491,20 @@ document.addEventListener("DOMContentLoaded", () => {
 </figure>
 ```
 
-## VII. 품질팀 관점
+## VII. 제품 신뢰성 관점
 
 ::: {.callout-important}
-## 왜 품질/신뢰성 분석이 중요한가
+## 왜 제품 신뢰성 분석이 중요한가
 시장 경쟁은 “누가 더 많이 만드나”에서 “누가 더 안정적으로 오래 버티는 고부가 구조를 만드나”로 이동한다. 저전력 구조, Tandem/IT OLED, 고휘도 Gaming, 자동차용 장수명 조건이 늘어날수록 L93/P10, color drift, shrinkage, double SED, burn-in 분리 평가가 중요해진다.
 :::
 
-품질팀의 OLED 수명 자동분석은 단순 업무 자동화가 아니다. 중국 가격 추격과 고객 인증 경쟁에서 SDC의 프리미엄을 설명하는 **정량 품질 언어**가 될 수 있다.
+OLED 수명 자동분석은 단순 업무 자동화가 아니다. 중국 가격 추격과 고객 인증 경쟁에서 SDC의 프리미엄을 설명하는 **정량 신뢰성 언어**가 될 수 있다.
 
 ## VIII. 결론
 
 SDC의 2026년 2분기는 **수익성 회복**을 보여줬다. 그러나 이것은 구조적 승리라기보다 프리미엄 OLED와 게이밍 모니터가 만든 방어다. 다음 경쟁은 스마트폰 OLED만으로 결정되지 않는다. **8.6G IT OLED, 대형 게이밍, 자동차용 장수명 OLED, 저전력 구조 신뢰성**이 향후 경쟁력의 중심이다.
 
-앞으로의 보고서는 분기 실적 숫자만 보지 않고, DART/공시, 증권사 리포트, 시장조사기관 자료를 연결해 **수익성·시장점유·기술전환·품질신뢰성**을 동시에 추적한다.
+앞으로의 보고서는 분기 실적 숫자만 보지 않고, DART/공시, 증권사 리포트, 시장조사기관 자료를 연결해 **수익성·시장점유·기술전환·제품신뢰성**을 동시에 추적한다.
 
 ## 참고자료
 

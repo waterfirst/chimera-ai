@@ -1,56 +1,282 @@
 ---
 title: "주간 자본흐름 — 반등은 안정이 아니었다"
-subtitle: "2026.07.27–07.31 KOSPI · 반도체 · 환율 · 수급 난류 진단"
+subtitle: "2026.07.27–07.31 KOSPI · 반도체 · 수급 난류의 해부"
 author: "Chimera AI"
-date: "2026-08-02"
+date: "2026-08-03"
 lang: ko
 format:
   html:
-    theme: darkly
+    theme:
+      dark: darkly
+      light: flatly
     toc: true
     toc-title: "목차"
-    embed-resources: true
+    toc-location: left
+    toc-depth: 3
+    number-sections: true
     smooth-scroll: true
+    embed-resources: true
+    code-fold: true
+    lightbox: true
     css: journal-202608.css
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
 ![](cover_weekly_flow_20260731.webp){.hero width=100% fig-alt="한국 증시의 급락과 반등을 난류로 표현한 이미지"}
 
-::: {.callout-warning}
-## 핵심 판정
-주간 종가는 `6,706.54 → 6,595.45`로 **−1.66%**였지만, 7월 30일 `5,593.56`까지 추락한 뒤 31일 **+17.91%** 급반등했다. 종가만 보면 사라지는 경로 의존성이 이번 주의 본질이다.
-:::
-
-# 5거래일 경로
-
 ```{=html}
-<svg viewBox="0 0 760 350" role="img" aria-label="KOSPI 5거래일 종가" style="width:100%;background:#fff;border-radius:14px"><g font-family="system-ui,sans-serif"><text x="25" y="32" font-size="19" font-weight="700" fill="#5b4316">KOSPI 종가 경로</text><g stroke="#e8e0d0"><line x1="70" y1="70" x2="725" y2="70"/><line x1="70" y1="160" x2="725" y2="160"/><line x1="70" y1="250" x2="725" y2="250"/></g><polyline points="90,78 240,184 390,244 540,255 700,96" fill="none" stroke="#b8862b" stroke-width="5"/><g fill="#1f2937" font-size="12" text-anchor="middle"><circle cx="90" cy="78" r="6" fill="#b8862b"/><text x="90" y="60">6,706.54</text><text x="90" y="300">7/27</text><circle cx="240" cy="184" r="6" fill="#b8862b"/><text x="240" y="168">6,023.66</text><text x="240" y="300">7/28</text><circle cx="390" cy="244" r="6" fill="#c94b42"/><text x="390" y="228">5,663.24</text><text x="390" y="300">7/29</text><circle cx="540" cy="255" r="6" fill="#c94b42"/><text x="540" y="278">5,593.56</text><text x="540" y="300">7/30</text><circle cx="700" cy="96" r="6" fill="#2d9b75"/><text x="700" y="78">6,595.45</text><text x="700" y="300">7/31</text></g><text x="25" y="333" font-size="11" fill="#6b7280">출처: KOSPI 연구 자동화 로그의 검증된 actuals, 2026-07-27~31 KST</text></g></svg>
+<style>
+figure.figure{
+  margin: 28px 0 34px;
+  padding: 18px;
+  border: 1px solid rgba(148,163,184,.36);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.98));
+  box-shadow:
+    0 18px 48px rgba(15,23,42,.10),
+    inset 0 1px 0 rgba(255,255,255,.88);
+}
+.figure svg{
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: zoom-in;
+  transition: transform .18s ease, box-shadow .18s ease;
+  border-radius: 18px;
+  border: 1px solid rgba(226,232,240,.9);
+  background: #fff;
+}
+.figure svg:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 20px 55px rgba(15,23,42,.18);
+}
+figure.figure figcaption{
+  margin-top: 10px;
+  padding: 10px 12px 0;
+  border-top: 1px solid rgba(226,232,240,.85);
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.55;
+}
+#svgZoomOverlay{
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2,6,23,.86);
+  backdrop-filter: blur(6px);
+  padding: 22px;
+}
+#svgZoomOverlay.active{display:flex}
+#svgZoomBox{
+  position: relative;
+  width: min(96vw, 1320px);
+  max-height: 92vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.55);
+  padding: 16px;
+}
+#svgZoomContent svg{
+  width: 1280px;
+  max-width: none;
+  height: auto;
+  display: block;
+  cursor: zoom-out;
+}
+#svgZoomClose{
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 100000;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #111827;
+  font-size: 26px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.zoom-hint{
+  display:inline-block;
+  margin: 8px 0 0;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eef2ff;
+  font-size: 12px;
+  color: #4338ca;
+  font-weight: 700;
+}
+</style>
+<div id="svgZoomOverlay" aria-hidden="true">
+  <button id="svgZoomClose" type="button" aria-label="닫기">×</button>
+  <div id="svgZoomBox"><div id="svgZoomContent"></div></div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const overlay = document.getElementById("svgZoomOverlay");
+  const content = document.getElementById("svgZoomContent");
+  const close = document.getElementById("svgZoomClose");
+  const closeZoom = () => {
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden", "true");
+    content.innerHTML = "";
+    document.body.style.overflow = "";
+  };
+  document.querySelectorAll("figure.figure svg").forEach((svg) => {
+    const hint = document.createElement("div");
+    hint.className = "zoom-hint";
+    hint.textContent = "🔍 클릭 확대";
+    svg.parentElement.insertBefore(hint, svg.nextSibling);
+    svg.addEventListener("click", () => {
+      content.innerHTML = "";
+      const clone = svg.cloneNode(true);
+      clone.removeAttribute("width");
+      clone.removeAttribute("height");
+      content.appendChild(clone);
+      overlay.classList.add("active");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  close.addEventListener("click", closeZoom);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeZoom();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && overlay.classList.contains("active")) closeZoom();
+  });
+});
+</script>
 ```
 
-# 세 개의 흐름
+::: {.callout-warning}
+## 핵심 판정
+직전 금요일(7월 24일) 종가 `6,690.62`에서 7월 31일 `6,595.45`까지의 주간 변화는 **−1.42%**였다. 월요일 종가부터 금요일 종가까지만 비교해도 `6,755.75 → 6,595.45`, **−2.37%**다. 그러나 어느 숫자도 경로를 보여주지 않는다. 7월 28일 하루 **−10.84%**로 무너진 뒤 30일 종가 `5,593.56`까지 밀렸고, 31일 **+17.91%** 급반등했다. 이번 주의 본질은 "약보합"이 아니라 **경로 의존적 난류**다.
+:::
 
-## 1. 반도체: 충격 전달기이자 반등 점화기
+# 종가가 지운 것
 
-7월 30일 직전 미국 SOX는 −5.33%, EWY는 −4.78%였다. 다음 날 참조치에서 SOX +8.19%, EWY +11.79%로 뒤집혔다. 한국 시장의 마지막 날 반등은 독립적 안정이라기보다 **미국 반도체와 한국 ETF의 동조 반전**으로 읽는 편이 안전하다.
+주간 등락률 한 줄은 시장이 실제로 통과한 지형을 숨긴다. 아래는 5거래일 종가와 각 날의 일중 저가를 함께 그린 것이다.
 
-## 2. 환율: 주 후반 완충
+<figure class="figure">
+<svg viewBox="0 0 960 430" width="100%" height="430" role="img" aria-label="KOSPI 연구로그 5거래일 종가와 일중 저가">
+  <rect width="960" height="430" fill="#fff"/>
+  <text x="36" y="42" font-size="23" font-weight="900" fill="#111827">5거래일 종가 경로와 일중 저가 밴드</text>
+  <text x="36" y="68" font-size="13" fill="#64748b">KOSPI 일별 시세 교차검증값 · 2026-07-27~31 KST · 단위: 지수 포인트</text>
+  <line x1="110" y1="368" x2="900" y2="368" stroke="#eef2f7"/><text x="98" y="372" font-size="12" fill="#94a3b8" text-anchor="end">5,200</text><line x1="110" y1="304" x2="900" y2="304" stroke="#eef2f7"/><text x="98" y="308" font-size="12" fill="#94a3b8" text-anchor="end">5,600</text><line x1="110" y1="240" x2="900" y2="240" stroke="#eef2f7"/><text x="98" y="244" font-size="12" fill="#94a3b8" text-anchor="end">6,000</text><line x1="110" y1="176" x2="900" y2="176" stroke="#eef2f7"/><text x="98" y="180" font-size="12" fill="#94a3b8" text-anchor="end">6,400</text><line x1="110" y1="112" x2="900" y2="112" stroke="#eef2f7"/><text x="98" y="116" font-size="12" fill="#94a3b8" text-anchor="end">6,800</text>
+  <polyline points="110.0,150.8 307.5,241.1 505.0,358.0 702.5,312.4 900.0,299.2" fill="none" stroke="#c94b42" stroke-width="2" stroke-dasharray="5 4" opacity="0.7"/>
+  <polyline points="110.0,119.1 307.5,236.2 505.0,293.9 702.5,305.0 900.0,144.7" fill="none" stroke="#b8862b" stroke-width="5"/>
+  <circle cx="110.0" cy="119.1" r="6" fill="#b8862b"/><text x="110.0" y="105.1" font-size="13" font-weight="700" fill="#1f2937" text-anchor="middle">6,756</text><circle cx="307.5" cy="236.2" r="6" fill="#c94b42"/><text x="307.5" y="222.2" font-size="13" font-weight="700" fill="#1f2937" text-anchor="middle">6,024</text><circle cx="505.0" cy="293.9" r="6" fill="#c94b42"/><text x="505.0" y="279.9" font-size="13" font-weight="700" fill="#1f2937" text-anchor="middle">5,663</text><circle cx="702.5" cy="305.0" r="6" fill="#c94b42"/><text x="702.5" y="331.0" font-size="13" font-weight="700" fill="#1f2937" text-anchor="middle">5,594</text><circle cx="900.0" cy="144.7" r="6" fill="#2d9b75"/><text x="900.0" y="130.7" font-size="13" font-weight="700" fill="#1f2937" text-anchor="middle">6,595</text>
+  <text x="505.0" y="390.0" font-size="12" fill="#c94b42" text-anchor="middle">7/29 일중 저가 5,262.77</text>
+</svg>
+<figcaption>굵은 선은 종가, 붉은 점선은 일중 저가. 종가만 보면 7/29~30의 저가 훼손과 7/31의 장중 진폭이 사라진다.</figcaption>
+</figure>
 
-원/달러 참조치는 7월 27일 1,459.42원에서 31일 1,421.55원으로 낮아졌다. 원화 강세 방향은 외국인 위험회피 압력을 덜었지만, 환율 하나가 시장 구조를 정상화했다는 증거는 아니다.
+세 가지가 드러난다. 첫째, 하락은 **28일 하루에 집중**됐다(−10.84%). 둘째, 29일에는 종가 `5,663.24` 아래로 밀려 **일중 저가 5,262.77**을 기록했다. 종가만 보면 사라지는 손상이다. 셋째, 31일 종가는 6,595로 주초 수준에 근접했지만, 시가 `5,657.79`에서 종가 `6,595.45`까지의 당일 상승률만 **+16.57%**였다. 이는 '실현변동성' 그 자체가 아니라 장중 시가-종가 수익률이다. 다만 하루 최대 절대 종가 수익률 `17.91%`가 월요일-금요일 순변화 `2.37%`의 **7.56배**라는 사실은, 주간 순변화만으로 경로 위험을 요약해서는 안 된다는 점을 보여준다.
 
-## 3. 수급: 매도에서 회수로
+# 하루 +17.9%의 해부
 
-사전 입력 기준 외국인 흐름은 27일 −3,268억원, 28일 −2,881억원에서 31일 +1,328억원으로 바뀌었다. 프로그램도 −3,009억원에서 +1,212억원으로 전환했다. 수급의 부호는 개선됐지만 규모와 지속성이 확인돼야 층류 전환으로 볼 수 있다.
+큰 음봉과 큰 양봉이 같은 주에 공존하는지가 레짐 판별의 1차 지표다.
 
-# 레짐 판정
+<figure class="figure">
+<svg viewBox="0 0 960 420" width="100%" height="420" role="img" aria-label="일별 종가 수익률">
+  <rect width="960" height="420" fill="#fff"/>
+  <text x="36" y="42" font-size="23" font-weight="900" fill="#111827">일별 종가 수익률 — 손상과 반등의 크기</text>
+  <text x="36" y="68" font-size="13" fill="#64748b">전일 종가 대비 · 같은 주 안에서 −10.8%와 +17.9%가 공존</text>
+  <line x1="120" y1="252.5" x2="900" y2="252.5" stroke="#cbd5e1"/>
+  <rect x="135" y="245.1" width="90" height="7.4" rx="6" fill="#2d9b75"/><text x="180" y="231" font-size="14" font-weight="800" fill="#2d9b75" text-anchor="middle">+1.0%</text><text x="180" y="392" font-size="12" fill="#64748b" text-anchor="middle">7/27</text><rect x="295" y="252.5" width="90" height="82.6" rx="6" fill="#c94b42"/><text x="340" y="355" font-size="14" font-weight="800" fill="#c94b42" text-anchor="middle">-10.8%</text><text x="340" y="392" font-size="12" fill="#64748b" text-anchor="middle">7/28</text><rect x="455" y="252.5" width="90" height="45.6" rx="6" fill="#c94b42"/><text x="500" y="318" font-size="14" font-weight="800" fill="#c94b42" text-anchor="middle">-6.0%</text><text x="500" y="392" font-size="12" fill="#64748b" text-anchor="middle">7/29</text><rect x="615" y="252.5" width="90" height="9.4" rx="6" fill="#c94b42"/><text x="660" y="282" font-size="14" font-weight="800" fill="#c94b42" text-anchor="middle">-1.2%</text><text x="660" y="392" font-size="12" fill="#64748b" text-anchor="middle">7/30</text><rect x="775" y="116.0" width="90" height="136.5" rx="6" fill="#2d9b75"/><text x="820" y="106" font-size="14" font-weight="800" fill="#2d9b75" text-anchor="middle">+17.9%</text><text x="820" y="392" font-size="12" fill="#64748b" text-anchor="middle">7/31</text>
+</svg>
+<figcaption>하루 +17.9%는 정상화가 아니라 높은 실현변동성의 반대쪽 꼬리다. 큰 음봉과 큰 양봉이 한 주에 같이 나오는 것 자체가 난류의 표식이다.</figcaption>
+</figure>
 
-<div class="note"><b>TURBULENT / 난류 지속.</b> 하루 +17.9%는 손상 복구가 아니라 높은 실현변동성의 반대쪽 꼬리일 수 있다.</div>
+7월 28일 −10.84%와 31일 +17.91%는 **부호만 반대인 같은 현상** — 높은 실현변동성 — 의 양쪽 꼬리다. 상승률이 크다는 사실은 안정의 증거가 아니라 오히려 변동성이 아직 압축되지 않았다는 증거다. 정상화된 시장은 하루에 두 자릿수로 움직이지 않는다. 반등의 **크기**를 회복의 **질**로 오독하는 것이 이번 주 가장 흔한 실수가 될 것이다.
 
-다음 주 층류 전환 조건은 세 가지다.
+# 고저폭으로 다시 읽는 주간 손상
 
-1. 저점이 높아지고 일중 고저폭이 축소될 것
-2. 외국인·프로그램 순매수가 2거래일 이상 이어질 것
-3. SOX·EWY 급등이 멈춘 날에도 KOSPI가 버틸 것
+종가 수익률은 거래일 사이의 이동을 보여주지만 한 세션 안에서 감당해야 했던 가격 범위를 보여주지 않는다. 이를 보완하기 위해 일중 고저폭을 `고가 − 저가`로 계산하고, 전일 종가로 나눠 비교했다. 이 값은 고빈도 수익률로 계산한 통계적 실현변동성이 아니라 **단순 일중 범위 지표**다.
 
-# 데이터 한계
+| 거래일 | 고가 | 저가 | 고저폭 | 전일 종가 대비 범위 |
+|---|---:|---:|---:|---:|
+| 7/27 | 6,806.27 | 6,557.39 | 248.88 | 3.72% |
+| 7/28 | 6,413.57 | 5,992.91 | 420.66 | 6.23% |
+| 7/29 | 6,228.52 | 5,262.77 | 965.75 | 16.03% |
+| 7/30 | 5,976.82 | 5,547.41 | 429.41 | 7.58% |
+| 7/31 | 6,630.77 | 5,629.76 | 1,001.01 | 17.89% |
 
-이 보고서는 2026년 7월 27~31일 로컬 연구 로그의 검증값을 사용했다. 수급은 각 로그가 다음 세션 예측에 사용한 직전 완료 세션 참조치이므로 당일 종가와 같은 행에서 인과관계로 읽으면 안 된다. 모든 해석은 연구·설명 목적이며 투자자문이 아니다.
+평균 일중 범위는 전일 종가 대비 약 10.29%다. 특히 29일과 31일은 방향은 반대지만 장중 범위가 각각 16.03%, 17.89%에 이른다. 29일은 종가가 전일보다 5.98% 내렸지만 저가에서는 훨씬 더 큰 손상을 통과했다. 31일은 종가가 17.91% 올랐지만 그 과정에서도 고가와 저가 사이가 1,001포인트 넘게 벌어졌다.
+
+주간 전체 최고가 `6,806.27`과 최저가 `5,262.77`의 차이는 `1,543.50`포인트다. 이를 직전 금요일 종가로 나누면 약 23.07%다. 주간 최종 수익률 −1.42%와 같은 시장을 설명하는 또 하나의 숫자다. 어느 한 값이 ‘진짜 위험’을 독점하지는 않지만, 순변화와 경로 범위를 함께 제시해야 독자가 약보합과 난류를 구분할 수 있다.
+
+이 범위 지표에도 한계가 있다. 하루 중 고가와 저가가 어떤 순서로 발생했는지, 각 가격대에 얼마나 오래 머물렀는지, 실제 체결 가능한 유동성이 있었는지는 알려주지 않는다. 따라서 손실확률이나 VaR로 해석하지 않고, 종가가 압축해버린 경로의 크기를 복원하는 보조 측정치로만 사용한다.
+
+# 외생 반전과 동행했다
+
+그렇다면 31일의 되돌림은 국내 요인과 외생 반전 중 무엇과 더 강하게 동행했는가. 관측치 5개만으로 원인을 식별할 수는 없지만, 날짜를 맞춘 비교는 가설의 방향을 보여준다.
+
+<figure class="figure">
+<svg viewBox="0 0 960 430" width="100%" height="430" role="img" aria-label="미국 반도체 오버나잇과 KOSPI 당일 수익률">
+  <rect width="960" height="430" fill="#fff"/>
+  <text x="36" y="42" font-size="23" font-weight="900" fill="#111827">미국 반도체 오버나잇 vs KOSPI 당일</text>
+  <text x="36" y="68" font-size="13" fill="#64748b">SOX·EWY 전일 미국장 변화(%) 대비 KOSPI 당일 종가 수익률(%)</text>
+  <line x1="120" y1="254.5" x2="900" y2="254.5" stroke="#cbd5e1"/>
+  <rect x="138.7" y="254.5" width="34.1" height="32.4" rx="3" fill="#6366f1"/><rect x="175.9" y="254.5" width="34.1" height="47.8" rx="3" fill="#0ea5e9"/><rect x="213.0" y="247.1" width="34.1" height="7.4" rx="3" fill="#b8862b"/><text x="190.2" y="385" font-size="12" fill="#64748b" text-anchor="middle">7/27</text><rect x="294.7" y="254.5" width="34.1" height="17.0" rx="3" fill="#6366f1"/><rect x="331.9" y="254.5" width="34.1" height="8.2" rx="3" fill="#0ea5e9"/><rect x="369.0" y="254.5" width="34.1" height="82.6" rx="3" fill="#b8862b"/><text x="346.2" y="385" font-size="12" fill="#64748b" text-anchor="middle">7/28</text><rect x="450.7" y="254.5" width="34.1" height="34.2" rx="3" fill="#6366f1"/><rect x="487.9" y="254.5" width="34.1" height="46.1" rx="3" fill="#0ea5e9"/><rect x="525.0" y="254.5" width="34.1" height="45.6" rx="3" fill="#b8862b"/><text x="502.2" y="385" font-size="12" fill="#64748b" text-anchor="middle">7/29</text><rect x="606.7" y="254.5" width="34.1" height="40.6" rx="3" fill="#6366f1"/><rect x="643.9" y="254.5" width="34.1" height="36.4" rx="3" fill="#0ea5e9"/><rect x="681.0" y="254.5" width="34.1" height="9.3" rx="3" fill="#b8862b"/><text x="658.2" y="385" font-size="12" fill="#64748b" text-anchor="middle">7/30</text><rect x="762.7" y="192.0" width="34.1" height="62.5" rx="3" fill="#6366f1"/><rect x="799.9" y="164.5" width="34.1" height="90.0" rx="3" fill="#0ea5e9"/><rect x="837.0" y="117.9" width="34.1" height="136.6" rx="3" fill="#b8862b"/><text x="814.2" y="385" font-size="12" fill="#64748b" text-anchor="middle">7/31</text><rect x="130" y="398" width="14" height="14" rx="3" fill="#6366f1"/><text x="148" y="410" font-size="12" fill="#334155">SOX 오버나잇</text><rect x="310" y="398" width="14" height="14" rx="3" fill="#0ea5e9"/><text x="328" y="410" font-size="12" fill="#334155">EWY 오버나잇</text><rect x="490" y="398" width="14" height="14" rx="3" fill="#b8862b"/><text x="508" y="410" font-size="12" fill="#334155">KOSPI 당일</text>
+</svg>
+<figcaption>7/31의 KOSPI +17.9%는 직전 미국 세션의 SOX +8.2%·EWY +11.8%와 동행한다. 이는 동조 반전의 증거이지, 인과관계의 증명은 아니다.</figcaption>
+</figure>
+
+7월 30일 한국장에 앞선 미국 세션까지 반도체와 한국 ETF는 약했다(SOX 오버나잇 −5.33%, EWY −4.78%). 반면 31일 한국장이 참조한 직전 미국 세션에서는 SOX **+8.19%**, EWY **+11.79%**로 방향이 뒤집혔고, KOSPI 당일 종가 수익률도 **+17.91%**였다. 방향과 크기가 함께 반전했다는 점은 외생 위험선호 회복과의 동행을 지지한다. 그러나 표본이 5일뿐이고 국내 정책·수급 변수를 통제하지 않았으므로, 이를 '외생 반전이 KOSPI 상승을 일으켰다'는 인과 명제로 확대해서는 안 된다.
+
+## 대안가설과 반증 조건
+
+외생 동행 외에도 최소 세 가지 설명이 가능하다. 첫째, 앞선 급락 자체가 과도해 기계적 숏커버와 저가매수가 집중됐을 수 있다. 둘째, 국내 정책 기대나 파생 포지션 청산이 현물 종가를 밀어 올렸을 수 있다. 셋째, 월말 리밸런싱과 프로그램 매매가 같은 방향으로 겹쳤을 수 있다. 현재 로그에는 이 가설들을 분리할 선물 베이시스, 공매도 잔고, 프로그램 세부내역, 정책 이벤트 더미가 없다.
+
+그러므로 다음 관측이 외생 동행 가설을 약화시킨다. SOX와 EWY가 보합 또는 하락한 날에도 KOSPI가 높은 저가와 축소된 고저폭을 유지하고, 검증된 국내 수급이 연속 순매수로 남는 경우다. 반대로 미국 반도체가 꺾이는 즉시 KOSPI가 전일 반등의 상당 부분을 반납한다면 외생 민감도 가설은 강해진다.
+
+좋은 레짐 판정은 한 번의 설명을 선언하는 데서 끝나지 않는다. 다음 데이터가 어떤 방향이면 기존 설명을 철회할지 미리 적어야 한다. 이 보고서가 “반등은 안정이 아니다”라고 판단하는 이유도 상승을 부정해서가 아니라, 아직 안정 가설을 지지할 **독립적인 국내 지속성 증거**가 부족하기 때문이다.
+
+# 수급: 부호는 돌았지만
+
+연구 로그의 장중 수급 지표는 주 초 순매도에서 주 후반 순매수 방향으로 부호가 바뀌었다. 다만 이 필드의 **절대 단위는 아직 검증되지 않았으므로**, 여기서는 금액을 단정하지 않고 **방향과 상대적 크기**만 사용한다. 확인 가능한 것은 두 가지다. (1) 외국인 지표는 28일 최대 순매도 방향에서 31일 순매수 방향으로 전환됐고, (2) 기관 지표는 29~30일 위기 국면에서 완충 방향으로 크게 기울었다가 31일 되돌려졌다. 부호의 전환은 개선의 **필요조건**일 뿐 충분조건이 아니다. 규모와 지속성이 다음 주에 확인돼야 층류 전환으로 볼 수 있다.
+
+# 레짐 판정: 난류 지속
+
+::: {.callout-note}
+**TURBULENT / 난류 지속.** 한 주 안의 −10.8%와 +17.9% 공존, 종가가 가린 일중 저가 훼손, 외생 반전과 동행한 반등 — 세 가지 모두 아직 층류(안정 추세)의 신호가 아니다.
+:::
+
+다음 주 층류 전환의 확인 조건은 셋이다.
+
+1. **저점 절상과 진폭 축소** — 일중 고저폭이 눈에 띄게 줄고 저가가 높아질 것
+2. **수급의 지속** — 순매수 방향이 2거래일 이상 이어지고 규모가 유지될 것
+3. **자생력 시험** — SOX·EWY 급등이 멈춘 날에도 KOSPI가 종가를 지킬 것
+
+세 번째가 가장 중요하다. 외생 반전 없이 버티는 날이 나오기 전까지, 이번 반등은 복구가 아니라 변동성의 한 국면으로 취급한다.
+
+# 데이터와 방법의 한계
+
+이 보고서는 2026년 7월 27~31일 KOSPI 연구 자동화 로그를 출발점으로 삼되, 가격은 공개 일별 시세와 다시 대조했다. 이 과정에서 로그의 일부 장중 고가·저가가 공개 시세와 다름을 발견해, **차트 1의 종가·저가는 공개 시세 교차검증값으로 교체**했다. 종가 수익률은 `(당일 종가 / 전일 종가 − 1) × 100`으로 다시 계산했다. 미국 자산은 한국 거래일 직전 미국 세션의 종가 수익률을 대응시켰다.
+
+재현에 필요한 핵심 입력은 다음과 같다.
+
+- KOSPI 종가: `6,755.75, 6,023.66, 5,663.24, 5,593.56, 6,595.45`
+- KOSPI 저가: `6,557.39, 5,992.91, 5,262.77, 5,547.41, 5,629.76`
+- KOSPI 고가: `6,806.27, 6,413.57, 6,228.52, 5,976.82, 6,630.77`
+- SOX 오버나잇 수익률: `−4.25%, −2.23%, −4.49%, −5.33%, +8.19%`
+- EWY 오버나잇 수익률: `−6.27%, −1.08%, −6.05%, −4.78%, +11.79%`
+
+공개 교차검증 경로는 [네이버 금융 KOSPI 일별 시세](https://m.stock.naver.com/domestic/index/KOSPI/total)와 [Yahoo Finance KOSPI](https://finance.yahoo.com/quote/%5EKS11/history/), [SOX](https://finance.yahoo.com/quote/%5ESOX/history/), [EWY](https://finance.yahoo.com/quote/EWY/history/)의 역사적 시세다(조회 기준일 2026-08-03). 데이터 제공처의 사후 정정 가능성이 있으므로 재현 시 조회일도 함께 보존해야 한다.
+
+수급 지표는 로컬 로그에 `foreign`, `inst` 필드로 남아 있지만 **절대 단위와 원천이 검증되지 않았다**. 따라서 금액으로 환산하지 않고 부호와 상대적 크기만 해석했다. 또한 5일 표본은 상관계수 추정이나 인과 추론에 충분하지 않다. SOX·EWY와 KOSPI가 함께 반전했다는 것은 동행 관찰이며, 국내 정책·환율·선물·프로그램 수급을 통제한 결과가 아니다.
+
+모든 해석은 연구·설명 목적이며 투자자문이 아니다. 특정 종목의 매수·매도 권유나 목표가를 제시하지 않는다.

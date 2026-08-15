@@ -1,0 +1,218 @@
+---
+title: "Chimera-AI 주간 증시 분석 리포트"
+subtitle: "8월 2주차 (08.10~08.14) — 신고가 안의 순환, 한국의 급반등, 낮은 VIX의 함정"
+author: "Chimera-AI Multi-Agent System"
+date: "2026-08-16"
+lang: ko
+jupyter: python3
+format:
+  html:
+    theme:
+      dark: darkly
+      light: flatly
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    embed-resources: true
+    lightbox: true
+    smooth-scroll: true
+    page-layout: article
+execute:
+  echo: false
+  warning: false
+---
+
+::: {.callout-warning}
+## 정보·연구 목적 고지
+이 글은 공개 시세를 이용한 시장 연구 기록이며 특정 상품의 매수·매도·보유를 권유하지 않는다. Yahoo Finance chart API의 조정가격을 2026년 8월 14일 기준으로 고정했으며, 거래소 공식 종가와 반올림·시차 차이가 생길 수 있다.
+:::
+
+```{python}
+#| label: setup
+import pandas as pd, numpy as np, matplotlib.pyplot as plt
+from pathlib import Path
+plt.style.use("dark_background")
+plt.rcParams["font.family"] = "Noto Sans CJK KR"
+plt.rcParams["axes.unicode_minus"] = False
+ACC, GREEN, RED, BLUE, MUTED = "#f59e0b", "#22c55e", "#ef4444", "#38bdf8", "#94a3b8"
+df=pd.read_csv(Path("../data/market_2025-08-15_2026-08-14.csv"),parse_dates=["date"])
+df=df.sort_values(["name","date"])
+def weekly(name):
+    x=df[(df.name==name)&(df.date.between("2026-08-07","2026-08-14"))]
+    return (x.iloc[-1].adj_close/x.iloc[0].adj_close-1)*100
+def series(name): return df[df.name==name].set_index("date").adj_close
+def finish(ax,title,subtitle=""):
+    ax.set_title(title,loc="left",color=ACC,fontweight="bold",fontsize=15,pad=16)
+    if subtitle: ax.text(0,1.01,subtitle,transform=ax.transAxes,color=MUTED,fontsize=9)
+    ax.grid(alpha=.18); ax.spines[["top","right"]].set_visible(False)
+```
+
+# 핵심 요약
+
+이번 주의 표면은 평온했다. S&P 500은 `+0.36%`, Nasdaq은 `+0.14%`였고 VIX는 `14.25`로 내려왔다. 그러나 내부에서는 Russell 2000이 `+1.12%`로 대형주를 앞섰고, 한국은 KOSPI `+11.49%`, KOSDAQ `+8.24%`의 급반등을 보였다. 반면 장기국채 ETF TLT는 `-0.87%`였다. **주가 상승과 채권 약세가 함께 나타난 것은 완화 기대 하나로 설명하기 어려운 혼합 레짐**이다.
+
+AP 집계도 S&P 500 `+0.4%`, Nasdaq `+0.1%`, Dow `-0.6%`, Russell 2000 `+1.1%`라는 같은 회전을 보여준다. 8월 14일 약한 소매판매는 금리 하락 기대와 경기둔화 우려를 동시에 키웠다. [AP 주간 마감](https://apnews.com/article/wall-street-stocks-dow-nasdaq-41b7cf2acc6562758183b1c5eae73635)
+
+```{python}
+#| label: fig-global-return
+#| fig-cap: "그림 1. 8월 7일 종가 대비 8월 14일 종가 수익률. 지역과 시가총액 간 회전이 전체 지수보다 크다."
+names=["KOSPI","KOSDAQ","Russell 2000","S&P 500","Nasdaq","Dow","Euro Stoxx 50","Nikkei 225","Hang Seng"]
+v=pd.Series({n:weekly(n) for n in names}).sort_values()
+fig,ax=plt.subplots(figsize=(10,5)); ax.barh(v.index,v,color=[GREEN if x>=0 else RED for x in v]); ax.axvline(0,color=MUTED,lw=.8)
+for i,x in enumerate(v): ax.text(x+(.15 if x>=0 else -.15),i,f"{x:+.2f}%",va="center",ha="left" if x>=0 else "right")
+finish(ax,"글로벌 주간 수익률","한국의 반등 폭은 선진국 지수의 주간 움직임을 크게 웃돌았다")
+plt.tight_layout(); plt.show()
+```
+
+| 지표 | 8월 14일 | 주간 변화 | 해석 |
+|---|---:|---:|---|
+| S&P 500 | 7,785.76 | +0.36% | 신고가 부근이나 상승폭 제한 |
+| Russell 2000 | 3,068.42 | +1.12% | 대형주 밖으로 순환 |
+| KOSPI | 6,977.94 | +11.49% | 급락 뒤 강한 평균회귀 |
+| VIX | 14.25 | -4.36% | 표면 변동성은 안정 |
+| TLT | 82.04 | -0.87% | 주식 강세와 채권 약세 병존 |
+
+# 글로벌 증시 동향
+
+```{python}
+#| label: fig-normalized
+#| fig-cap: "그림 2. 최근 1년 주요 지수의 정규화 경로(시작=100). 종착점뿐 아니라 낙폭과 회복경로를 비교한다."
+fig,ax=plt.subplots(figsize=(10,5.5))
+for n in ["S&P 500","Russell 2000","Euro Stoxx 50","Nikkei 225","KOSPI"]:
+    x=series(n).dropna(); ax.plot(x.index,x/x.iloc[0]*100,label=n,lw=2)
+finish(ax,"1년 누적 경로","같은 수익률도 중간 낙폭이 다르면 필요한 위험예산이 다르다"); ax.legend(ncol=2,frameon=False)
+plt.tight_layout(); plt.show()
+```
+
+미국 대형주는 경기둔화가 금리를 낮출 것이라는 기대에 반응했지만, 소매판매 약화는 이익 전망의 하방 위험이기도 하다. 따라서 “나쁜 뉴스=주가 호재”라는 등식은 성장 둔화가 이익 감소로 넘어가는 문턱까지만 유효하다. 유럽·일본·홍콩은 같은 주에 한 방향으로 움직이지 않아 글로벌 유동성이 단일 파동이 아니라 지역별 압력차를 따라 움직였음을 보여준다.
+
+# 한국 증시: 급반등의 질
+
+```{python}
+#| label: fig-korea-path
+#| fig-cap: "그림 3. 최근 30거래일 KOSPI·KOSDAQ 정규화 경로와 KOSPI 거래량. 반등의 폭과 거래 참여를 함께 본다."
+k=pd.concat([series("KOSPI").rename("KOSPI"),series("KOSDAQ").rename("KOSDAQ")],axis=1).dropna().tail(30)
+vol=df[df.name=="KOSPI"].set_index("date").volume.reindex(k.index)
+fig,(a,b)=plt.subplots(2,1,figsize=(10,6),sharex=True,gridspec_kw={"height_ratios":[3,1]})
+for c in k: a.plot(k.index,k[c]/k[c].iloc[0]*100,label=c,lw=2)
+finish(a,"한국 급반등의 경로","7월 말 충격 이후 가격 복원 속도"); a.legend(frameon=False)
+b.bar(vol.index,vol/1e6,color=BLUE,alpha=.7); b.set_ylabel("거래량(백만)"); b.grid(alpha=.15)
+plt.tight_layout(); plt.show()
+```
+
+```{python}
+#| label: fig-size-rotation
+#| fig-cap: "그림 4. 미국·한국의 대형/중소형 대용 지수 주간 성과. 미국은 소형주 우위, 한국은 대형주 우위였다."
+pairs=pd.DataFrame({"시장":["미국","미국","한국","한국"],"구분":["대형주","중소형","대형주","중소형"],"수익률":[weekly("S&P 500"),weekly("Russell 2000"),weekly("KOSPI"),weekly("KOSDAQ")]})
+fig,ax=plt.subplots(figsize=(8,5));
+for j,(market,g) in enumerate(pairs.groupby("시장",sort=False)):
+    xs=np.arange(len(g))+j*3; ax.bar(xs,g.수익률,color=[BLUE,GREEN]);
+    for x,y,label in zip(xs,g.수익률,g.구분): ax.text(x,y+.2,f"{label}\n{y:.2f}%",ha="center")
+ax.set_xticks([.5,3.5],["미국","한국"]); finish(ax,"시가총액 회전은 서로 달랐다")
+plt.tight_layout(); plt.show()
+```
+
+한국의 반등은 크지만 일주일 수익률만으로 추세 복귀를 선언하기 어렵다. 급락 직후에는 숏커버, 기계적 리밸런싱, 낙폭과대 매수가 동시에 섞인다. 다음 판정은 지수가 아니라 **상승 종목 확산, 외국인 수급 지속, 20일 변동성 하락**으로 해야 한다.
+
+# 섹터 분석과 신호
+
+```{python}
+#| label: fig-sector
+#| fig-cap: "그림 5. 미국 상장 섹터·테마 ETF의 주간 가격 모멘텀. 공식 자금유입액이 아니라 가격 대용치다."
+sectors=["SOXX","Energy","Financials","Health Care","Consumer","Industrials","Materials","Utilities","Defense","Clean Energy"]
+sv=pd.Series({n:weekly(n) for n in sectors}).sort_values()
+fig,ax=plt.subplots(figsize=(9,5)); ax.barh(sv.index,sv,color=[GREEN if x>0 else RED for x in sv]); ax.axvline(0,color=MUTED,lw=.8)
+for i,x in enumerate(sv): ax.text(x+(.05 if x>0 else -.05),i,f"{x:+.1f}%",va="center",ha="left" if x>0 else "right")
+finish(ax,"섹터 가격 모멘텀","ETF 가격은 수급의 결과이지 직접 자금유입 자료는 아니다")
+plt.tight_layout(); plt.show()
+```
+
+| 섹터 | 판정 | 근거 |
+|---|---|---|
+| 반도체 | 관망 | SOXX 상대강도는 유지되나 고변동 성장 베타 |
+| 금융 | 관망 | 장기금리 상승은 마진에 우호적이나 경기둔화 상쇄 |
+| 방산 | 관망 | 구조적 수요와 단기 가격 과열을 분리 |
+| 유틸리티 | 방어 | 변동성 완충 기능, 강한 알파 신호는 아님 |
+| 청정에너지 | 약세 | 금리·정책 민감도가 높아 추세 확인 필요 |
+
+# NS 자본흐름: 낮은 점도, 다른 유속
+
+```{python}
+#| label: fig-ns-flow
+#| fig-cap: "그림 6. 섹터 ETF의 주간 수익률과 거래량 변화율. 화살표가 아닌 관측 가능한 가격·거래량 대용치로 흐름을 표현한다."
+rows=[]
+for n in sectors:
+    x=df[(df.name==n)&(df.date.between("2026-08-07","2026-08-14"))]
+    rows.append([n,weekly(n),(x.iloc[-1].volume/x.iloc[0].volume-1)*100])
+flow=pd.DataFrame(rows,columns=["sector","return","volume_change"])
+fig,ax=plt.subplots(figsize=(9,6)); ax.scatter(flow.volume_change,flow["return"],s=90,c=[GREEN if x>0 else RED for x in flow["return"]],alpha=.8)
+for _,r in flow.iterrows(): ax.annotate(r.sector,(r.volume_change,r["return"]),xytext=(4,4),textcoords="offset points",fontsize=8)
+ax.axhline(0,color=MUTED,lw=.8); ax.axvline(0,color=MUTED,lw=.8); ax.set_xlabel("거래량 변화율(%)"); ax.set_ylabel("주간 수익률(%)")
+finish(ax,"NS 흐름 지도","우상단=가격과 참여 동반, 좌상단=얇은 거래 속 가격상승")
+plt.tight_layout(); plt.show()
+```
+
+VIX 14.25는 점도가 낮아졌음을 뜻하지만, 섹터별 속도와 거래량이 같은 방향은 아니다. 이를 엄밀한 유체역학 레이놀즈 수라고 부를 수는 없다. 여기서 NS는 **변동성=점도, 수익률=유속, 거래량 변화=유량**으로 둔 관찰 프레임이다. 이번 주는 전체 난류보다 국지적 와류—한국 급반등과 소형주 회전—가 더 중요하다.
+
+# TACO와 리스크 대시보드
+
+```{python}
+#| label: fig-taco
+#| fig-cap: "그림 7. TACO 6팩터 연구 점수. 각 시장 대용치의 주간 변화율을 -100~100으로 절단한 상대 위험 신호다."
+factors={"변동성":-weekly("VIX")*8,"달러":weekly("Dollar")*15,"유가":weekly("Oil")*10,"장기금리":-weekly("Long Treasury")*12,"반도체쏠림":weekly("SOXX")*8,"한국충격":weekly("KOSPI")*5}
+fv=pd.Series(factors).clip(-100,100).sort_values()
+fig,ax=plt.subplots(figsize=(8,5)); ax.barh(fv.index,fv,color=[RED if x>35 else GREEN if x<0 else ACC for x in fv]); ax.axvline(0,color=MUTED)
+finish(ax,"TACO 압력계","양수는 위험압력, 음수는 완화 방향의 연구용 점수")
+plt.tight_layout(); plt.show()
+```
+
+```{python}
+#| label: fig-risk
+#| fig-cap: "그림 8. 가격에서 계산한 위험 대시보드. 점수가 높을수록 변동성·낙폭 위험이 크다."
+def annvol(name,n=20): return series(name).pct_change().tail(n).std()*np.sqrt(252)*100
+def dd(name):
+    x=series(name).tail(252); return (1-x.iloc[-1]/x.max())*100
+risk=pd.Series({"VIX 레벨":series("VIX").iloc[-1]/40*100,"KOSPI 20일 변동성":annvol("KOSPI"),"S&P 낙폭":dd("S&P 500")*4,"SOXX 20일 변동성":annvol("SOXX")}).clip(0,100)
+fig,ax=plt.subplots(figsize=(8,4.8)); ax.barh(risk.index,risk,color=[GREEN if x<30 else ACC if x<60 else RED for x in risk]); ax.set_xlim(0,100)
+for i,x in enumerate(risk): ax.text(x+2,i,f"{x:.0f}")
+finish(ax,"과열·충격 위험 점수","서로 다른 단위를 0~100 경보 범위로 변환한 비교용 지표")
+plt.tight_layout(); plt.show()
+```
+
+# 시나리오별 위험예산
+
+```{python}
+#| label: fig-scenario
+#| fig-cap: "그림 9. 세 레짐에서 위험예산을 어디에 쓰는지 보여주는 연구용 예시. 개인별 포트폴리오 처방이 아니다."
+alloc=pd.DataFrame({"레짐":["강세 지속","순환 횡보","충격 재발"],"주식 베타":[65,45,20],"방어자산":[15,30,45],"현금성":[20,25,35]}).set_index("레짐")
+fig,ax=plt.subplots(figsize=(9,4.5)); left=np.zeros(len(alloc))
+for c,color in zip(alloc.columns,[BLUE,GREEN,MUTED]): ax.barh(alloc.index,alloc[c],left=left,label=c,color=color); left+=alloc[c].values
+ax.set_xlim(0,100); ax.legend(ncol=3,frameon=False,loc="lower center",bbox_to_anchor=(.5,-.28)); finish(ax,"레짐별 변동성 예산 예시")
+plt.tight_layout(); plt.show()
+```
+
+- **강세 지속:** 미국 신고가와 이익 기대가 함께 유지되고 소형주 확산이 이어지는 경우.
+- **순환 횡보:** 지수는 버티지만 섹터 주도권이 빠르게 바뀌는 경우. 추세보다 리밸런싱 규칙이 중요하다.
+- **충격 재발:** 소매·고용 약화가 금리 호재가 아니라 이익 하향으로 번지는 경우. 현금성 완충이 옵션가치를 갖는다.
+
+# 다음 주 확인할 것
+
+1. Russell 2000의 상대강도가 일주일 이상 지속되는가.
+2. KOSPI 급반등 뒤 20일 변동성이 실제로 낮아지는가.
+3. 낮은 VIX와 약한 실물지표의 괴리가 확대되는가.
+4. SOXX 상승이 거래량과 함께 나타나는가.
+5. 장기채 약세가 인플레이션 재평가인지 공급·재정 프리미엄인지 구분되는가.
+
+# 결론
+
+이번 주 시장은 “위험선호 회복” 한 문장으로 요약되지 않는다. 미국에서는 대형주 신고가 안에서 소형주가 더 강했고, 한국은 충격 뒤 두 자릿수 반등을 보였으며, 장기채는 약했다. **가격은 낙관을 말하지만 경로는 아직 안정성을 증명하지 못했다.** 다음 주의 핵심은 지수 방향이 아니라 상승의 폭, 거래 참여, 변동성 압축이 함께 지속되는지다.
+
+## 데이터와 재현 범위
+
+- 고정 데이터: `data/market_2025-08-15_2026-08-14.csv`
+- 가격 출처: Yahoo Finance chart API, 2026-08-14 종가까지
+- 주간 미국 지수 교차검증: [AP 2026-08-14](https://apnews.com/article/wall-street-stocks-dow-nasdaq-41b7cf2acc6562758183b1c5eae73635)
+- TACO·NS·위험 점수는 경제적 진실값이 아니라 본문에 공개한 변환식의 산출물이다.

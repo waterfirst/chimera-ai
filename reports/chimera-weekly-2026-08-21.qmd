@@ -1,0 +1,292 @@
+---
+title: "약한 고용인데도 금리를 내리기 어려운 이유"
+subtitle: "8월 3주차 (08.14~08.20) — 9대3 FOMC, 4.7% 생산자물가, 성장주에서 방어주로"
+author: "Chimera-AI Multi-Agent System"
+date: "2026-08-21"
+lang: ko
+jupyter: python3
+format:
+  html:
+    theme:
+      dark: darkly
+      light: flatly
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    embed-resources: true
+    lightbox: true
+    smooth-scroll: true
+    page-layout: article
+execute:
+  echo: false
+  warning: false
+---
+
+::: {.callout-warning}
+## 정보·연구 목적 고지
+이 글은 공개된 경제통계와 시장가격을 해석한 연구 기록이다. 특정 증권·상품의 매수, 매도 또는 보유를 권유하지 않으며 개인별 투자자문이 아니다. 미국 시장 데이터는 **2026년 8월 20일 정규장 종가**, 미국 국채금리는 **8월 20일 미 재무부 고시**, 거시지표는 **8월 21일 20:36 KST 현재 공개된 최신치**로 고정했다. 8월 21일 미국장은 기준시각에 개장 전이므로 이번 호의 주간 가격에 포함하지 않았다.
+:::
+
+```{python}
+#| label: setup
+import pandas as pd, numpy as np, matplotlib.pyplot as plt
+from pathlib import Path
+plt.style.use("dark_background")
+plt.rcParams["font.family"] = "Noto Sans CJK KR"
+plt.rcParams["axes.unicode_minus"] = False
+ACC, GREEN, RED, BLUE, PURPLE, MUTED = "#f59e0b", "#22c55e", "#ef4444", "#38bdf8", "#a78bfa", "#94a3b8"
+df = pd.read_csv(Path("../data/market_2026-08-14_20_nasdaq.csv"), parse_dates=["date"])
+labels = {"SPY":"S&P 500", "QQQ":"Nasdaq 100", "IWM":"Russell 2000", "DIA":"Dow",
+          "EWY":"한국", "SOXX":"반도체", "XLE":"에너지", "XLF":"금융", "XLV":"헬스케어",
+          "XLY":"경기소비", "XLI":"산업재", "XLB":"소재", "XLU":"유틸리티",
+          "ITA":"방산", "ICLN":"청정에너지", "TLT":"장기국채", "UUP":"달러", "USO":"원유"}
+def s(sym): return df[df.symbol==sym].set_index("date").sort_index()
+def ret(sym):
+    x=s(sym).close
+    return (x.iloc[-1]/x.iloc[0]-1)*100
+def volchg(sym):
+    x=s(sym).volume
+    return (x.iloc[-1]/x.iloc[0]-1)*100
+def finish(ax, title, subtitle=""):
+    ax.set_title(title, loc="left", color=ACC, fontweight="bold", fontsize=15, pad=16)
+    if subtitle: ax.text(0,1.01,subtitle,transform=ax.transAxes,color=MUTED,fontsize=9)
+    ax.grid(alpha=.18); ax.spines[["top","right"]].set_visible(False)
+```
+
+# 핵심 요약
+
+이번 주의 핵심은 경기침체 확정도, 인플레이션 재가속 확정도 아니다. 더 불편한 조합이다. 미국의 7월 비농업 고용은 **2만3천 명 감소**했고 5~6월 수치는 합계 **10만3천 명 하향 수정**됐다. 반면 소비자물가는 전년 대비 **3.4%**, 생산자 최종수요 물가는 **4.7%**였다. 성장의 온도계는 식는데 비용의 온도계는 아직 뜨겁다.
+
+이 조합에서 중앙은행의 선택지는 좁아진다. 연준은 7월 29일 기준금리를 3.50~3.75%로 동결했는데, 반대표 세 명은 인하가 아니라 **0.25%포인트 인상**을 원했다. 동결 결정이 9대3이었다는 사실은 시장이 흔히 상상하는 “약한 고용→곧 인하”의 직선 경로가 존재하지 않음을 보여준다. [연준 7월 FOMC 성명](https://www.federalreserve.gov/newsevents/pressreleases/monetary20260729a.htm)
+
+가격도 이 갈등을 반영했다. 8월 14일부터 20일까지 SPY는 **-1.77%**, QQQ는 **-2.75%**, SOXX는 **-5.10%**였다. 반면 헬스케어 XLV는 **+3.00%**, 에너지 XLE는 **+2.97%**, 원유 USO는 **+6.27%**였다. 지수 전체의 위험회피보다 **장기 성장 기대에서 현재 현금흐름·실물 인플레이션 민감 자산으로 이동한 회전**이 더 선명했다.
+
+| 관측치 | 최신값 | 이번 호의 해석 |
+|---|---:|---|
+| 7월 비농업 고용 | -23천 명 | 고용의 완충력이 약해짐 |
+| 실업률 | 4.1% | 급등은 아니지만 참여율 하락과 함께 봐야 함 |
+| CPI / 근원 CPI | 3.4% / 2.5% YoY | 헤드라인은 목표를 크게 웃돌고 근원은 둔화 |
+| PPI 최종수요 / 근원성 지표 | 4.7% / 4.7% YoY | 기업 비용 압력이 소비자물가보다 강함 |
+| 연방기금 목표범위 | 3.50~3.75% | 9명 동결, 3명 인상 선호 |
+| 미 국채 2년 / 10년 | 4.19% / 4.69% | 장기 프리미엄이 사라지지 않음 |
+
+```{python}
+#| label: fig-asset-return
+#| lightbox: true
+#| fig-cap: "그림 1. 8월 14일 대비 8월 20일 ETF 종가 수익률. 8월 21일 미국장은 기준시각에 개장 전이라 제외했다. 출처: Nasdaq Historical API."
+syms=["SPY","QQQ","IWM","DIA","EWY","TLT","UUP","USO"]
+v=pd.Series({labels[x]:ret(x) for x in syms}).sort_values()
+fig,ax=plt.subplots(figsize=(10,5)); ax.barh(v.index,v,color=[GREEN if x>=0 else RED for x in v]); ax.axvline(0,color=MUTED,lw=.8)
+for i,x in enumerate(v): ax.text(x+(.10 if x>=0 else -.10),i,f"{x:+.2f}%",va="center",ha="left" if x>=0 else "right")
+finish(ax,"주식은 내리고 원유는 올랐다","경기둔화만으로는 설명되지 않는 실물가격 압력")
+plt.tight_layout(); plt.show()
+```
+
+# 글로벌 증시: 하락의 모양이 말해주는 것
+
+```{python}
+#| label: fig-normalized-path
+#| lightbox: true
+#| fig-cap: "그림 2. 8월 14일 종가=100으로 정규화한 4개 대표 ETF 경로. 출처: Nasdaq Historical API."
+fig,ax=plt.subplots(figsize=(10,5.5))
+for sym in ["SPY","QQQ","IWM","DIA"]:
+    x=s(sym).close; ax.plot(x.index,x/x.iloc[0]*100,lw=2.3,label=labels[sym],marker="o")
+finish(ax,"미국 주식의 동반 후퇴","기술주만의 조정이 아니라 소형주·산업주까지 폭이 넓어졌다"); ax.legend(frameon=False,ncol=2)
+plt.tight_layout(); plt.show()
+```
+
+직전 호에서는 Russell 2000의 상대강도가 “상승 폭의 확장” 가능성을 보여줬다. 이번 주에는 그 신호가 이어지지 않았다. IWM은 -2.43%로 SPY보다 더 약했다. 대형 성장주의 고평가만 해소되는 건강한 순환이라면 중소형주가 버텨야 하지만, 실제로는 자본비용과 경기민감도가 높은 영역까지 함께 밀렸다. 이것은 위험선호의 폭이 넓어진 것이 아니라 **위험예산 자체가 줄어든 것**에 가깝다.
+
+그렇다고 전형적인 디플레이션 거래도 아니다. 장기국채 TLT는 +0.37%로 소폭 상승했지만 원유 USO가 6% 넘게 뛰었다. 달러 UUP은 -0.71%였다. 강한 달러·강한 국채·약한 원유가 함께 나타나는 침체형 방어와 다르다. 시장은 “성장 둔화”와 “공급·비용 충격”을 동시에 가격에 넣고 있다.
+
+```{python}
+#| label: fig-factor-quadrant
+#| lightbox: true
+#| fig-cap: "그림 3. 자산별 주간 수익률과 거래량 변화. 우상단은 가격상승과 참여확대가 동반된 영역이다. 출처: Nasdaq Historical API."
+syms=["SPY","QQQ","IWM","EWY","SOXX","XLE","XLV","ITA","TLT","USO"]
+flow=pd.DataFrame({"symbol":syms,"return":[ret(x) for x in syms],"volume":[volchg(x) for x in syms]})
+fig,ax=plt.subplots(figsize=(10,6)); ax.scatter(flow.volume,flow["return"],s=100,c=[GREEN if x>0 else RED for x in flow["return"]],alpha=.8)
+for _,r in flow.iterrows(): ax.annotate(labels[r.symbol],(r.volume,r["return"]),xytext=(5,5),textcoords="offset points",fontsize=9)
+ax.axhline(0,color=MUTED,lw=.8); ax.axvline(0,color=MUTED,lw=.8); ax.set_xlabel("거래량 변화율(%)"); ax.set_ylabel("가격 수익률(%)")
+finish(ax,"가격과 거래 참여의 흐름 지도","SOXX·ITA의 하락은 거래량 증가를 동반했다")
+plt.tight_layout(); plt.show()
+```
+
+# 한국: EWY의 변동성은 반등의 취약성을 드러냈다
+
+한국 주식의 미국 상장 대용치인 EWY는 주간 -0.88%로 종착점만 보면 안정적이다. 그러나 경로는 전혀 안정적이지 않았다. 17일 +2.98% 상승한 뒤 18일 하루에 -8.13% 급락했고, 이후 이틀 동안 일부를 회복했다. 종착점 수익률이 작은 것은 위험이 작았다는 뜻이 아니라 **큰 양방향 충격이 상쇄됐다는 뜻**이다.
+
+따라서 국내 투자자가 확인할 것은 주간 등락률 한 개가 아니다. 첫째, 반도체 급락이 한국 대형주의 외국인 수급에 얼마나 전이되는가. 둘째, 원유 상승이 원화와 수입물가에 주는 압력이 커지는가. 셋째, 반등일의 거래 참여가 하락일보다 넓은가다. 이 세 조건이 개선되지 않으면 지난주 급반등은 추세의 시작보다 변동성 국면의 한 파동일 가능성이 높다.
+
+```{python}
+#| label: fig-ewy-soxx
+#| lightbox: true
+#| fig-cap: "그림 4. EWY와 SOXX의 8월 14일=100 정규화 경로. EWY는 한국지수 자체가 아니라 미국 거래시간의 국가 ETF 대용치다. 출처: Nasdaq Historical API."
+fig,ax=plt.subplots(figsize=(10,5))
+for sym in ["EWY","SOXX"]:
+    x=s(sym).close; ax.plot(x.index,x/x.iloc[0]*100,label=labels[sym],lw=2.5,marker="o")
+finish(ax,"한국과 반도체의 불안정한 연결","EWY의 종착점보다 18일 급락 경로가 중요하다"); ax.legend(frameon=False)
+plt.tight_layout(); plt.show()
+```
+
+# 섹터 회전: 방어주가 오른 것이 아니라 위험의 가격이 달라졌다
+
+```{python}
+#| label: fig-sector-return
+#| lightbox: true
+#| fig-cap: "그림 5. 미국 상장 섹터·테마 ETF의 8월 14~20일 수익률. ETF 가격은 직접적인 펀드 자금유입액이 아니라 시장가격 대용치다. 출처: Nasdaq Historical API."
+sectors=["SOXX","XLE","XLF","XLV","XLY","XLI","XLB","XLU","ITA","ICLN"]
+sv=pd.Series({labels[x]:ret(x) for x in sectors}).sort_values()
+fig,ax=plt.subplots(figsize=(9,5.5)); ax.barh(sv.index,sv,color=[GREEN if x>0 else RED for x in sv]); ax.axvline(0,color=MUTED,lw=.8)
+for i,x in enumerate(sv): ax.text(x+(.08 if x>0 else -.08),i,f"{x:+.2f}%",va="center",ha="left" if x>0 else "right")
+finish(ax,"헬스케어·에너지만 양수","반도체와 방산의 큰 하락이 지수 내부 위험회피를 드러냈다")
+plt.tight_layout(); plt.show()
+```
+
+헬스케어와 에너지의 동반 상승은 한 가지 거시 시나리오로 묶기 어렵다. 헬스케어는 경기 방어와 실적 가시성의 프리미엄을, 에너지는 원유 상승과 공급 리스크를 반영한다. 공통점은 먼 미래의 이익보다 현재 현금흐름과 가격 결정력이 중요해졌다는 것이다.
+
+10개 섹터 신호는 예측이 아니라 상태분류다. 주간 수익률, 거래량 변화, 거시 민감도를 각각 0~100으로 정규화해 합성했다. 이처럼 표본이 닷새뿐인 점수는 추세 신호가 아니라 **다음 주 검증 우선순위**로만 사용해야 한다.
+
+```{python}
+#| label: fig-sector-signal
+#| lightbox: true
+#| fig-cap: "그림 6. 가격모멘텀 60%, 거래량 동행 25%, 거시방향 15%의 공개식으로 계산한 연구용 신호. 5거래일 표본이라 매매지시가 아니다."
+macro={"SOXX":25,"XLE":85,"XLF":40,"XLV":80,"XLY":35,"XLI":30,"XLB":45,"XLU":65,"ITA":25,"ICLN":30}
+raw=[]
+for x in sectors:
+    mom=np.clip(50+ret(x)*7,0,100)
+    participation=np.clip(50+np.sign(ret(x))*volchg(x)*.35,0,100)
+    raw.append([labels[x],.60*mom+.25*participation+.15*macro[x]])
+sig=pd.DataFrame(raw,columns=["sector","score"]).sort_values("score")
+colors=[GREEN if x>=65 else ACC if x>=40 else RED for x in sig.score]
+fig,ax=plt.subplots(figsize=(9,5.5)); ax.barh(sig.sector,sig.score,color=colors); ax.set_xlim(0,100); ax.axvline(40,color=MUTED,ls="--"); ax.axvline(65,color=MUTED,ls="--")
+for i,x in enumerate(sig.score): ax.text(x+1,i,f"{x:.0f}",va="center")
+finish(ax,"섹터 상태 신호","65 이상 우호·40~64 중립·40 미만 경계")
+plt.tight_layout(); plt.show()
+```
+
+# 물가의 두 층: 소비자는 둔화, 기업 비용은 잔류
+
+BLS에 따르면 7월 CPI는 전월 대비 0.1%, 전년 대비 3.4%였다. 근원 CPI는 전월 대비 0.2%, 전년 대비 2.5%로 둔화 방향이다. 그러나 에너지의 전년 상승률은 14.7%였고 식품은 3.0%, 주거비는 3.2%였다. 헤드라인 둔화가 생활물가의 고른 안정은 아니다. [BLS 7월 CPI](https://www.bls.gov/news.release/archives/cpi_08122026.htm)
+
+생산자 단계는 더 불편하다. 7월 PPI 최종수요는 전월 대비 보합이었지만 전년 대비 4.7%였다. 식품·에너지·무역서비스를 제외한 지표도 전년 대비 4.7%였다. 월간으로 에너지와 상품가격이 내렸지만 서비스는 +0.2%, 건설은 +2.2%였다. 원가 압력이 소멸한 것이 아니라 상품에서 서비스·건설로 이동했을 가능성을 확인해야 한다. [BLS 7월 PPI](https://www.bls.gov/news.release/archives/ppi_08132026.htm)
+
+```{python}
+#| label: fig-inflation-pipeline
+#| lightbox: true
+#| fig-cap: "그림 7. 2026년 7월 CPI·PPI 주요 항목의 전년 대비 상승률. 서로 다른 바구니와 조사단계이므로 수준 비교보다 방향 차이를 본다. 출처: U.S. BLS."
+infl=pd.Series({"CPI 전체":3.4,"CPI 근원":2.5,"CPI 식품":3.0,"CPI 에너지":14.7,"CPI 주거":3.2,"PPI 최종수요":4.7,"PPI 근원성 지표":4.7})
+fig,ax=plt.subplots(figsize=(9,5)); ax.barh(infl.index,infl,color=[BLUE]*5+[PURPLE]*2); ax.axvline(2,color=ACC,ls="--",label="2% 기준선")
+for i,x in enumerate(infl): ax.text(x+.15,i,f"{x:.1f}%",va="center")
+finish(ax,"소비자물가 둔화만 보면 놓치는 생산자 비용","에너지와 생산자 단계의 압력이 통화완화 속도를 제약"); ax.legend(frameon=False)
+plt.tight_layout(); plt.show()
+```
+
+# 고용: -2.3만보다 더 중요한 10.3만 하향 수정
+
+7월 고용 감소 2만3천 명만 보면 한 달의 잡음일 수 있다. 더 중요한 것은 세 가지다. 첫째, 직전 12개월 월평균 증가는 3만4천 명에 그쳤다. 둘째, 5월과 6월 합계가 기존 발표보다 10만3천 명 낮아졌다. 셋째, 노동참가율은 61.4%로 1월 이후 0.7%포인트 하락했다. 실업률 4.1%가 안정적으로 보이는 이유 중 일부가 노동시장 밖으로의 이동이라면, 표면 실업률은 고용의 체력을 과대평가한다. [BLS 7월 고용보고서](https://www.bls.gov/news.release/empsit.nr0.htm)
+
+산업별로는 지방정부 교육 -5만 명, 소매 -1만9천 명, 금융 -1만4천 명이 줄었고 헬스케어는 +2만2천 명이었다. 금융 고용은 2025년 5월 고점 이후 12만1천 명 감소했다. 시장에서 헬스케어가 강하고 금융이 약했던 이번 주 회전은 단순 우연이 아니라 실물 고용의 방향과도 일부 겹친다. 단, 한 주 가격과 한 달 고용을 인과관계로 단정할 수는 없다.
+
+```{python}
+#| label: fig-jobs
+#| lightbox: true
+#| fig-cap: "그림 8. 7월 고용 변화와 직전 12개월 월평균, 주요 업종 변화. 단위: 천 명. 출처: U.S. BLS 2026년 7월 고용보고서."
+jobs=pd.Series({"지방정부 교육":-50,"전체 고용":-23,"소매":-19,"금융":-14,"헬스케어":22,"직전 12개월 평균":34}).sort_values()
+fig,ax=plt.subplots(figsize=(9,5)); ax.barh(jobs.index,jobs,color=[GREEN if x>0 else RED for x in jobs]); ax.axvline(0,color=MUTED)
+for i,x in enumerate(jobs): ax.text(x+(1.5 if x>0 else -1.5),i,f"{x:+.0f}",va="center",ha="left" if x>0 else "right")
+finish(ax,"고용은 평균보다 약했고 업종별 편차는 컸다","5~6월 합계 하향 수정 -103천 명은 별도 위험 신호")
+plt.tight_layout(); plt.show()
+```
+
+# 국채곡선과 연준: 단기 인하 기대보다 장기 위험 프리미엄
+
+미 재무부 고시에 따르면 8월 14일에서 20일까지 2년물은 4.17%에서 4.19%, 10년물은 4.68%에서 4.69%로 올랐다. 30년물은 5.25%에서 5.23%로 소폭 낮아졌다. 큰 평행이동은 아니지만 10년-2년 스프레드는 약 +50bp로 양수다. 단기 경기둔화만 본다면 장기금리가 빠르게 내려야 하는데, 실제 곡선에는 인플레이션·재정·공급 위험 프리미엄이 남아 있다. [미 재무부 일일 국채금리](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026)
+
+```{python}
+#| label: fig-yield-curve
+#| lightbox: true
+#| fig-cap: "그림 9. 8월 14일과 20일 미 국채 수익률곡선. 출처: U.S. Department of the Treasury Daily Treasury Par Yield Curve Rates."
+tenor=[1,2,3,5,7,10,20,30]
+y14=[3.98,4.17,4.24,4.36,4.51,4.68,5.25,5.25]
+y20=[3.99,4.19,4.26,4.39,4.53,4.69,5.20,5.23]
+fig,ax=plt.subplots(figsize=(10,5)); ax.plot(tenor,y14,marker="o",lw=2,label="8월 14일"); ax.plot(tenor,y20,marker="o",lw=2,label="8월 20일")
+ax.set_xlabel("만기(년)"); ax.set_ylabel("수익률(%)"); finish(ax,"장기 프리미엄은 사라지지 않았다","2년 4.19%, 10년 4.69%, 30년 5.23%"); ax.legend(frameon=False)
+plt.tight_layout(); plt.show()
+```
+
+연준의 9대3 표결을 “동결이 압도적”이라고만 읽으면 안 된다. 세 명의 반대가 모두 인상을 선호했다는 방향성이 중요하다. 고용 약화는 인하 논리를 만들지만, 생산자 비용과 에너지 상승은 인상 또는 장기 동결 논리를 만든다. 이때 정책 불확실성은 기준금리 전망의 평균보다 **전망 분포의 폭**을 키운다. 성장주의 먼 미래 현금흐름은 할인율 분포가 넓어질수록 더 큰 타격을 받는다.
+
+# NS 자본흐름 판정
+
+이번 주 NS 프레임의 관측값을 다음처럼 둔다.
+
+- **점도:** 국채곡선이 안정적으로 내려오지 않고 자산별 변동이 커져 중간 이상이다.
+- **유속:** 원유·에너지·헬스케어로는 양의 유속, 반도체·방산·산업재에서는 음의 유속이다.
+- **압력구배:** 약한 고용은 금리 하락 방향, 4.7% PPI와 원유 상승은 금리 상승 방향으로 반대 압력을 만든다.
+- **와류:** EWY처럼 주간 종착점은 작지만 일중·일별 진폭이 큰 자산에서는 방향성보다 회전이 지배한다.
+- **레짐:** 전체 시장이 한 방향으로 흐르는 층류가 아니라, 거시 신호가 충돌하며 섹터별 속도차가 커지는 **전이 난류**다.
+
+이것은 실제 유체의 레이놀즈 수를 추정한 결과가 아니다. 변동성·수익률·거래량을 각각 점도·유속·유량의 대용치로 둔 해석 프레임이다. 물리 비유가 데이터보다 앞서가면 설명은 화려해지고 검증은 약해진다. 따라서 이번 호에서는 직접 관측 가능한 가격과 거래량을 먼저 제시하고 비유는 그 뒤에 배치했다.
+
+# TACO 위험계와 다음 주 시나리오
+
+| 팩터 | 방향 | 관찰 근거 |
+|---|---|---|
+| 성장 충격 | 위험 확대 | 7월 고용 -23천, 이전 두 달 -103천 수정 |
+| 물가 압력 | 위험 확대 | CPI 3.4%, PPI 4.7%, USO +6.27% |
+| 할인율 | 중립~위험 | 10년 4.69%, 장기곡선 고점 유지 |
+| 시장 폭 | 위험 확대 | SPY·QQQ·IWM·DIA 동반 하락 |
+| 섹터 회전 | 완충 | XLV·XLE는 양수로 자금 피난처 존재 |
+| 한국 전염 | 관찰 | EWY 종착점 -0.88%, 경로 변동성은 큼 |
+
+### 시나리오 A — 비용 압력 완화, 고용 연착륙
+
+원유 상승이 되돌려지고 8월 고용이 플러스로 복원되며 10년물이 4.5% 아래로 안정되는 경우다. 성장주의 할인율 부담은 완화될 수 있다. 확인 신호는 QQQ의 반등 자체가 아니라 SOXX 거래량이 하락일보다 상승일에 더 커지는지다.
+
+### 시나리오 B — 약한 성장과 끈적한 물가의 횡보
+
+현재의 기본 시나리오다. 고용은 약하지만 침체로 급락하지 않고, PPI와 에너지가 인하 속도를 막는다. 지수는 좁은 범위에 머물러도 섹터 회전은 빠르다. 이 환경에서는 단일 방향 예측보다 손실한도, 포지션 크기, 재평가 날짜가 중요하다.
+
+### 시나리오 C — 공급 충격이 장기금리를 다시 밀어올림
+
+원유 상승과 서비스 비용이 이어져 10년·30년 금리가 재상승하는 경우다. 고용 둔화에도 연준이 움직이지 못하면 실질 금융여건이 긴축적으로 바뀐다. 이때 고평가 성장주뿐 아니라 소형주·산업재도 함께 압박받을 수 있다.
+
+# 다음 주 검증표
+
+1. 8월 26일 BEA의 2분기 GDP 2차 추정과 7월 개인소득·지출에서 성장과 물가의 어느 쪽이 더 크게 수정되는가.
+2. 8월 28일 BLS 예비 벤치마크 수정이 고용의 현재 수준을 얼마나 낮추는가.
+3. USO 주간 급등이 CPI 에너지의 다음 달 반등으로 연결되는가.
+4. 10년-2년 스프레드가 확대되는 이유가 성장 기대인지 기간 프리미엄인지 구분되는가.
+5. SOXX가 거래량 증가를 동반한 하락을 멈추는가.
+6. EWY의 일별 진폭이 줄고 반등일 참여가 넓어지는가.
+
+## 이 해석이 틀릴 수 있는 세 가지 경로
+
+첫째, 7월 고용 감소가 계절조정과 지방정부 교육의 일시적 변동에 집중됐을 수 있다. 헬스케어 증가가 이어지고 8월 고용이 반등한다면 “고용의 체력 약화”라는 이번 호의 진단은 낮춰야 한다. 특히 8월 28일 예비 벤치마크는 방향을 보여줄 뿐 공식 월별 시계열을 즉시 고치는 값이 아니다. 예비치와 확정치를 혼동해서는 안 된다.
+
+둘째, PPI 4.7%가 CPI로 그대로 전달된다고 가정할 수 없다. 생산자물가와 소비자물가는 가중치, 거래단계, 마진, 수입품 처리 방식이 다르다. 기업이 비용을 마진으로 흡수하거나 에너지 하락이 뒤늦게 반영되면 소비자 단계의 둔화가 계속될 수 있다. 그러므로 PPI는 ‘다음 CPI 4.7%’라는 예측치가 아니라 통화완화의 확신을 늦추는 위험변수다.
+
+셋째, 5거래일 섹터 수익률은 기업실적·정책뉴스·기술적 포지션 정리의 영향을 크게 받는다. 헬스케어와 에너지 상승을 장기 주도주 교체로 부르는 것은 이르다. 다음 주에 가격 방향뿐 아니라 거래량 동행, 시장 폭, 국채곡선이 함께 반전하면 이번 주 회전은 구조 변화가 아니라 짧은 헤지였다고 판정해야 한다. 좋은 분석은 이야기를 지키는 일이 아니라 **이야기가 폐기되는 조건을 먼저 적는 일**이다.
+
+# 결론
+
+이번 주 시장을 “고용이 약하니 인하가 온다”로 요약하면 가장 중요한 반쪽을 잃는다. 고용은 약했고 이전 수치도 크게 하향 수정됐지만, 소비자물가는 3.4%, 생산자물가는 4.7%다. 연준의 세 반대표는 인하가 아니라 인상을 원했다. 원유는 6% 넘게 상승했고 장기금리는 높은 수준을 유지했다.
+
+따라서 이번 주의 자본흐름은 단순한 위험회피가 아니다. 성장의 지속시간이 긴 반도체·기술·산업재에서 현재 현금흐름과 가격 결정력이 상대적으로 분명한 헬스케어·에너지로 위험의 가격이 이동했다. 주식지수의 하락률보다 중요한 것은 이 이동의 원인이다. 경기만 약해진다면 채권과 성장주의 복원이 뒤따를 수 있지만, 비용 압력이 남는다면 정책은 늦어지고 할인율 불확실성은 더 오래 간다.
+
+**다음 주의 질문은 “연준이 언제 내리는가”가 아니다. “고용과 물가 중 어느 데이터가 정책의 손을 먼저 풀어주는가”다.** 답이 나오기 전까지는 방향 확신보다 데이터의 기준시각, 위험예산, 반증 조건을 먼저 정하는 편이 합리적이다.
+
+## 데이터·재현 범위와 한계
+
+- 시장 원자료: `data/market_2026-08-14_20_nasdaq.csv`; Nasdaq Historical API에서 2026-08-21 20:36 KST에 조회한 8월 14~20일 정규장 종가·거래량을 고정했다.
+- 물가: [BLS CPI, 2026-08-12](https://www.bls.gov/news.release/archives/cpi_08122026.htm), [BLS PPI, 2026-08-13](https://www.bls.gov/news.release/archives/ppi_08132026.htm).
+- 고용: [BLS Employment Situation, 2026-08-07](https://www.bls.gov/news.release/empsit.nr0.htm).
+- 통화정책: [Federal Reserve FOMC statement, 2026-07-29](https://www.federalreserve.gov/newsevents/pressreleases/monetary20260729a.htm).
+- 국채: [U.S. Treasury Daily Treasury Par Yield Curve Rates](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2026), 8월 14일·20일.
+- ETF는 지수·산업·국가의 완전한 대체물이 아니다. EWY는 한국 현물지수와 거래시간·환율·구성비가 다르며, ETF 거래량 변화는 공식 펀드 순유입액이 아니다.
+- 5거래일은 추세를 확정하기에 짧다. 신호 점수와 NS·TACO 해석은 본문에 공개한 대용치와 변환식의 산출물이지 경제적 진실값이나 투자등급이 아니다.
+- 8월 21일 미국 정규장 결과는 미포함이다. 주말 이후 확정판에서는 당일 종가와 다음 공식 통계를 추가할 수 있다.

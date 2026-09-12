@@ -1,0 +1,271 @@
+---
+title: "Chimera 월간 금융·경제 저널"
+subtitle: "2026년 9월 MTD — KOSPI 7,000 재돌파, 미국은 금리 5% 시험, 원유·채권 난류"
+author: "Chimera AI"
+date: "2026-09-13"
+lang: ko
+format:
+  html:
+    theme: darkly
+    toc: true
+    toc-title: "목차"
+    embed-resources: true
+    smooth-scroll: true
+    css: journal-202608.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+::: {.callout-warning}
+## 정보·연구 목적 고지
+이 월간 저널은 공개 시세와 공식·공공기관 자료, 저장소 내부 연구 산출물을 바탕으로 한 **정보·연구 목적**의 시장 기록이다. 특정 증권·상품의 매수·매도·보유를 권유하는 투자자문이 아니며, 계좌·비밀키·개인정보는 포함하지 않는다. 기준시각은 **2026년 9월 13일**, 가격 데이터는 대체로 **2026년 9월 11일 종가 또는 최신 공식 고시치**로 고정했다.
+:::
+
+```{r}
+library(ggplot2)
+library(scales)
+
+kfont <- "Noto Sans CJK KR"
+theme_chimera <- function(base_size = 13) {
+  theme_minimal(base_size = base_size) +
+    theme(
+      plot.background = element_rect(fill = "#101827", color = NA),
+      panel.background = element_rect(fill = "#101827", color = NA),
+      panel.grid.major = element_line(color = "#263449", linewidth = 0.35),
+      panel.grid.minor = element_blank(),
+      text = element_text(family = kfont, color = "#e5e7eb"),
+      axis.text = element_text(color = "#cbd5e1"),
+      axis.title = element_text(color = "#cbd5e1"),
+      plot.title = element_text(color = "#f59e0b", face = "bold"),
+      plot.subtitle = element_text(color = "#94a3b8"),
+      plot.caption = element_text(color = "#94a3b8", size = rel(0.75)),
+      legend.position = "bottom",
+      legend.background = element_rect(fill = "#101827", color = NA),
+      legend.text = element_text(color = "#e5e7eb"),
+      legend.title = element_text(color = "#f59e0b")
+    )
+}
+green <- "#22c55e"; red <- "#ef4444"; amber <- "#f59e0b"; blue <- "#38bdf8"; purple <- "#a78bfa"; muted <- "#94a3b8"
+```
+
+# 1. 이번 달 핵심 시장 레짐
+
+9월 중순의 한 줄 판정은 **“한국 주식은 KOSPI 7,000선 복귀로 위험선호가 살아났지만, 미국은 국채 10년물 5% 문턱과 연준 재인상 기대가 주식 밸류에이션을 압박하는 이중 레짐”**이다.
+
+한국거래소 정보데이터시스템은 최신 크롤 기준 KOSPI `7,033.92`, KOSPI 200 `1,112.13`을 표시했다. 8월 초 급락 저점권으로 본 `6,258.77`과 비교하면 가격은 회복됐지만, 9월 11일 KODEX 200 ETF가 `109,500원`, 일간 `-2.11%`로 밀린 점은 7,000선 위에서도 변동성 예산이 커졌음을 뜻한다.  
+자료: [KRX 정보데이터시스템](https://data.krx.co.kr/), [KODEX 200 인용 시세](https://kr.investing.com/etfs/samsung-kodex-kospi-200-securities)
+
+미국은 9월 11일 S&P 500 `7,656.98`, Nasdaq `26,333.04`, Dow `52,573.29`로 반등 마감했지만 주간으로는 각각 `-0.8%`, `-0.7%`, `-1.6%`였다. 핵심 변수는 지수 레벨보다 금리다. 미 국채 10년물은 9월 10일 FRED 기준 `4.95%`, 9월 11일 시장 보도 기준 `4.97%`대까지 올라 5%를 시험했다.  
+자료: [AP 2026-09-11 미국 지수 마감](https://apnews.com/article/67a463295d9ea178d7802ca4338a6eb5), [FRED DGS10](https://fred.stlouisfed.org/series/dgs10), [미 재무부 일별 수익률곡선](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve)
+
+```{r}
+#| label: fig-regime-map
+#| lightbox: true
+#| fig-cap: "그림 1. 2026년 9월 중순 핵심 레짐 맵. 한국은 KOSPI 7,000 회복, 미국은 국채금리 5% 시험, 원유는 지정학 프리미엄이 붙은 상태다."
+regime <- data.frame(
+  block = c("KOSPI", "미국 주식", "채권/금리", "원유/금", "환율"),
+  score = c(72, 51, 34, 58, 55),
+  label = c("7,033.92", "S&P 7,656.98", "UST10Y 4.95~4.97%", "Brent $104.61", "USD/KRW 1,341")
+)
+ggplot(regime, aes(x = reorder(block, score), y = score, fill = score)) +
+  geom_col(width = 0.68) +
+  geom_text(aes(label = label), hjust = -0.05, color = "#ffffff", fontface = "bold", size = 4) +
+  coord_flip() +
+  scale_fill_gradient2(low = red, mid = amber, high = green, midpoint = 55, guide = "none") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 25)) +
+  labs(title = "9월 MTD 레짐 점수", subtitle = "높을수록 위험선호·가격 모멘텀이 우세, 낮을수록 긴축·변동성 압력 우세", x = NULL, y = "레짐 점수") +
+  theme_chimera()
+```
+
+# 2. KOSPI와 미국증시
+
+## KOSPI: 7,000 회복은 강세, 하지만 ‘잔류 난류’가 남았다
+
+7월 말~8월 초의 급락 이후 KOSPI가 다시 7,000선을 회복한 것은 명백한 강세 신호다. 다만 저장소의 9월 9일 특별보고서가 지적한 대로 2025~2026 KOSPI에는 단순 확산이 아니라 **다중프랙탈 간헐성**이 남아 있다. 즉 평균 방향은 위라도, 변동성은 특정 일자와 특정 섹터에 몰려 나타난다.
+
+이번 호의 KOSPI 판단은 다음과 같다.
+
+- **가격 레짐**: 7,000선 회복으로 상승 추세 복원.
+- **변동성 레짐**: KODEX 200의 9월 11일 일간 `-2.11%` 하락이 보여주듯, 추세 안의 일간 충격은 여전히 크다.
+- **수급·섹터 레짐**: 저장소 최신 섹터 신호는 5월 자료라 직접 매매 신호로 쓰지 않고, 반도체·자동차·금융 쏠림 구조를 “검증해야 할 가설”로만 유지한다.
+
+## 미국: 지수보다 금리가 더 빠르게 시장을 설명한다
+
+미국 주식은 9월 11일 반등했지만 주간 수익률은 음수였다. 같은 날 보도된 시장 설명의 공통분모는 **원유 급등 → 물가 기대 → 연준 인상 확률 → 장기금리 상승**이다. S&P 500이 아직 연초 대비 `+11.9%`라는 사실은 이익 기대가 살아 있음을 보여주지만, 10년물 5%에 가까운 할인율은 AI·성장주 멀티플을 계속 시험한다.
+
+```{r}
+#| label: fig-us-index
+#| lightbox: true
+#| fig-cap: "그림 2. 9월 11일 미국 주요 지수: 당일 반등했지만 주간 기준으로는 모두 하락. 출처: AP."
+us <- data.frame(
+  index = c("S&P 500", "Nasdaq", "Dow", "Russell 2000"),
+  close = c(7656.98, 26333.04, 52573.29, 2903.94),
+  weekly = c(-0.8, -0.7, -1.6, -2.4),
+  ytd = c(11.9, 13.3, 9.4, 17.0)
+)
+ggplot(us, aes(x = reorder(index, weekly), y = weekly, fill = weekly > 0)) +
+  geom_col(width = 0.65) +
+  geom_text(aes(label = paste0(weekly, "%")), vjust = ifelse(us$weekly > 0, -0.5, 1.3), color = "#ffffff", fontface = "bold") +
+  scale_fill_manual(values = c(`TRUE` = green, `FALSE` = red), guide = "none") +
+  labs(title = "미국 지수 주간 수익률", subtitle = "9월 11일 반등에도 주간 손실은 남았다", x = NULL, y = "주간 수익률(%)") +
+  theme_chimera()
+```
+
+# 3. ETF 모멘텀
+
+9월 ETF 모멘텀은 **한국 베타의 높은 탄력성**과 **미국 베타의 금리 민감도**로 갈린다.
+
+KODEX 200은 9월 11일 `109,500원`으로 마감했고, 인용 시세 기준 월간 `+30.63%`, 연초 대비 `+79.82%`가 표시됐다. TIGER 미국나스닥100은 `174,005원`, TIGER 미국S&P500은 `25,440원`으로 각각 9월 11일 일간 `-0.31%`, `+0.06%`가 표시됐다. 즉 원화 상장 해외 ETF는 환율 완충을 받지만, 미국 현지 성장주 모멘텀은 국채금리에 눌리고 있다.  
+자료: [KODEX 200 인용 시세](https://kr.investing.com/etfs/samsung-kodex-kospi-200-securities), [KODEX 200 상품 정보](https://www.funetf.co.kr/product/etf/view/KR7069500007)
+
+```{r}
+#| label: fig-etf-momentum
+#| lightbox: true
+#| fig-cap: "그림 3. 관찰 가능한 ETF 모멘텀 점수. 일부 국내 ETF는 최신 공개 인용 시세가 제한되어 가격·월간수익·레짐 민감도를 합성한 연구용 점수로 표시했다."
+etf <- data.frame(
+  name = c("KODEX 200", "TIGER 미국나스닥100", "TIGER 미국S&P500", "장기국채/TLT proxy", "금/GLD proxy", "원유/USO proxy"),
+  score = c(82, 57, 61, 36, 54, 69),
+  driver = c("KOSPI 7,000", "금리 민감", "대형주 방어", "10Y 5% 압박", "고금리 상쇄", "지정학 프리미엄")
+)
+ggplot(etf, aes(x = reorder(name, score), y = score, fill = score)) +
+  geom_col(width = 0.68) +
+  geom_text(aes(label = paste0(score, " · ", driver)), hjust = -0.05, color = "#ffffff", size = 3.7) +
+  coord_flip() +
+  scale_fill_gradient2(low = red, mid = amber, high = green, midpoint = 55, guide = "none") +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "ETF 모멘텀: 한국 베타 강세, 미국 성장주는 금리 시험", x = NULL, y = "연구용 모멘텀 점수") +
+  theme_chimera()
+```
+
+# 4. 금리·환율·원유·금·채권
+
+이번 달 자산 간 압력 구배는 네 줄로 요약된다.
+
+1. **정책금리**: 연준 목표범위는 FRED 기준 상단 `3.75%`로 유지되어 있고, 한국은행은 8월 금통위에서 기준금리를 `3.00%`로 올렸다.  
+   자료: [FRED DFEDTARU](https://fred.stlouisfed.org/), [한국은행 기준금리 결정](https://www.bok.or.kr/)
+2. **장기금리**: 미 10년물은 9월 10일 `4.95%`, 9월 11일 시장 보도 기준 `4.97%`대로 상승했다. 이는 주식에는 할인율 상승, 채권에는 가격 하락 압력이다.
+3. **원유**: Brent는 9월 11일 `104.61달러`, 주간 `+8.7%`로 마감했다. EIA가 공개한 Brent 현물도 9월 7~9일 `104.47 → 106.12 → 109.51달러`로 상승했다.  
+   자료: [EIA Brent 현물](https://www.eia.gov/), [WSJ/시장 보도 Brent 마감](https://www.wsj.com/world/middle-east/oil-prices-slip-after-recent-surge-amid-supply-risks-e1819c15)
+4. **금·환율**: 금은 뉴욕 선물 기준 `4,366.20달러/oz`, 주간 `-1.4%`로 고금리 압력을 받았다. 원/달러는 9월 11일 `1,341.25원` 부근으로 표시됐다.  
+   자료: [World Gold Council 시장 데이터](https://www.gold.org/goldhub/data/gold-prices), [Trading Economics USD/KRW](https://tradingeconomics.com/south-korea/currency)
+
+```{r}
+#| label: fig-macro-pressure
+#| lightbox: true
+#| fig-cap: "그림 4. 주요 매크로 변수의 위험자산 압력. 양수는 위험선호에 우호, 음수는 할인율·비용·변동성 압력."
+macro <- data.frame(
+  factor = c("KOSPI 7,000 회복", "BOK 3.00%", "Fed 3.50~3.75%", "UST 10Y 4.95%", "Brent $104.61", "Gold $4,366", "USD/KRW 1,341"),
+  pressure = c(28, -12, -8, -31, -24, 4, 2)
+)
+ggplot(macro, aes(x = reorder(factor, pressure), y = pressure, fill = pressure > 0)) +
+  geom_col(width = 0.7) +
+  geom_hline(yintercept = 0, color = muted) +
+  geom_text(aes(label = ifelse(pressure > 0, paste0("+", pressure), pressure)), hjust = ifelse(macro$pressure > 0, -0.2, 1.2), color = "#ffffff", fontface = "bold") +
+  coord_flip() +
+  scale_fill_manual(values = c(`TRUE` = green, `FALSE` = red), guide = "none") +
+  labs(title = "압력 구배: 주식 회복 vs 금리·원유 압박", x = NULL, y = "위험자산 압력 점수") +
+  theme_chimera()
+```
+
+# 5. 장기·절세계좌 리밸런싱 시사점
+
+저장소 `CLAUDE.md`는 개인 재정·연금 포트폴리오 제안을 이 프로젝트 범위 밖으로 둔다. 따라서 이번 섹션은 특정 개인의 연금 투자전략이 아니라 **장기·절세계좌 관점의 리스크 관리 원칙**으로 한정한다.
+
+- KOSPI가 7,000선을 회복한 뒤에는 추격 매수보다 **목표 비중 초과분 점검**이 우선이다.
+- 미 국채 10년물 5% 접근은 장기채 가격 변동성을 키운다. 채권은 “무조건 방어자산”이 아니라 **듀레이션 리스크가 있는 자산**으로 분리해야 한다.
+- 원유가 100달러 위에서 유지되면 인플레이션 헤지 자산과 성장주가 동시에 흔들릴 수 있다. 리밸런싱은 자산군 간 상관관계가 깨지는 날을 전제로 설계해야 한다.
+- 결론: 월간 단위에서는 수익률 극대화보다 **과집중 해소, 현금흐름 확보, 다음 리밸런싱 날짜 고정**이 더 중요하다.
+
+```{r}
+#| label: fig-rebalance
+#| lightbox: true
+#| fig-cap: "그림 5. 장기계좌 리스크 예산 예시. 개인별 권고 비중이 아니라 이번 레짐에서 점검해야 할 위험원 분해다."
+risk <- data.frame(
+  bucket = c("국내주식 베타", "미국 성장주", "장기채 듀레이션", "원자재/인플레", "현금성 완충"),
+  risk = c(30, 24, 20, 16, 10)
+)
+ggplot(risk, aes(x = "", y = risk, fill = bucket)) +
+  geom_col(width = 1, color = "#101827") +
+  coord_polar(theta = "y") +
+  scale_fill_manual(values = c(green, blue, purple, amber, muted)) +
+  labs(title = "리밸런싱 체크리스트: 비중보다 위험원", x = NULL, y = NULL, fill = NULL) +
+  theme_void(base_family = kfont) +
+  theme(plot.background = element_rect(fill = "#101827", color = NA), plot.title = element_text(color = amber, face = "bold"), legend.text = element_text(color = "#e5e7eb"), legend.position = "right")
+```
+
+# 6. 모의투자 성과 복기
+
+메모리와 최근 운영 기록 기준, 9월 초 모의투자는 방어자산 쏠림을 해소하고 KODEX200·나스닥100 중심의 위험자산 바스켓으로 복원됐다. 확인된 최근 수치는 다음과 같다.
+
+- 9월 2일 리셋 후 9월 4일 기준 총평가액 `97,194,771원`, 리셋 대비 `+1.97%`.
+- 금 포지션 전량 매도에서 실현 `+1,592,460원`, `+3.05%`.
+- 복원 후 배분은 KODEX200 약 `55.0%`, TIGER 미국나스닥100 약 `44.5%`.
+
+이번 달 평가의 핵심은 수익률보다 **운영 품질**이다. 이전 문제였던 바스켓 밖 방어자산 잔존, phantom position, 상태파일 경로 오염, VTS timeout·중복주문 문제가 수정됐고 테스트도 통과했다. 다음 월간 성과표에는 단순 평가금액보다 `평균이익/평균손실`, `profit factor`, `최대낙폭`, `주문 실패율`을 우선 지표로 올려야 한다.
+
+```{r}
+#| label: fig-mock
+#| lightbox: true
+#| fig-cap: "그림 6. 모의투자 최근 상태 요약. 9월 초 리셋 이후 확인된 운영 메모 기준."
+mock <- data.frame(
+  item = c("리셋 대비 성과", "KODEX200 비중", "나스닥100 비중", "금 실현손익률"),
+  value = c(1.97, 55.0, 44.5, 3.05)
+)
+ggplot(mock, aes(x = reorder(item, value), y = value, fill = item)) +
+  geom_col(width = 0.68, show.legend = FALSE) +
+  geom_text(aes(label = paste0(value, "%")), hjust = -0.15, color = "#ffffff", fontface = "bold") +
+  coord_flip() +
+  scale_fill_manual(values = c(green, blue, purple, amber)) +
+  scale_y_continuous(limits = c(0, 62)) +
+  labs(title = "모의투자: 수익률보다 운영 안정성 개선", x = NULL, y = "%") +
+  theme_chimera()
+```
+
+# 7. Claude vs Codex 예측모델 성과
+
+저장소의 `hit_rate_history.json`은 2026년 3월 말~5월 말 주간 예측 적중률을 기록한다. 최신 기록은 5월 4주 `57%`, 전체 평균은 약 `61.7%`다. 이는 **현재 9월 시장을 예측한 신규 성과가 아니라, 과거 주간 모델의 마지막 공개 채점표**다.
+
+추가로 9월 9일 특별보고서는 Claude와 Codex를 모두 사용한 연구 워크플로를 다뤘지만, 금융 시가·종가 예측의 직접 승패표는 아직 저장소에 없다. 따라서 이번 달 판정은 보수적으로 둔다.
+
+- **Claude 계열**: 서사·가설 생성·반증조건 정리에 강점.
+- **Codex 계열**: 코드 수정, 백테스트 룩어헤드 제거, 테스트 자동화에 강점.
+- **검증 결론**: LAG=0 백테스트는 룩어헤드라 폐기하고, LAG=1 기준만 정당하다. 수정 기준에서 VIX/밸류에이션 레짐 전략은 60/40보다 위험조정 성과가 우수했지만, KOSPI 매수보유보다 절대 CAGR은 낮았다.
+
+```{r}
+#| label: fig-hit-rate
+#| lightbox: true
+#| fig-cap: "그림 7. 저장소 hit_rate_history.json의 마지막 공개 예측 적중률. 9월 신규 예측 성과가 아니라 과거 채점표다."
+hit <- data.frame(
+  week = c("3월4주","4월1주","4월2주","4월3주","4월4주","5월1주","5월2주","5월3주","5월4주"),
+  rate = c(57,71,57,71,57,71,71,43,57)
+)
+hit$n <- seq_len(nrow(hit))
+ggplot(hit, aes(x = n, y = rate)) +
+  geom_hline(yintercept = mean(hit$rate), color = amber, linetype = "dashed") +
+  geom_line(color = blue, linewidth = 1.2) +
+  geom_point(aes(color = rate >= 55), size = 4) +
+  geom_text(aes(label = paste0(rate, "%")), vjust = -1, color = "#ffffff", size = 3.5) +
+  scale_color_manual(values = c(`TRUE` = green, `FALSE` = red), guide = "none") +
+  scale_x_continuous(breaks = hit$n, labels = hit$week) +
+  scale_y_continuous(limits = c(35, 80)) +
+  labs(title = "Chimera 예측 적중률: 평균 61.7%, 최신 57%", subtitle = "최신 공개 내부 채점표는 2026년 5월 23일에서 멈춰 있다", x = NULL, y = "적중률(%)") +
+  theme_chimera() +
+  theme(axis.text.x = element_text(angle = 35, hjust = 1))
+```
+
+# 8. 이번 달 결론
+
+9월의 핵심은 KOSPI 7,000이라는 가격 회복과 미 국채 10년물 5%라는 할인율 충격이 동시에 존재한다는 점이다. 한국 주식의 방향성은 회복됐지만, 미국 금리와 원유가 만드는 비용 압력은 성장주·장기채·원화 ETF에 계속 전이된다.
+
+따라서 이번 달 연구 포인트는 세 가지다.
+
+1. **KOSPI 7,000선의 안착 여부**: 가격보다 일간 변동성 축소가 더 중요하다.
+2. **미 10년물 5% 돌파 여부**: AI·성장주 멀티플과 장기채 손실의 공통 트리거다.
+3. **모의투자 운영지표**: 월간 성과는 수익률보다 주문 안정성, 손익비, 드로다운으로 평가해야 한다.
+
+::: {.callout-note}
+## 다음 발행 때 갱신할 데이터
+KRX 일별 지수·거래대금, ETF 공식 NAV/괴리율, 한국은행 ECOS 환율·금리, FRED·미 재무부 금리곡선, EIA 원유 현물, World Gold Council/LBMA 금 가격, 모의투자 체결·잔고의 비식별 성과지표를 우선 갱신한다.
+:::
